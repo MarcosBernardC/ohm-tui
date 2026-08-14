@@ -1,15 +1,8 @@
-def req_func_1():
-    pass
-
-def req_func_2():
-    pass
-
-def req_func_3():
-    pass
-
+from modules.terminal import Terminal
 
 def main():
-    pass
+    Terminal.mover_cursor(7,7)
+    print("Línea 7, Columna 7!")
 
 
 if __name__ == "__main__":
