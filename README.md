@@ -1,3 +1,7 @@
+# Diagramas UML
+
+## Diagramas de Clase
+
 ```mermaid
 classDiagram
     class Cursor{
@@ -18,4 +22,13 @@ classDiagram
         +mover_cursor()$
         +ocultar_cursor()$
     }
+```
+## Diagramas de secuencia:
+
+```mermaid
+sequenceDiagram
+   Bernard->>+tui:  python project.py
+    tui-->>-Bernard: Menu General (opt:0)
+    Bernard->>+tui: Presionar 'j'
+    tui-->>-Bernard:  Menu General (opt:1)
 ```
