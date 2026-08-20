@@ -39,29 +39,40 @@ class MenuView0:
     opt: list=field(default_factory=lambda:["1. opt a", "2. opt b"])
 
     def render(self): 
+        cursor_pos = self.cursor.posicion
         menu_str = []
         for i, str_opt in enumerate(self.opt):
-            if i == self.cursor.linea:
+            if i == cursor_pos[0]: #línea (Y)
                 menu_str.append(f"{self.cursor.symbol} {str_opt}")
             else:
                 menu_str.append(str_opt)
 
         print('\n'.join(menu_str))
 
+@dataclass
+class InputHandler:
+    cursor: Cursor
+    #: list=field(default_factory=lambda:[])
+
+    def kb(self):
+        opt = input("Ingresa Opción")
+        match opt:
+            case 'j':
+                print("presionaste j!")
+                self.cursor.mover_abajo()
+            case 'k':
+                print("presionaste k!")
+                self.cursor.mover_arriba()
+
+        return (opt)
+
 def main():
-    # Terminal.mover_cursor(7,7)
-    # print("Línea 7, Columna 7!")
-
-    # cursor = Cursor()
-    # print(cursor)
-    # print(cursor.posicion)
-    #
-    # cursor.mover_abajo()
-    # print(cursor)
-    # print(cursor.posicion)
-
     menu = MenuView0()
-    menu.render()
+    inputkb = InputHandler(menu.cursor)
+    while True:
+        Terminal.reiniciar_pantalla()
+        menu.render()
+        inputkb.kb()
 
 if __name__ == "__main__":
     main()
