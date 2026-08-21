@@ -1,3 +1,5 @@
+from readchar import readkey
+import sys
 from dataclasses import dataclass, field
 from modules.terminal import Terminal
 
@@ -5,9 +7,10 @@ from modules.terminal import Terminal
 @dataclass
 class Cursor:
     symbol: str = '>'
-    linea: int = 0
-    columna: int = 0
-    max_posicion: tuple[int, int] = (10, 0)
+    linea: int = 1
+    columna: int = 1
+    max_posicion: tuple[int, int] = (10, 1)
+    init_pos: tuple[int, int] = (1, 1)
 
     def mover_arriba(self):
         if self.linea > 0:
@@ -34,9 +37,9 @@ class Cursor:
         pass
 
 @dataclass
-class MenuView0:
-    cursor: Cursor=field(default_factory=lambda:Cursor(max_posicion=(1,0)))
-    opt: list=field(default_factory=lambda:["1. opt a", "2. opt b"])
+class MenuView0: #main menu
+    cursor: Cursor=field(default_factory=lambda:Cursor(max_posicion=(1,1)))
+    opt: list=field(default_factory=lambda:["1. Editar", "2. Ayuda"])
 
     def render(self): 
         cursor_pos = self.cursor.posicion
@@ -50,29 +53,44 @@ class MenuView0:
         print('\n'.join(menu_str))
 
 @dataclass
+class MenuView01: #help menu
+    cursor: Cursor=field(default_factory=lambda:Cursor(max_posicion=(1,1)))
+    menu_list: list=field(default_factory=lambda:[15*'-',"Ayuda", 15*'-', '', "MOVIMIENTOS BÁSICOS:", "  j - Mover cursor hacia abajo", "  k - Mover cursor hacia arriba"])
+
+    def render(self): 
+        for i, str_opt in enumerate(self.menu_list):
+            if i == cursor_pos[0]: #línea (Y)
+                menu_str.append(f"{self.cursor.symbol} {str_opt}")
+            else:
+                menu_str.append(str_opt)
+
+        print('\n'.join(menu_str))
+
+@dataclass
 class InputHandler:
     cursor: Cursor
-    #: list=field(default_factory=lambda:[])
 
     def kb(self):
-        opt = input("Ingresa Opción")
-        match opt:
-            case 'j':
-                print("presionaste j!")
-                self.cursor.mover_abajo()
-            case 'k':
-                print("presionaste k!")
-                self.cursor.mover_arriba()
-
+        opt = readkey()
+        dispatch = {
+                'j': self.cursor.mover_abajo,
+                'k': self.cursor.mover_arriba,
+                'h': sys.exit,
+                'q': sys.exit
+                }
+        dispatch[opt]()
         return (opt)
 
 def main():
-    menu = MenuView0()
-    inputkb = InputHandler(menu.cursor)
+    menu0 = MenuView0()
+    menu01 = MenuView01()
+    menu_list = [menu0]
+    inputkb = InputHandler(menu_list[-1].cursor)
     while True:
         Terminal.reiniciar_pantalla()
-        menu.render()
+        menu_list[-1].render()
         inputkb.kb()
+
 
 if __name__ == "__main__":
     main()
