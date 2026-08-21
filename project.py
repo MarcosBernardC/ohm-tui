@@ -7,25 +7,28 @@ from modules.terminal import Terminal
 @dataclass
 class Cursor:
     symbol: str = '>'
+    max_posicion: tuple[int, int] = (10, 1)
+    min_posicion: tuple[int, int] = (1, 1)
+    opt: int = 0
     linea: int = 1
     columna: int = 1
-    max_posicion: tuple[int, int] = (10, 1)
-    init_pos: tuple[int, int] = (1, 1)
 
     def mover_arriba(self):
-        if self.linea > 0:
+        if self.linea > self.min_posicion[0]:
             self.linea -= 1
+            self.opt -= 1
     
     def mover_abajo(self):
         if self.linea < self.max_posicion[0]:
             self.linea += 1
+            self.opt += 1
 
     def mover_derecha(self):
         if self.columna < self.max_posicion[1]:
             self.columna += 1
 
     def mover_izquierda(self):
-        if self.columna > 0:
+        if self.columna > self.min_posicion[1]:
             self.columna -= 1
 
     @property
@@ -33,38 +36,37 @@ class Cursor:
         return (self.linea, self.columna)
 
     @posicion.setter
-    def posicion(self, value):
-        pass
+    def posicion(self, value: tuple[int, int]):
+        self.linea = value[0]
+        self.columna = value[0]
 
 @dataclass
 class MenuView0: #main menu
-    cursor: Cursor=field(default_factory=lambda:Cursor(max_posicion=(1,1)))
-    opt: list=field(default_factory=lambda:["1. Editar", "2. Ayuda"])
+    cursor: Cursor=field(default_factory=lambda:Cursor(min_posicion=(1, 1), max_posicion=(2,1)))
+    banner: list=field(default_factory=lambda:[15*'-', "Main Menu", 15*'-'])
+    opt_str_list: list=field(default_factory=lambda:["Calcular Voltaje (V = I * R)", "Ayuda"])
 
-    def render(self): 
-        cursor_pos = self.cursor.posicion
+    def render(self):
         menu_str = []
-        for i, str_opt in enumerate(self.opt):
-            if i == cursor_pos[0]: #línea (Y)
+        
+        for element in self.banner:
+            menu_str.append(element)
+
+        cursor_pos = self.cursor.posicion
+        init_pos = self.cursor.min_posicion
+        for i, str_opt in enumerate(self.opt_str_list):
+            if i+init_pos[0] == cursor_pos[0]: #línea (Y)
                 menu_str.append(f"{self.cursor.symbol} {str_opt}")
             else:
-                menu_str.append(str_opt)
+                menu_str.append(f"  {str_opt}")
 
         print('\n'.join(menu_str))
 
-@dataclass
-class MenuView01: #help menu
-    cursor: Cursor=field(default_factory=lambda:Cursor(max_posicion=(1,1)))
-    menu_list: list=field(default_factory=lambda:[15*'-',"Ayuda", 15*'-', '', "MOVIMIENTOS BÁSICOS:", "  j - Mover cursor hacia abajo", "  k - Mover cursor hacia arriba"])
-
-    def render(self): 
-        for i, str_opt in enumerate(self.menu_list):
-            if i == cursor_pos[0]: #línea (Y)
-                menu_str.append(f"{self.cursor.symbol} {str_opt}")
-            else:
-                menu_str.append(str_opt)
-
-        print('\n'.join(menu_str))
+    def handle_input(self, value):
+        match value:
+            case 'j': self.cursor.mover_abajo
+            case 'k': self.cursor.mover_arriba
+            case 'l': return cursor.posicion[0]
 
 @dataclass
 class InputHandler:
@@ -78,17 +80,27 @@ class InputHandler:
                 'h': sys.exit,
                 'q': sys.exit
                 }
-        dispatch[opt]()
-        return (opt)
+        if opt in dispatch:
+            dispatch[opt]()
+            return (opt)
+        else:
+            print("opcion inválida")
+@dataclass
+class Controller:
+    menu_stack: list[MenuView0] = field(default_factory=lambda:[MenuView0()])
+    
+    # def getInput(self, value):
+
 
 def main():
     menu0 = MenuView0()
-    menu01 = MenuView01()
-    menu_list = [menu0]
-    inputkb = InputHandler(menu_list[-1].cursor)
+    # menu0.cursor.posicion = (3,2)
+    menu_stack = [menu0]
+    inputkb = InputHandler(menu_stack[-1].cursor)
     while True:
         Terminal.reiniciar_pantalla()
-        menu_list[-1].render()
+        Terminal.ocultar_cursor()
+        menu_stack[-1].render()
         inputkb.kb()
 
 
