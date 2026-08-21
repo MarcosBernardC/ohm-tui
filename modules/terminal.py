@@ -16,6 +16,10 @@ class Terminal:
     def ocultar_cursor() -> None:
         Terminal._imprimir_secuencia("\033[?25l")
 
+    @staticmethod
+    def reiniciar_pantalla() -> None:
+        Terminal.limpiar_pantalla()
+        Terminal.mover_cursor(0,0)
 
 if __name__ == "__main__":
     pass
