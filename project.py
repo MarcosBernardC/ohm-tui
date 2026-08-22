@@ -4,24 +4,26 @@ from dataclasses import dataclass, field
 from modules.terminal import Terminal
 
 
-@dataclass
 class Cursor:
-    symbol: str = '>'
-    max_posicion: tuple[int, int] = (10, 1)
-    min_posicion: tuple[int, int] = (1, 1)
-    opt: int = 0
-    linea: int = 1
-    columna: int = 1
+    def __init__(self,
+                 symbol: str = '>',
+                 max_posicion: tuple[int, int] = (10, 1),
+                 min_posicion: tuple[int, int] = (1, 1),
+                 linea: int = None,
+                 columna: int = None):
+        self.symbol = symbol
+        self.max_posicion = max_posicion
+        self.min_posicion = min_posicion
+        self.linea = min_posicion[0]
+        self.columna = min_posicion[1]
 
     def mover_arriba(self):
         if self.linea > self.min_posicion[0]:
             self.linea -= 1
-            self.opt -= 1
     
     def mover_abajo(self):
         if self.linea < self.max_posicion[0]:
             self.linea += 1
-            self.opt += 1
 
     def mover_derecha(self):
         if self.columna < self.max_posicion[1]:
@@ -40,6 +42,10 @@ class Cursor:
         self.linea = value[0]
         self.columna = value[0]
 
+    @property
+    def rel_posicionY(self):
+        return self.linea-self.min_posicion[0]
+    
 @dataclass
 class MenuView0: #main menu
     cursor: Cursor=field(default_factory=lambda:Cursor(min_posicion=(1, 1), max_posicion=(3,1)))
@@ -80,21 +86,31 @@ class Controller:
 
     def exec_kb(self, value):
         menu = self.menu_stack[-1]
+        print(f"Opción actual: {menu.cursor.rel_posicionY}")
         dispatch = {
                 'j': menu.cursor.mover_abajo,
                 'k': menu.cursor.mover_arriba,
                 'h': sys.exit,
                 'q': sys.exit,
-                'l': "enter"
+                'l': self.add_menu
                 }
         if value in dispatch:
+            cursor = menu.cursor
+            # print(f"Posición cursor: {cursor.posicion[0]}")
+            # print(f"Opción: {cursor.rel_posicionY}")
+            # print(f"Opción actual: {menu.opt_str_list[cursor.rel_posicionY]}")
             dispatch[value]()
-            # return (value)
+            input()
         else:
             print("opcion inválida")
         print(value)
 
-        # input()
+    def add_menu(self):
+        menu = self.menu_stack[-1]
+        cursor_rel_pos = menu.cursor.rel_posicionY
+        match menu.opt_str_list[cursor_rel_pos]:
+            case "Opt1":
+                print("MENUopt1!")
 
     def gestionar_menu(self):
         self.menu_stack[-1].render()
@@ -117,4 +133,5 @@ def main():
         controller.exec_kb(opt)
 
 
-if __name__ == "__main__":    main()
+if __name__ == "__main__":
+    main()
