@@ -42,9 +42,9 @@ class Cursor:
 
 @dataclass
 class MenuView0: #main menu
-    cursor: Cursor=field(default_factory=lambda:Cursor(min_posicion=(1, 1), max_posicion=(2,1)))
+    cursor: Cursor=field(default_factory=lambda:Cursor(min_posicion=(1, 1), max_posicion=(3,1)))
     banner: list=field(default_factory=lambda:[15*'-', "Main Menu", 15*'-'])
-    opt_str_list: list=field(default_factory=lambda:["Calcular Voltaje (V = I * R)", "Ayuda"])
+    opt_str_list: list=field(default_factory=lambda:["Opt1", "Opt2", "Ayuda"])
 
     def render(self):
         menu_str = []
@@ -70,39 +70,51 @@ class MenuView0: #main menu
 
 @dataclass
 class InputHandler:
-    cursor: Cursor
-
     def kb(self):
         opt = readkey()
-        dispatch = {
-                'j': self.cursor.mover_abajo,
-                'k': self.cursor.mover_arriba,
-                'h': sys.exit,
-                'q': sys.exit
-                }
-        if opt in dispatch:
-            dispatch[opt]()
-            return (opt)
-        else:
-            print("opcion inválida")
+        return (opt)
+
 @dataclass
 class Controller:
-    menu_stack: list[MenuView0] = field(default_factory=lambda:[MenuView0()])
-    
-    # def getInput(self, value):
+    menu_stack: list[MenuView0] = field(default_factory=lambda:[MenuView0()]) 
 
+    def exec_kb(self, value):
+        menu = self.menu_stack[-1]
+        dispatch = {
+                'j': menu.cursor.mover_abajo,
+                'k': menu.cursor.mover_arriba,
+                'h': sys.exit,
+                'q': sys.exit,
+                'l': "enter"
+                }
+        if value in dispatch:
+            dispatch[value]()
+            # return (value)
+        else:
+            print("opcion inválida")
+        print(value)
+
+        # input()
+
+    def gestionar_menu(self):
+        self.menu_stack[-1].render()
+         
 
 def main():
     menu0 = MenuView0()
     # menu0.cursor.posicion = (3,2)
     menu_stack = [menu0]
-    inputkb = InputHandler(menu_stack[-1].cursor)
+    inputkb = InputHandler()
+    controller = Controller()
+
     while True:
         Terminal.reiniciar_pantalla()
         Terminal.ocultar_cursor()
-        menu_stack[-1].render()
-        inputkb.kb()
+        
+        controller.gestionar_menu()
+        # menu_stack[-1].render()
+        opt = inputkb.kb()
+        controller.exec_kb(opt)
 
 
-if __name__ == "__main__":
-    main()
+if __name__ == "__main__":    main()
