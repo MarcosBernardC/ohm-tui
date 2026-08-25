@@ -162,7 +162,7 @@ class Controller:
             self.menu_stack.pop()
 
     def quit(self):
-        tmp = input("Salir y/N: ")
+        tmp = input("\n¿Salir del programa? (y/N): ")
         if tmp == 'y' or tmp == 'Y':
             sys.exit()
 
