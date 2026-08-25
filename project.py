@@ -68,13 +68,6 @@ class MenuView0: #main menu
 
         print('\n'.join(menu_str))
 
-    def handle_input(self, value):
-        match value:
-            case 'j': self.cursor.mover_abajo
-            case 'k': self.cursor.mover_arriba
-            case 'l': return cursor.posicion[0]
-
-
 @dataclass
 class MenuAyuda: #main menu
     cursor: Cursor=field(default_factory=lambda:Cursor(min_posicion=(1, 1), max_posicion=(1,1)))
@@ -103,11 +96,36 @@ class MenuAyuda: #main menu
 
         print('\n'.join(menu_str))
 
-    def handle_input(self, value):
-        match value:
-            case 'j': self.cursor.mover_abajo
-            case 'k': self.cursor.mover_arriba
-            case 'l': return cursor.posicion[0]
+@dataclass
+class MenuEditarVoltaje:
+    cursor: Cursor=field(default_factory=lambda:Cursor(min_posicion=(1, 1), max_posicion=(2,1)))
+    banner: list=field(default_factory=lambda:[15*'-', "Editar: Voltaje", 15*'-'])
+    opt_str_list: list=field(default_factory=lambda:["Valor anterior : ", "Nuevo valor    : "])
+    footer: list=field(default_factory=lambda:["\n[Enter] Guardar | [h] Volver / Cancelar"])
+
+    def render(self):
+        menu_str = []
+        
+        for element in self.banner:
+            menu_str.append(element)
+
+        cursor_pos = self.cursor.posicion
+        init_pos = self.cursor.min_posicion
+        for i, str_opt in enumerate(self.opt_str_list):
+            if i+init_pos[0] == cursor_pos[0]: #línea (Y)
+                menu_str.append(f"{self.cursor.symbol} {str_opt}")
+            else:
+                menu_str.append(f"  {str_opt}")
+
+        for element in self.footer:
+            menu_str.append(element)
+
+        print('\n'.join(menu_str))
+
+    # def handle_input(self, value):
+    #     match value:
+    #         case 'j': self.cursor.mover_abajo
+    #         case 'k': self.cursor.mover_arriba
 
 @dataclass
 class InputHandler:
@@ -127,7 +145,8 @@ class Controller:
                 'k': menu.cursor.mover_arriba,
                 'l': self.add_menu,
                 'h': self.delete_menu,
-                'q': self.quit
+                'q': self.quit,
+                '?': self.help_menu
                 }
         if value in dispatch:
             cursor = menu.cursor
@@ -135,10 +154,16 @@ class Controller:
             # print(f"Opción: {cursor.rel_posicionY}")
             # print(f"Opción actual: {menu.opt_str_list[cursor.rel_posicionY]}")
             dispatch[value]()
-            input()
         else:
             print("opcion inválida")
         print(value)
+        #input()
+
+    def help_menu(self):
+        if isinstance(self.menu_stack[-1], MenuAyuda):
+            return 0
+        else:
+            self.menu_stack.append(MenuAyuda())
 
     def add_menu(self):
         menu = self.menu_stack[-1]
@@ -146,6 +171,7 @@ class Controller:
         match menu.opt_str_list[cursor_rel_pos]:
             case "Opt1":
                 print("menu: Opt1")
+                self.menu_stack.append(MenuEditarVoltaje())
             case "Opt2":
                 print("menu: Opt2")
             case "Ayuda":
