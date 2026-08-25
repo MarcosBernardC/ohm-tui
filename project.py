@@ -74,6 +74,35 @@ class MenuView0: #main menu
             case 'k': self.cursor.mover_arriba
             case 'l': return cursor.posicion[0]
 
+
+@dataclass
+class MenuAyuda: #main menu
+    cursor: Cursor=field(default_factory=lambda:Cursor(min_posicion=(1, 1), max_posicion=(3,1)))
+    banner: list=field(default_factory=lambda:[15*'-', "Main Menu", 15*'-'])
+    opt_str_list: list=field(default_factory=lambda:["Opt1", "Opt2", "Ayuda"])
+
+    def render(self):
+        menu_str = []
+        
+        for element in self.banner:
+            menu_str.append(element)
+
+        cursor_pos = self.cursor.posicion
+        init_pos = self.cursor.min_posicion
+        for i, str_opt in enumerate(self.opt_str_list):
+            if i+init_pos[0] == cursor_pos[0]: #línea (Y)
+                menu_str.append(f"{self.cursor.symbol} {str_opt}")
+            else:
+                menu_str.append(f"  {str_opt}")
+
+        print('\n'.join(menu_str))
+
+    def handle_input(self, value):
+        match value:
+            case 'j': self.cursor.mover_abajo
+            case 'k': self.cursor.mover_arriba
+            case 'l': return cursor.posicion[0]
+
 @dataclass
 class InputHandler:
     def kb(self):
@@ -90,9 +119,9 @@ class Controller:
         dispatch = {
                 'j': menu.cursor.mover_abajo,
                 'k': menu.cursor.mover_arriba,
-                'h': sys.exit,
-                'q': sys.exit,
-                'l': self.add_menu
+                'l': self.add_menu,
+                'h': self.delete_menu,
+                'q': self.quit
                 }
         if value in dispatch:
             cursor = menu.cursor
@@ -110,11 +139,26 @@ class Controller:
         cursor_rel_pos = menu.cursor.rel_posicionY
         match menu.opt_str_list[cursor_rel_pos]:
             case "Opt1":
-                print("MENUopt1!")
+                print("menu: Opt1")
+            case "Opt2":
+                print("menu: Opt2")
+            case "Ayuda":
+                print("menu: Ayuda")
+                self.menu_stack.append(MenuAyuda())
 
     def gestionar_menu(self):
         self.menu_stack[-1].render()
-         
+
+    def delete_menu(self):
+        cantidad_menus = len(self.menu_stack)
+        if cantidad_menus > 1:
+            print(f"Longitud menús: {cantidad_menus}")
+            self.menu_stack.pop()
+
+    def quit(self):
+        tmp = input("Salir y/N: ")
+        if tmp == 'y' or tmp == 'Y':
+            sys.exit()
 
 def main():
     menu0 = MenuView0()
