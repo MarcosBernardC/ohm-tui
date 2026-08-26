@@ -4,7 +4,7 @@ from dataclasses import dataclass, field
 from src.core.cursor import Cursor
 from src.core.terminal import Terminal
 from src.core.input import InputHandler
-from src.views.menus import MainMenu, MenuAyuda, MenuEditarVoltaje
+from src.views.menus import MainMenu, MenuAyuda, MenuCalcularVoltaje
 
 
 @dataclass
@@ -39,13 +39,14 @@ class Controller:
     def add_menu(self):
         menu = self.menu_stack[-1]
         cursor_rel_pos = menu.cursor.rel_posicionY
-        match menu.opt_str_list[cursor_rel_pos]:
-            case "Opt1":
-                print("menu: Opt1")
-                self.menu_stack.append(MenuEditarVoltaje())
-            case "Opt2":
+        print(menu.opt_str_list[cursor_rel_pos][:3])
+        match menu.opt_str_list[cursor_rel_pos][:3]:
+            case "1. ":
+                print(f"Menú seleccionado: {menu.opt_str_list[cursor_rel_pos]}")
+                self.menu_stack.append(MenuCalcularVoltaje())
+            case "2. ":
                 print("menu: Opt2")
-            case "Ayuda":
+            case "5. ":
                 print("menu: Ayuda")
                 self.menu_stack.append(MenuAyuda())
 
