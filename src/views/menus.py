@@ -50,3 +50,30 @@ class MenuAyuda: #main menu
                 menu_str.append(f"{str_opt}")
 
         print('\n'.join(menu_str))
+
+@dataclass
+class MenuEditarVoltaje:
+    cursor: Cursor=field(default_factory=lambda:Cursor(min_posicion=(1, 1), max_posicion=(2,1)))
+    banner: list=field(default_factory=lambda:[15*'-', "Editar: Voltaje", 15*'-'])
+    opt_str_list: list=field(default_factory=lambda:["Valor anterior : ", "Nuevo valor    : "])
+    footer: list=field(default_factory=lambda:["\n[Enter] Guardar | [h] Volver / Cancelar"])
+
+    def render(self):
+        menu_str = []
+        
+        for element in self.banner:
+            menu_str.append(element)
+
+        cursor_pos = self.cursor.posicion
+        init_pos = self.cursor.min_posicion
+        for i, str_opt in enumerate(self.opt_str_list):
+            if i+init_pos[0] == cursor_pos[0]: #línea (Y)
+                menu_str.append(f"{self.cursor.symbol} {str_opt}")
+            else:
+                menu_str.append(f"  {str_opt}")
+
+        for element in self.footer:
+            menu_str.append(element)
+
+        print('\n'.join(menu_str))
+
