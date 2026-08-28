@@ -1,4 +1,3 @@
-from readchar import readkey
 import sys
 from dataclasses import dataclass, field
 from src.core.cursor import Cursor
