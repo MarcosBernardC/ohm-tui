@@ -13,7 +13,7 @@ def main():
         print(menu_str)
         kb = input_handler.kb()
         print(f"Haz presionado {kb}!")
-        if kb in ['e', 'E']:
+        if kb in ['l']:
             print("modo editar")
             Terminal.mover_cursor(4, 9)
             input()
