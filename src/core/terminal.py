@@ -17,6 +17,10 @@ class Terminal:
         Terminal._imprimir_secuencia("\033[?25l")
 
     @staticmethod
+    def mostrar_cursor() -> None:
+        Terminal._imprimir_secuencia("\033[?25h")
+
+    @staticmethod
     def reiniciar_pantalla() -> None:
         Terminal.limpiar_pantalla()
         Terminal.mover_cursor(0,0)

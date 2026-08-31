@@ -39,16 +39,26 @@ class Controller:
     def add_menu(self):
         menu = self.menu_stack[-1]
         cursor_rel_pos = menu.cursor.rel_posicionY
-        print(menu.opt_str_list[cursor_rel_pos][:3])
-        match menu.opt_str_list[cursor_rel_pos][:3]:
-            case "1. ":
-                print(f"Menú seleccionado: {menu.opt_str_list[cursor_rel_pos]}")
+        # print(menu.opt_str_list[cursor_rel_pos].split()[0])
+        match menu.opt_str_list[cursor_rel_pos].split()[0]:
+            case "1.":
+                # print(f"Menú seleccionado: {menu.opt_str_list[cursor_rel_pos]}")
                 self.menu_stack.append(MenuCalcularVoltaje())
-            case "2. ":
-                print("menu: Opt2")
-            case "5. ":
+            case "2.":
+                print("menu: 2.")
+            case "5.":
                 print("menu: Ayuda")
                 self.menu_stack.append(MenuAyuda())
+            case "1.1.":
+                print("menu: 1.1.")
+                Terminal.mostrar_cursor()
+                Terminal.mover_cursor(4, 33)
+                input()
+            case "1.2.":
+                # print("menu: 
+                pass
+        print(f"Menú seleccionado: {menu.opt_str_list[cursor_rel_pos]}")
+        #input()
 
     def gestionar_menu(self):
         self.menu_stack[-1].render()

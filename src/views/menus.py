@@ -64,8 +64,8 @@ class MenuAyuda: #main menu
 @dataclass
 class MenuCalcularVoltaje:
     cursor: Cursor=field(default_factory=lambda:Cursor(min_posicion=(1, 1), max_posicion=(2,1)))
-    banner: list=field(default_factory=lambda:[18*'-', "   Cálculo de Voltaje   ", 18*'-'])
-    opt_str_list: list=field(default_factory=lambda:["Valor de Corriente (I) : ", "Valor de Resistencia (R): "])
+    banner: list=field(default_factory=lambda:[18*'-', "Cálculo de Voltaje", 18*'-'])
+    opt_str_list: list=field(default_factory=lambda:["1.1. Valor de Corriente (I) : ", "1.2. Valor de Resistencia (R): "])
     footer: list=field(default_factory=lambda:[
         18*'-',
         "Resultado (V)            :",
