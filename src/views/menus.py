@@ -61,18 +61,44 @@ class MenuAyuda: #main menu
         
         print('\n'.join(menu_str))
 
+
+@dataclass
+class Corriente:
+    unidad: str = 'A'
+    valor: float = 0.0
+
+@dataclass
+class Voltaje:
+    unidad: str = 'V'
+    valor: float = 0.0
+
+@dataclass
+class Resistencia:
+    unidad: str = 'Ω'
+    valor: float = 0.0
+
 @dataclass
 class MenuCalcularVoltaje:
+    corriente: Corriente = field(default_factory=lambda:Corriente)
+    voltaje: Voltaje = field(default_factory=Voltaje)
+    resistencia: Resistencia = field(default_factory=Resistencia)
     cursor: Cursor=field(default_factory=lambda:Cursor(min_posicion=(1, 1), max_posicion=(2,1)))
     banner: list=field(default_factory=lambda:[18*'-', "Cálculo de Voltaje", 18*'-'])
-    opt_str_list: list=field(default_factory=lambda:["1.1. Valor de Corriente (I) : ", "1.2. Valor de Resistencia (R): "])
+    opt_str_list: list=field(default_factory=lambda:[f"1.1. Valor de Corriente (I) : ", "1.2. Valor de Resistencia (R):"])
     footer: list=field(default_factory=lambda:[
         18*'-',
         "Resultado (V)            :",
         18*'-',
-        "[Enter] Guardar | [h] Volver / Cancelar"])
+        "[Enter] Guardar | [h] Volver / Cancelar"]) 
 
     def render(self):
+        self.opt_str_list = [f"1.1. Valor de Corriente (I) : {self.corriente.valor} {self.corriente.unidad}", f"1.2. Valor de Resistencia (R): {self.resistencia.valor} {self.resistencia.unidad}"]
+
+        self.footer = [
+            18*'-',
+            f"Resultado (V)            : {self.voltaje.valor} {self.voltaje.unidad}",
+            18*'-',
+            "[Enter] Guardar | [h] Volver / Cancelar"]
         menu_str = []
         
         for element in self.banner:
@@ -90,4 +116,3 @@ class MenuCalcularVoltaje:
             menu_str.append(element)
 
         print('\n'.join(menu_str))
-
