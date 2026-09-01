@@ -7,9 +7,19 @@ from src.core.input import InputHandler
 from src.views.menus import MainMenu, MenuAyuda, MenuCalcularVoltaje
 
 
+
+def is_float(value):
+    try:
+        float(value)
+        return True
+    except ValueError:
+        return False
+    return 
+
 @dataclass
 class Controller:
-    menu_stack: list[MainMenu] = field(default_factory=lambda:[MainMenu()]) 
+    menu_stack: list[MainMenu] = field(default_factory=lambda:[MainMenu()])
+ 
 
     def exec_kb(self, value):
         menu = self.menu_stack[-1]
@@ -49,11 +59,16 @@ class Controller:
             case "5.":
                 print("menu: Ayuda")
                 self.menu_stack.append(MenuAyuda())
-            case "1.1.":
+            case "1.1.":                
                 print("menu: 1.1.")
                 Terminal.mostrar_cursor()
                 Terminal.mover_cursor(4, 33)
-                input()
+                value = input()
+                if is_float(value):
+                    menu.corriente.valor = value
+                else:
+                    print("Valor inválido")
+                    
             case "1.2.":
                 # print("menu: 
                 pass
