@@ -65,13 +65,22 @@ class Controller:
                 Terminal.mover_cursor(4, 33)
                 value = input()
                 if is_float(value):
-                    menu.corriente.valor = value
+                    menu.corriente.valor = float(value)
+                    menu.voltaje.valor = menu.corriente.valor*menu.resistencia.valor
                 else:
                     print("Valor inválido")
                     
             case "1.2.":
-                # print("menu: 
-                pass
+                print("menu: 1.2.")
+                Terminal.mostrar_cursor()
+                Terminal.mover_cursor(5, 34)
+                value = input()
+                if is_float(value):
+                    menu.resistencia.valor = float(value)
+                    menu.voltaje.valor = menu.corriente.valor*menu.resistencia.valor
+                else:
+                    print("Valor inválido")
+
         print(f"Menú seleccionado: {menu.opt_str_list[cursor_rel_pos]}")
         #input()
 
