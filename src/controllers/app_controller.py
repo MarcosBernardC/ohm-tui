@@ -4,8 +4,7 @@ from dataclasses import dataclass, field
 from src.core.cursor import Cursor
 from src.core.terminal import Terminal
 from src.core.input import InputHandler
-from src.views.menus import MainMenu, MenuAyuda, MenuCalcularVoltaje
-
+from src.views.menus import MainMenu, MenuAyuda, MenuCalcularVoltaje, MenuCalcularCorriente
 
 
 def is_float(value):
@@ -20,7 +19,6 @@ def is_float(value):
 class Controller:
     menu_stack: list[MainMenu] = field(default_factory=lambda:[MainMenu()])
  
-
     def exec_kb(self, value):
         menu = self.menu_stack[-1]
         print(f"Opción actual: {menu.cursor.rel_posicionY}")
@@ -51,14 +49,10 @@ class Controller:
         cursor_rel_pos = menu.cursor.rel_posicionY
         # print(menu.opt_str_list[cursor_rel_pos].split()[0])
         match menu.opt_str_list[cursor_rel_pos].split()[0]:
+        # Menu 1.0: ====
             case "1.":
                 # print(f"Menú seleccionado: {menu.opt_str_list[cursor_rel_pos]}")
                 self.menu_stack.append(MenuCalcularVoltaje())
-            case "2.":
-                print("menu: 2.")
-            case "5.":
-                print("menu: Ayuda")
-                self.menu_stack.append(MenuAyuda())
             case "1.1.":                
                 print("menu: 1.1.")
                 Terminal.mostrar_cursor()
@@ -68,8 +62,7 @@ class Controller:
                     menu.corriente.valor = float(value)
                     menu.voltaje.valor = menu.corriente.valor*menu.resistencia.valor
                 else:
-                    print("Valor inválido")
-                    
+                    print("Valor inválido")                    
             case "1.2.":
                 print("menu: 1.2.")
                 Terminal.mostrar_cursor()
@@ -80,7 +73,44 @@ class Controller:
                     menu.voltaje.valor = menu.corriente.valor*menu.resistencia.valor
                 else:
                     print("Valor inválido")
+        # Menu 2.0: ====
+            case "2.":
+                print("menu: 2.")
+                self.menu_stack.append(MenuCalcularCorriente())    
+            case "2.1.":                
+                print("menu: 2.1.")
+                Terminal.mostrar_cursor()
+                Terminal.mover_cursor(4, 31)
+                value = input()
+                if is_float(value):
+                    menu.voltaje.valor = float(value)
+                    try:
+                        menu.corriente.valor = menu.voltaje.valor/menu.resistencia.valor
+                        menu.corriente.unidad = 'A'
+                    except ZeroDivisionError:
+                        menu.corriente.valor = "ERR"
+                        menu.corriente.unidad = ''
+                else:
+                    print("Valor inválido")                    
+            case "2.2.":
+                print("menu: 2.2.")
+                Terminal.mostrar_cursor()
+                Terminal.mover_cursor(5, 34)
+                value = input()
+                if is_float(value):
+                    menu.resistencia.valor = float(value)
+                    try:
+                        menu.corriente.valor = menu.voltaje.valor/menu.resistencia.valor
+                        menu.corriente.unidad = 'A'
+                    except ZeroDivisionError:
+                        menu.corriente.valor = "ERR"
+                        menu.corriente.unidad = ''
+                else:
+                    print("Valor inválido")                    
 
+            case "5.":
+                print("menu: Ayuda")
+                self.menu_stack.append(MenuAyuda())
         print(f"Menú seleccionado: {menu.opt_str_list[cursor_rel_pos]}")
         #input()
 
