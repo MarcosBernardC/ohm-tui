@@ -4,7 +4,7 @@ from dataclasses import dataclass, field
 from src.core.cursor import Cursor
 from src.core.terminal import Terminal
 from src.core.input import InputHandler
-from src.views.menus import MainMenu, MenuAyuda, MenuCalcularVoltaje, MenuCalcularCorriente
+from src.views.menus import MainMenu, MenuAyuda, MenuCalcularVoltaje, MenuCalcularCorriente, MenuCalcularResistencia
 
 
 def is_float(value):
@@ -108,6 +108,40 @@ class Controller:
                 else:
                     print("Valor inválido")                    
 
+        # Menu 3.0: ====
+            case "3.":
+                print("menu: 3.")
+                self.menu_stack.append(MenuCalcularResistencia())    
+            case "3.1.":                
+                print("menu: 3.1.")
+                Terminal.mostrar_cursor()
+                Terminal.mover_cursor(4, 31)
+                value = input()
+                if is_float(value):
+                    menu.voltaje.valor = float(value)
+                    try:
+                        menu.resistencia.valor = menu.voltaje.valor/menu.corriente.valor
+                        menu.resistencia.unidad = 'Ω'
+                    except ZeroDivisionError:
+                        menu.resistencia.valor = "ERR"
+                        menu.resistencia.unidad = ''
+                else:
+                    print("Valor inválido")                    
+            case "3.2.":
+                print("menu: 3.2.")
+                Terminal.mostrar_cursor()
+                Terminal.mover_cursor(5, 32)
+                value = input()
+                if is_float(value):
+                    menu.corriente.valor = float(value)
+                    try:
+                        menu.resistencia.valor = menu.voltaje.valor/menu.corriente.valor
+                        menu.resistencia.unidad = 'Ω'
+                    except ZeroDivisionError:
+                        menu.resistencia.valor = "ERR"
+                        menu.resistencia.unidad = ''
+                else:
+                    print("Valor inválido")                    
             case "5.":
                 print("menu: Ayuda")
                 self.menu_stack.append(MenuAyuda())
