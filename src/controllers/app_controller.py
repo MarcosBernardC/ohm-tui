@@ -4,7 +4,7 @@ from dataclasses import dataclass, field
 from src.core.cursor import Cursor
 from src.core.terminal import Terminal
 from src.core.input import InputHandler
-from src.views.menus import MainMenu, MenuAyuda, MenuCalcularVoltaje, MenuCalcularCorriente, MenuCalcularResistencia
+from src.views.menus import MainMenu, MenuAyuda, MenuCalcularVoltaje, MenuCalcularCorriente, MenuCalcularResistencia, MenuMostrarParametros
 
 
 def is_float(value):
@@ -18,7 +18,8 @@ def is_float(value):
 @dataclass
 class Controller:
     menu_stack: list[MainMenu] = field(default_factory=lambda:[MainMenu()])
- 
+    
+
     def exec_kb(self, value):
         menu = self.menu_stack[-1]
         print(f"Opción actual: {menu.cursor.rel_posicionY}")
@@ -51,7 +52,6 @@ class Controller:
         match menu.opt_str_list[cursor_rel_pos].split()[0]:
         # Menu 1.0: ====
             case "1.":
-                # print(f"Menú seleccionado: {menu.opt_str_list[cursor_rel_pos]}")
                 self.menu_stack.append(MenuCalcularVoltaje())
             case "1.1.":                
                 print("menu: 1.1.")
@@ -142,6 +142,9 @@ class Controller:
                         menu.resistencia.unidad = ''
                 else:
                     print("Valor inválido")                    
+        # Menu 4.0: ====
+            case "4.":
+                self.menu_stack.append(MenuMostrarParametros())    
             case "5.":
                 print("menu: Ayuda")
                 self.menu_stack.append(MenuAyuda())
