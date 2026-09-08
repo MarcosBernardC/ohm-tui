@@ -4,16 +4,8 @@ from dataclasses import dataclass, field
 from src.core.cursor import Cursor
 from src.core.terminal import Terminal
 from src.core.input import InputHandler
-from src.views.menus import MainMenu, MenuAyuda, MenuCalcularVoltaje, MenuCalcularCorriente, MenuCalcularResistencia, MenuMostrarParametros
+from src.views.menus import MainMenu, MenuAyuda, MenuCalcularVoltaje, MenuCalcularCorriente, MenuCalcularResistencia, MenuMostrarParametros, OhmModel
 
-
-def is_float(value):
-    try:
-        float(value)
-        return True
-    except ValueError:
-        return False
-    return 
 
 @dataclass
 class Controller:
@@ -45,6 +37,25 @@ class Controller:
         else:
             self.menu_stack.append(MenuAyuda())
 
+
+    @staticmethod
+    def is_float(value):
+        try:
+            float(value)
+            return True
+        except ValueError:
+            return False
+
+    def edit_value(self, cursor_edit_position: tuple[int, int], edit_obj: object, edit_param: str):
+        Terminal.mostrar_cursor()
+        Terminal.mover_cursor(cursor_edit_position[0], cursor_edit_position[1])
+        value = input()
+        if Controller.is_float(value):
+            valor_a_editar = float(value)
+            setattr(edit_obj, edit_param, valor_a_editar)
+        else:
+            print("valor inválido")
+
     def add_menu(self):
         menu = self.menu_stack[-1]
         cursor_rel_pos = menu.cursor.rel_posicionY
@@ -55,24 +66,12 @@ class Controller:
                 self.menu_stack.append(MenuCalcularVoltaje())
             case "1.1.":                
                 print("menu: 1.1.")
-                Terminal.mostrar_cursor()
-                Terminal.mover_cursor(4, 33)
-                value = input()
-                if is_float(value):
-                    menu.corriente.valor = float(value)
-                    menu.voltaje.valor = menu.corriente.valor*menu.resistencia.valor
-                else:
-                    print("Valor inválido")                    
+                self.edit_value(cursor_edit_position=(4,33), edit_obj=menu.corriente, edit_param="valor")
+                menu.voltaje.valor = menu.corriente.valor*menu.resistencia.valor
             case "1.2.":
                 print("menu: 1.2.")
-                Terminal.mostrar_cursor()
-                Terminal.mover_cursor(5, 34)
-                value = input()
-                if is_float(value):
-                    menu.resistencia.valor = float(value)
-                    menu.voltaje.valor = menu.corriente.valor*menu.resistencia.valor
-                else:
-                    print("Valor inválido")
+                self.edit_value(cursor_edit_position=(5, 34), edit_obj=menu.resistencia, edit_param="valor")
+                menu.voltaje.valor = menu.corriente.valor*menu.resistencia.valor
         # Menu 2.0: ====
             case "2.":
                 print("menu: 2.")
@@ -82,7 +81,7 @@ class Controller:
                 Terminal.mostrar_cursor()
                 Terminal.mover_cursor(4, 31)
                 value = input()
-                if is_float(value):
+                if Controller.is_float(value):
                     menu.voltaje.valor = float(value)
                     try:
                         menu.corriente.valor = menu.voltaje.valor/menu.resistencia.valor
@@ -97,7 +96,7 @@ class Controller:
                 Terminal.mostrar_cursor()
                 Terminal.mover_cursor(5, 34)
                 value = input()
-                if is_float(value):
+                if Controller.is_float(value):
                     menu.resistencia.valor = float(value)
                     try:
                         menu.corriente.valor = menu.voltaje.valor/menu.resistencia.valor
