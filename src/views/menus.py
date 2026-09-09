@@ -65,9 +65,7 @@ class MenuAyuda: #main menu
 
 @dataclass
 class MenuCalcularVoltaje:
-    corriente: Corriente = field(default_factory=lambda:Corriente)
-    voltaje: Voltaje = field(default_factory=Voltaje)
-    resistencia: Resistencia = field(default_factory=Resistencia)
+    modelo: OhmModel = field(default_factory=OhmModel)
     cursor: Cursor=field(default_factory=lambda:Cursor(min_posicion=(1, 1), max_posicion=(2,1)))
     banner: list=field(default_factory=lambda:[18*'-', "Cálculo de Voltaje", 18*'-'])
     opt_str_list: list=field(default_factory=lambda:[f"1.1. Valor de Corriente (I) : ", "1.2. Valor de Resistencia (R):"])
@@ -78,11 +76,11 @@ class MenuCalcularVoltaje:
         "[Enter] Guardar | [h] Volver / Cancelar"]) 
 
     def render(self):
-        self.opt_str_list = [f"1.1. Valor de Corriente (I) : {self.corriente.valor} {self.corriente.unidad}", f"1.2. Valor de Resistencia (R): {self.resistencia.valor} {self.resistencia.unidad}"]
+        self.opt_str_list = [f"1.1. Valor de Corriente (I) : {self.modelo.corriente.valor} {self.modelo.corriente.unidad}", f"1.2. Valor de Resistencia (R): {self.modelo.resistencia.valor} {self.modelo.resistencia.unidad}"]
 
         self.footer = [
             18*'-',
-            f"Resultado (V)            : {self.voltaje.valor} {self.voltaje.unidad}",
+            f"Resultado (V)            : {self.modelo.voltaje.valor} {self.modelo.voltaje.unidad}",
             18*'-',
             "[Enter] Guardar | [h] Volver / Cancelar"]
         menu_str = []
@@ -97,7 +95,7 @@ class MenuCalcularVoltaje:
                 menu_str.append(f"{self.cursor.symbol} {str_opt}")
             else:
                 menu_str.append(f"  {str_opt}")
-
+        
         for element in self.footer:
             menu_str.append(element)
 

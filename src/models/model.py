@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 @dataclass
 class Corriente:
@@ -15,12 +15,8 @@ class Resistencia:
     unidad: str = 'Ω'
     valor: float = 0.0
 
+@dataclass
 class OhmModel:
-    def __init__(self, corriente: Corriente, voltaje: Voltaje, resistencia: Resistencia):
-        self.corriente = corriente
-        self.voltaje = voltaje
-        self.resistencia = resistencia
-    
-    def __str__(self):
-        return f"Corriente: {self.corriente.valor} {self.corriente.unidad}\nResistencia: {self.resistencia.valor} {self.resistencia.unidad}\nVoltaje: {self.voltaje.valor} {self.voltaje.unidad}"
-
+    corriente: Corriente = field(default_factory=Corriente)
+    voltaje: Voltaje = field(default_factory=Voltaje)
+    resistencia: Resistencia = field(default_factory=Resistencia)

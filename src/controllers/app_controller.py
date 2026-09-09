@@ -66,12 +66,12 @@ class Controller:
                 self.menu_stack.append(MenuCalcularVoltaje())
             case "1.1.":                
                 print("menu: 1.1.")
-                self.edit_value(cursor_edit_position=(4,33), edit_obj=menu.corriente, edit_param="valor")
-                menu.voltaje.valor = menu.corriente.valor*menu.resistencia.valor
+                self.edit_value(cursor_edit_position=(4,33), edit_obj=menu.modelo.corriente, edit_param="valor")
+                menu.modelo.voltaje.valor = menu.modelo.corriente.valor*menu.modelo.resistencia.valor
             case "1.2.":
                 print("menu: 1.2.")
-                self.edit_value(cursor_edit_position=(5, 34), edit_obj=menu.resistencia, edit_param="valor")
-                menu.voltaje.valor = menu.corriente.valor*menu.resistencia.valor
+                self.edit_value(cursor_edit_position=(5, 34), edit_obj=menu.modelo.resistencia, edit_param="valor")
+                menu.modelo.voltaje.valor = menu.modelo.corriente.valor*menu.modelo.resistencia.valor
         # Menu 2.0: ====
             case "2.":
                 print("menu: 2.")
