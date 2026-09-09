@@ -103,9 +103,7 @@ class MenuCalcularVoltaje:
 
 @dataclass
 class MenuCalcularCorriente:
-    corriente: Corriente = field(default_factory=Corriente)
-    voltaje: Voltaje = field(default_factory=Voltaje)
-    resistencia: Resistencia = field(default_factory=Resistencia)
+    modelo: OhmModel = field(default_factory=OhmModel)
     cursor: Cursor=field(default_factory=lambda:Cursor(min_posicion=(1, 1), max_posicion=(2,1)))
     banner: list=field(default_factory=lambda:[20*'-', "Cálculo de Corriente", 20*'-'])
     opt_str_list: list=field(default_factory=lambda:[f"2.1. Valor de Voltaje (V) : ", "2.2. Valor de Resistencia (R):"])
@@ -116,11 +114,11 @@ class MenuCalcularCorriente:
         "[Enter] Guardar | [h] Volver / Cancelar"]) 
 
     def render(self):
-        self.opt_str_list = [f"2.1. Valor de Voltaje (V) : {self.voltaje.valor} {self.voltaje.unidad}", f"2.2. Valor de Resistencia (R): {self.resistencia.valor} {self.resistencia.unidad}"]
+        self.opt_str_list = [f"2.1. Valor de Voltaje (V) : {self.modelo.voltaje.valor} {self.modelo.voltaje.unidad}", f"2.2. Valor de Resistencia (R): {self.modelo.resistencia.valor} {self.modelo.resistencia.unidad}"]
 
         self.footer = [
             18*'-',
-            f"Resultado (I)            : {self.corriente.valor} {self.corriente.unidad}",
+            f"Resultado (I)            : {self.modelo.corriente.valor} {self.modelo.corriente.unidad}",
             18*'-',
             "[Enter] Guardar | [h] Volver / Cancelar"]
         menu_str = []
@@ -143,9 +141,7 @@ class MenuCalcularCorriente:
 
 @dataclass
 class MenuCalcularResistencia:
-    corriente: Corriente = field(default_factory=Corriente)
-    voltaje: Voltaje = field(default_factory=Voltaje)
-    resistencia: Resistencia = field(default_factory=Resistencia)
+    modelo: OhmModel = field(default_factory=OhmModel)
     cursor: Cursor=field(default_factory=lambda:Cursor(min_posicion=(1, 1), max_posicion=(2,1)))
     banner: list=field(default_factory=lambda:[20*'-', "Cálculo de Corriente", 20*'-'])
     opt_str_list: list=field(default_factory=lambda:[f"3.1. Valor de Voltaje (V) : ", "3.2. Valor de Corriente (I):"])
@@ -156,11 +152,11 @@ class MenuCalcularResistencia:
         "[Enter] Guardar | [h]RVolver / Cancelar"]) 
 
     def render(self):
-        self.opt_str_list = [f"3.1. Valor de Voltaje (V) : {self.voltaje.valor} {self.voltaje.unidad}", f"3.2. Valor de Corriente (I): {self.corriente.valor} {self.corriente.unidad}"]
+        self.opt_str_list = [f"3.1. Valor de Voltaje (V) : {self.modelo.voltaje.valor} {self.modelo.voltaje.unidad}", f"3.2. Valor de Corriente (I): {self.modelo.corriente.valor} {self.modelo.corriente.unidad}"]
 
         self.footer = [
             18*'-',
-            f"Resultado (R)            : {self.resistencia.valor} {self.resistencia.unidad}",
+            f"Resultado (R)            : {self.modelo.resistencia.valor} {self.modelo.resistencia.unidad}",
             18*'-',
             "[Enter] Guardar | [h] Volver / Cancelar"]
         menu_str = []

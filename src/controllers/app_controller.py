@@ -82,13 +82,13 @@ class Controller:
                 Terminal.mover_cursor(4, 31)
                 value = input()
                 if Controller.is_float(value):
-                    menu.voltaje.valor = float(value)
+                    menu.modelo.voltaje.valor = float(value)
                     try:
-                        menu.corriente.valor = menu.voltaje.valor/menu.resistencia.valor
-                        menu.corriente.unidad = 'A'
+                        menu.modelo.corriente.valor = menu.modelo.voltaje.valor/menu.modelo.resistencia.valor
+                        menu.modelo.corriente.unidad = 'A'
                     except ZeroDivisionError:
-                        menu.corriente.valor = "ERR"
-                        menu.corriente.unidad = ''
+                        menu.modelo.corriente.valor = "ERR"
+                        menu.modelo.corriente.unidad = ''
                 else:
                     print("Valor inválido")                    
             case "2.2.":
@@ -97,13 +97,13 @@ class Controller:
                 Terminal.mover_cursor(5, 34)
                 value = input()
                 if Controller.is_float(value):
-                    menu.resistencia.valor = float(value)
+                    menu.modelo.resistencia.valor = float(value)
                     try:
-                        menu.corriente.valor = menu.voltaje.valor/menu.resistencia.valor
-                        menu.corriente.unidad = 'A'
+                        menu.modelo.corriente.valor = menu.modelo.voltaje.valor/menu.modelo.resistencia.valor
+                        menu.modelo.corriente.unidad = 'A'
                     except ZeroDivisionError:
-                        menu.corriente.valor = "ERR"
-                        menu.corriente.unidad = ''
+                        menu.modelo.corriente.valor = "ERR"
+                        menu.modelo.corriente.unidad = ''
                 else:
                     print("Valor inválido")                    
 
@@ -116,14 +116,14 @@ class Controller:
                 Terminal.mostrar_cursor()
                 Terminal.mover_cursor(4, 31)
                 value = input()
-                if is_float(value):
-                    menu.voltaje.valor = float(value)
+                if Controller.is_float(value):
+                    menu.modelo.voltaje.valor = float(value)
                     try:
-                        menu.resistencia.valor = menu.voltaje.valor/menu.corriente.valor
-                        menu.resistencia.unidad = 'Ω'
+                        menu.modelo.resistencia.valor = menu.modelo.voltaje.valor/menu.modelo.corriente.valor
+                        menu.modelo.resistencia.unidad = 'Ω'
                     except ZeroDivisionError:
-                        menu.resistencia.valor = "ERR"
-                        menu.resistencia.unidad = ''
+                        menu.modelo.resistencia.valor = "ERR"
+                        menu.modelo.resistencia.unidad = ''
                 else:
                     print("Valor inválido")                    
             case "3.2.":
@@ -131,14 +131,14 @@ class Controller:
                 Terminal.mostrar_cursor()
                 Terminal.mover_cursor(5, 32)
                 value = input()
-                if is_float(value):
-                    menu.corriente.valor = float(value)
+                if Controller.is_float(value):
+                    menu.modelo.corriente.valor = float(value)
                     try:
-                        menu.resistencia.valor = menu.voltaje.valor/menu.corriente.valor
-                        menu.resistencia.unidad = 'Ω'
+                        menu.modelo.resistencia.valor = menu.modelo.voltaje.valor/menu.modelo.corriente.valor
+                        menu.modelo.resistencia.unidad = 'Ω'
                     except ZeroDivisionError:
-                        menu.resistencia.valor = "ERR"
-                        menu.resistencia.unidad = ''
+                        menu.modelo.resistencia.valor = "ERR"
+                        menu.modelo.resistencia.unidad = ''
                 else:
                     print("Valor inválido")                    
         # Menu 4.0: ====
