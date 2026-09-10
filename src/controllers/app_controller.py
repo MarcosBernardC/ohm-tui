@@ -4,7 +4,7 @@ from dataclasses import dataclass, field
 from src.core.cursor import Cursor
 from src.core.terminal import Terminal
 from src.core.input import InputHandler
-from src.views.menus import MainMenu, MenuAyuda, MenuCalcularVoltaje, MenuCalcularCorriente, MenuCalcularResistencia, MenuMostrarParametros, OhmModel
+from src.views.menus import MainMenu, MenuAyuda, MenuCalcularVoltaje, MenuCalcularCorriente, MenuCalcularResistencia, MenuChangelog, OhmModel
 
 
 @dataclass
@@ -143,7 +143,7 @@ class Controller:
                     print("Valor inválido")                    
         # Menu 4.0: ====
             case "4.":
-                self.menu_stack.append(MenuMostrarParametros())    
+                self.menu_stack.append(MenuChangelog())
             case "5.":
                 print("menu: Ayuda")
                 self.menu_stack.append(MenuAyuda())

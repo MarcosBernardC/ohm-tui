@@ -5,7 +5,10 @@ from src.models.model import Corriente, Voltaje, Resistencia, OhmModel
 @dataclass
 class MainMenu: #main menu
     cursor: Cursor=field(default_factory=lambda:Cursor(min_posicion=(1, 1), max_posicion=(5,1)))
-    banner: list=field(default_factory=lambda:[18*'-', "   OHM-TUI v1.0   ", 18*'-'])
+    banner: list=field(default_factory=lambda:[
+        18*'-',
+        "   OHM-TUI v1.0   ",
+        18*'-'])
     opt_str_list: list=field(default_factory=lambda:[
         "1. Calcular Voltaje (V = I × R)",
         "2. Calcular Corriente (I = V / R)",
@@ -32,10 +35,57 @@ class MainMenu: #main menu
 @dataclass
 class MenuAyuda: #main menu
     cursor: Cursor=field(default_factory=lambda:Cursor(min_posicion=(1, 1), max_posicion=(1,1)))
-    banner: list=field(default_factory=lambda:[17*'-', " Ayuda / Atajos  ", 17*'-'])
-    opt_str_list: list=field(default_factory=lambda:["[j] Mover abajo", "[k] Mover arriba", "[h] Volver atrás", "[q] Salir", "[l] Ingresar"])
+    banner: list=field(default_factory=lambda:[
+        17*'-',
+        " Ayuda / Atajos  ",
+        17*'-'])
+    opt_str_list: list=field(default_factory=lambda:[
+        "[j] Mover abajo",
+        "[k] Mover arriba",
+        "[h] Volver atrás",
+        "[q] Salir",
+        "[l] Ingresar"])
     footer: list = field(default_factory=lambda:[
         17*"-", "Presione [h] para volver"])
+    navigable: bool = False
+
+    def render(self):
+        menu_str = []
+        
+        for element in self.banner:
+            menu_str.append(element)
+
+        cursor_pos = self.cursor.posicion
+        init_pos = self.cursor.min_posicion
+
+        if self.navigable == True:
+            for i, str_opt in enumerate(self.opt_str_list):
+                if i+init_pos[0] == cursor_pos[0]: #línea (Y)
+                    menu_str.append(f"{self.cursor.symbol} {str_opt}")
+                else:
+                    menu_str.append(f"  {str_opt}")
+        else:
+            for i, str_opt in enumerate(self.opt_str_list):
+                menu_str.append(f"{str_opt}")
+
+        for element in self.footer:
+            menu_str.append(element)
+        
+        print('\n'.join(menu_str))
+
+@dataclass
+class MenuChangelog:
+    cursor: Cursor=field(default_factory=lambda:Cursor(min_posicion=(1, 1), max_posicion=(1,1)))
+    banner: list=field(default_factory=lambda:[
+        38*'=',
+        15*' '+"CHANGELOG",
+        38*'='])
+    opt_str_list: list=field(default_factory=lambda:[
+        '\n'+"v1.1.0 (Actual)",
+        "  * feat: agregado panel de historial",
+        "  * refactor: unificación de vistas",])
+    footer: list = field(default_factory=lambda:[
+        '\n'+38*"=", "[h] Volver al menú principal"])
     navigable: bool = False
 
     def render(self):
@@ -67,8 +117,13 @@ class MenuAyuda: #main menu
 class MenuCalcularVoltaje:
     modelo: OhmModel = field(default_factory=OhmModel)
     cursor: Cursor=field(default_factory=lambda:Cursor(min_posicion=(1, 1), max_posicion=(2,1)))
-    banner: list=field(default_factory=lambda:[18*'-', "Cálculo de Voltaje", 18*'-'])
-    opt_str_list: list=field(default_factory=lambda:[f"1.1. Valor de Corriente (I) : ", "1.2. Valor de Resistencia (R):"])
+    banner: list=field(default_factory=lambda:[
+        18*'-',
+        "Cálculo de Voltaje",
+        18*'-'])
+    opt_str_list: list=field(default_factory=lambda:[
+        f"1.1. Valor de Corriente (I) : ",
+        "1.2. Valor de Resistencia (R):"])
     footer: list=field(default_factory=lambda:[
         18*'-',
         "Resultado (V)            :",
@@ -76,7 +131,9 @@ class MenuCalcularVoltaje:
         "[Enter] Guardar | [h] Volver / Cancelar"]) 
 
     def render(self):
-        self.opt_str_list = [f"1.1. Valor de Corriente (I) : {self.modelo.corriente.valor} {self.modelo.corriente.unidad}", f"1.2. Valor de Resistencia (R): {self.modelo.resistencia.valor} {self.modelo.resistencia.unidad}"]
+        self.opt_str_list = [
+                f"1.1. Valor de Corriente (I) : {self.modelo.corriente.valor} {self.modelo.corriente.unidad}",
+                f"1.2. Valor de Resistencia (R): {self.modelo.resistencia.valor} {self.modelo.resistencia.unidad}"]
 
         self.footer = [
             18*'-',
@@ -177,14 +234,3 @@ class MenuCalcularResistencia:
 
         print('\n'.join(menu_str))
 
-@dataclass
-class MenuMostrarParametros:
-    model: OhmModel = field(default_factory=OhmModel)
-    cursor: Cursor=field(default_factory=lambda:Cursor(min_posicion=(1, 1), max_posicion=(2,1)))
-    banner: list=field(default_factory=lambda:[20*'-', "Mostrar Parámetros", 20*'-'])
-    def render(self):
-        menu_str = []
-        for element in self.banner:
-            menu_str.append(element)
-        menu_str.append(f"Corriente: {model.corriente.valor} {self.corriente.unidad}\nResistencia: {self.resistencia.valor} {self.resistencia.unidad}\nVoltaje: {self.voltaje.valor} {self.voltaje.unidad}")
-        print('\n'.join(menu_str))
