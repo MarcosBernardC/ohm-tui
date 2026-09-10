@@ -14,7 +14,7 @@ class Controller:
 
     def exec_kb(self, value):
         menu = self.menu_stack[-1]
-        print(f"Opción actual: {menu.cursor.rel_posicionY}")
+        #print(f"Opción actual: {menu.cursor.rel_posicionY}")
         dispatch = {
                 'j': menu.cursor.mover_abajo,
                 'k': menu.cursor.mover_arriba,
@@ -66,11 +66,11 @@ class Controller:
                 self.menu_stack.append(MenuCalcularVoltaje())
             case "1.1.":                
                 print("menu: 1.1.")
-                self.edit_value(cursor_edit_position=(4,33), edit_obj=menu.modelo.corriente, edit_param="valor")
+                self.edit_value(cursor_edit_position=(4,27), edit_obj=menu.modelo.corriente, edit_param="valor")
                 menu.modelo.voltaje.valor = menu.modelo.corriente.valor*menu.modelo.resistencia.valor
             case "1.2.":
                 print("menu: 1.2.")
-                self.edit_value(cursor_edit_position=(5, 34), edit_obj=menu.modelo.resistencia, edit_param="valor")
+                self.edit_value(cursor_edit_position=(5, 27), edit_obj=menu.modelo.resistencia, edit_param="valor")
                 menu.modelo.voltaje.valor = menu.modelo.corriente.valor*menu.modelo.resistencia.valor
         # Menu 2.0: ====
             case "2.":
@@ -79,7 +79,7 @@ class Controller:
             case "2.1.":                
                 print("menu: 2.1.")
                 Terminal.mostrar_cursor()
-                Terminal.mover_cursor(4, 31)
+                Terminal.mover_cursor(4, 27)
                 value = input()
                 if Controller.is_float(value):
                     menu.modelo.voltaje.valor = float(value)
@@ -94,7 +94,7 @@ class Controller:
             case "2.2.":
                 print("menu: 2.2.")
                 Terminal.mostrar_cursor()
-                Terminal.mover_cursor(5, 34)
+                Terminal.mover_cursor(5, 27)
                 value = input()
                 if Controller.is_float(value):
                     menu.modelo.resistencia.valor = float(value)
@@ -114,7 +114,7 @@ class Controller:
             case "3.1.":                
                 print("menu: 3.1.")
                 Terminal.mostrar_cursor()
-                Terminal.mover_cursor(4, 31)
+                Terminal.mover_cursor(4, 27)
                 value = input()
                 if Controller.is_float(value):
                     menu.modelo.voltaje.valor = float(value)
@@ -129,7 +129,7 @@ class Controller:
             case "3.2.":
                 print("menu: 3.2.")
                 Terminal.mostrar_cursor()
-                Terminal.mover_cursor(5, 32)
+                Terminal.mover_cursor(5, 27)
                 value = input()
                 if Controller.is_float(value):
                     menu.modelo.corriente.valor = float(value)
