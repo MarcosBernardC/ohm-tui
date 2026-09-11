@@ -59,50 +59,54 @@ class Controller:
     def add_menu(self):
         menu = self.menu_stack[-1]
         cursor_rel_pos = menu.cursor.rel_posicionY
-        # print(menu.opt_str_list[cursor_rel_pos].split()[0])
-        match menu.opt_str_list[cursor_rel_pos].split()[0]:
+        opt = menu.opt_str_list[cursor_rel_pos]
+        idmenu = opt[0]
+        # print(opt)
+        # input()
+        match idmenu:
         # Menu 1.0: ====
             case "1.":
+                # print(f"IDmenu: {idmenu}")
                 self.menu_stack.append(MenuCalcularVoltaje())
             case "1.1.":                
-                print("menu: 1.1.")
+                # print(f"IDmenu: {idmenu}")
                 self.edit_value(cursor_edit_position=(4,27), edit_obj=menu.modelo.corriente, edit_param="valor")
                 menu.modelo.voltaje.valor = menu.modelo.corriente.valor*menu.modelo.resistencia.valor
             case "1.2.":
-                print("menu: 1.2.")
+                # print(f"IDmenu: {idmenu}")
                 self.edit_value(cursor_edit_position=(5, 27), edit_obj=menu.modelo.resistencia, edit_param="valor")
                 menu.modelo.calcular_voltaje()
         # Menu 2.0: ====
             case "2.":
-                print("menu: 2.")
+                # print(f"IDmenu: {idmenu}")
                 self.menu_stack.append(MenuCalcularCorriente())    
             case "2.1.":                
-                print("menu: 2.1.")
+                # print(f"IDmenu: {idmenu}")
                 self.edit_value(cursor_edit_position=(4, 27), edit_obj=menu.modelo.voltaje, edit_param="valor")
                 menu.modelo.calcular_corriente()
             case "2.2.":
-                print("menu: 2.2.")
+                # print(f"IDmenu: {idmenu}")
                 self.edit_value(cursor_edit_position=(5,27), edit_obj=menu.modelo.resistencia, edit_param="valor")
                 menu.modelo.calcular_corriente()
         # Menu 3.0: ====
             case "3.":
-                print("menu: 3.")
+                # print(f"IDmenu: {idmenu}")
                 self.menu_stack.append(MenuCalcularResistencia())    
             case "3.1.":                
-                print("menu: 3.1.")
+                # print(f"IDmenu: {idmenu}")
                 self.edit_value(cursor_edit_position=(4,27), edit_obj=menu.modelo.voltaje, edit_param="valor")
                 menu.modelo.calcular_resistencia()
             case "3.2.":
-                print("menu: 3.2.")
+                # print(f"IDmenu: {idmenu}")
                 self.edit_value(cursor_edit_position=(5,27), edit_obj=menu.modelo.corriente, edit_param="valor")
                 menu.modelo.calcular_resistencia()
         # Menu 4.0: ====
             case "4.":
+                # print(f"IDmenu: {idmenu}")
                 self.menu_stack.append(MenuChangelog())
             case "5.":
-                print("menu: Ayuda")
-                self.menu_stack.append(MenuAyuda())
-        print(f"Menú seleccionado: {menu.opt_str_list[cursor_rel_pos]}")
+                # print(f"IDmenu: {idmenu}")
+                self.menu_stack.append(MenuAyuda()) 
         #input()
 
     def gestionar_menu(self):

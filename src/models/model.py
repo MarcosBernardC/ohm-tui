@@ -39,7 +39,3 @@ class OhmModel:
         except ZeroDivisionError:
             self.resistencia.valor = "ERR"
             self.resistencia.unidad = ''
-
-
-
-

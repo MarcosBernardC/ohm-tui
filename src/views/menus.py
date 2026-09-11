@@ -10,11 +10,11 @@ class MainMenu:
         15*' '+"OHM-TUI v1.0   ",
         43*'=']) 
     opt_str_list: list=field(default_factory=lambda:[
-        "1. Calcular Voltaje (V = I × R)",
-        "2. Calcular Corriente (I = V / R)",
-        "3. Calcular Resistencia (R = V / I)",
-        "4. Ver Changelog", 
-        "5. Ayuda / Atajos"])
+        ("1.", "1. Calcular Voltaje (V = I × R)"),
+        ("2.", "2. Calcular Corriente (I = V / R)"),
+        ("3.", "3. Calcular Resistencia (R = V / I)"),
+        ("4.", "4. Ver Changelog"), 
+        ("5.", "5. Ayuda / Atajos")])
     footer: list = field(default_factory=lambda:[
         43*"=", "subir/bajar [k/j] . Entrar [l] . Salir [q]"])
 
@@ -27,10 +27,12 @@ class MainMenu:
         cursor_pos = self.cursor.posicion
         init_pos = self.cursor.min_posicion
         for i, str_opt in enumerate(self.opt_str_list):
+            # print(str_opt[1])
+            # input()
             if i+init_pos[0] == cursor_pos[0]: #línea (Y)
-                menu_str.append(f"{self.cursor.symbol} {str_opt}")
+                menu_str.append(f"{self.cursor.symbol} {str_opt[1]}")
             else:
-                menu_str.append(f"  {str_opt}")
+                menu_str.append(f"  {str_opt[1]}")
         
         for element in self.footer:
             menu_str.append(element)
@@ -127,8 +129,8 @@ class MenuCalcularVoltaje:
         9*' '+"CÁLCULO DE VOLTAJE",
         36*'='])
     opt_str_list: list=field(default_factory=lambda:[
-        "1.1. Corriente (I)     : ",
-        "1.2. Resistencia (R)   :"])
+        ("1.1.", "1.1. Corriente (I)     : "),
+        ("1.2.", "1.2. Resistencia (R)   :")])
     footer: list=field(default_factory=lambda:[
         40*'-',
             "  Resultado (V)     :",
@@ -137,8 +139,8 @@ class MenuCalcularVoltaje:
 
     def render(self):
         self.opt_str_list = [
-            f"1.1. Corriente (I)    : {self.modelo.corriente.valor} {self.modelo.corriente.unidad}",
-            f"1.2. Resistencia (R)  : {self.modelo.resistencia.valor} {self.modelo.resistencia.unidad}"]
+            ("1.1.", f"1.1. Corriente (I)    : {self.modelo.corriente.valor} {self.modelo.corriente.unidad}"),
+            ("1.2.", f"1.2. Resistencia (R)  : {self.modelo.resistencia.valor} {self.modelo.resistencia.unidad}")]
 
         self.footer = [
             17*'-',
@@ -154,9 +156,9 @@ class MenuCalcularVoltaje:
         init_pos = self.cursor.min_posicion
         for i, str_opt in enumerate(self.opt_str_list):
             if i+init_pos[0] == cursor_pos[0]: #línea (Y)
-                menu_str.append(f"{self.cursor.symbol} {str_opt}")
+                menu_str.append(f"{self.cursor.symbol} {str_opt[1]}")
             else:
-                menu_str.append(f"  {str_opt}")
+                menu_str.append(f"  {str_opt[1]}")
         
         for element in self.footer:
             menu_str.append(element)
@@ -171,7 +173,7 @@ class MenuCalcularCorriente:
         36*'=',
         7*' '+"CÁLCULO DE CORRIENTE",
         36*'='])
-    opt_str_list: list=field(default_factory=lambda:[f"2.1. Voltaje (V):", "2.2. Resistencia (R):"])
+    opt_str_list: list=field(default_factory=lambda:[("2.1.", f"2.1. Voltaje (V):"), ("2.2.", "2.2. Resistencia (R):")])
     footer: list=field(default_factory=lambda:[
         18*'-',
         "Resultado (I)            :",
@@ -180,8 +182,8 @@ class MenuCalcularCorriente:
 
     def render(self):
         self.opt_str_list = [
-            f"2.1. Voltaje (V)      : {self.modelo.voltaje.valor} {self.modelo.voltaje.unidad}",
-            f"2.2. Resistencia (R)  : {self.modelo.resistencia.valor} {self.modelo.resistencia.unidad}"]
+            ("2.1.", f"2.1. Voltaje (V)      : {self.modelo.voltaje.valor} {self.modelo.voltaje.unidad}"),
+            ("2.2.", f"2.2. Resistencia (R)  : {self.modelo.resistencia.valor} {self.modelo.resistencia.unidad}")]
 
         self.footer = [
             18*'-',
@@ -197,9 +199,9 @@ class MenuCalcularCorriente:
         init_pos = self.cursor.min_posicion
         for i, str_opt in enumerate(self.opt_str_list):
             if i+init_pos[0] == cursor_pos[0]: #línea (Y)
-                menu_str.append(f"{self.cursor.symbol} {str_opt}")
+                menu_str.append(f"{self.cursor.symbol} {str_opt[1]}")
             else:
-                menu_str.append(f"  {str_opt}")
+                menu_str.append(f"  {str_opt[1]}")
 
         for element in self.footer:
             menu_str.append(element)
@@ -214,7 +216,7 @@ class MenuCalcularResistencia:
         36*'=',
         7*' '+"CÁLCULO DE RESISTENCIA",
         36*'='])
-    opt_str_list: list=field(default_factory=lambda:[f"3.1. Valor de Voltaje (V) : ", "3.2. Valor de Corriente (I):"])
+    opt_str_list: list=field(default_factory=lambda:[("3.1", f"3.1. Valor de Voltaje (V) : "), ("3.2.", "3.2. Valor de Corriente (I):")])
     footer: list=field(default_factory=lambda:[
         18*'-',
         "  Resultado (R)            :",
@@ -223,8 +225,8 @@ class MenuCalcularResistencia:
 
     def render(self):
         self.opt_str_list = [
-            f"3.1. Voltaje (V)      : {self.modelo.voltaje.valor} {self.modelo.voltaje.unidad}",
-            f"3.2. Corriente (I)    : {self.modelo.corriente.valor} {self.modelo.corriente.unidad}"]
+            ("3.1.", f"3.1. Voltaje (V)      : {self.modelo.voltaje.valor} {self.modelo.voltaje.unidad}"),
+            ("3.2.", f"3.2. Corriente (I)    : {self.modelo.corriente.valor} {self.modelo.corriente.unidad}")]
 
         self.footer = [
             18*'-',
@@ -240,9 +242,9 @@ class MenuCalcularResistencia:
         init_pos = self.cursor.min_posicion
         for i, str_opt in enumerate(self.opt_str_list):
             if i+init_pos[0] == cursor_pos[0]: #línea (Y)
-                menu_str.append(f"{self.cursor.symbol} {str_opt}")
+                menu_str.append(f"{self.cursor.symbol} {str_opt[1]}")
             else:
-                menu_str.append(f"  {str_opt}")
+                menu_str.append(f"  {str_opt[1]}")
 
         for element in self.footer:
             menu_str.append(element)
