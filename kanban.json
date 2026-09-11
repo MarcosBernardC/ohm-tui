@@ -1,16 +1,6 @@
 {
     "next_id": 6,
     "TODO": {},
-    "DOING": {
-        "4": {
-            "texto": "Reestructurar todos los MenuCalcular para evitar el DRY.",
-            "creado": "10/09/2026 09:55"
-        }
-    },
-    "DONE": {
-        "5": {
-            "texto": "Cambiar la opci\u00f3n 4 (Configurar par\u00e1metros) por un vvisualizador de Changelog del proyecto.",
-            "creado": "10/09/2026 10:49"
-        }
-    }
+    "DOING": {},
+    "DONE": {}
 }

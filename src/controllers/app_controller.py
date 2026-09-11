@@ -71,76 +71,31 @@ class Controller:
             case "1.2.":
                 print("menu: 1.2.")
                 self.edit_value(cursor_edit_position=(5, 27), edit_obj=menu.modelo.resistencia, edit_param="valor")
-                menu.modelo.voltaje.valor = menu.modelo.corriente.valor*menu.modelo.resistencia.valor
+                menu.modelo.calcular_voltaje()
         # Menu 2.0: ====
             case "2.":
                 print("menu: 2.")
                 self.menu_stack.append(MenuCalcularCorriente())    
             case "2.1.":                
                 print("menu: 2.1.")
-                Terminal.mostrar_cursor()
-                Terminal.mover_cursor(4, 27)
-                value = input()
-                if Controller.is_float(value):
-                    menu.modelo.voltaje.valor = float(value)
-                    try:
-                        menu.modelo.corriente.valor = menu.modelo.voltaje.valor/menu.modelo.resistencia.valor
-                        menu.modelo.corriente.unidad = 'A'
-                    except ZeroDivisionError:
-                        menu.modelo.corriente.valor = "ERR"
-                        menu.modelo.corriente.unidad = ''
-                else:
-                    print("Valor inválido")                    
+                self.edit_value(cursor_edit_position=(4, 27), edit_obj=menu.modelo.voltaje, edit_param="valor")
+                menu.modelo.calcular_corriente()
             case "2.2.":
                 print("menu: 2.2.")
-                Terminal.mostrar_cursor()
-                Terminal.mover_cursor(5, 27)
-                value = input()
-                if Controller.is_float(value):
-                    menu.modelo.resistencia.valor = float(value)
-                    try:
-                        menu.modelo.corriente.valor = menu.modelo.voltaje.valor/menu.modelo.resistencia.valor
-                        menu.modelo.corriente.unidad = 'A'
-                    except ZeroDivisionError:
-                        menu.modelo.corriente.valor = "ERR"
-                        menu.modelo.corriente.unidad = ''
-                else:
-                    print("Valor inválido")                    
-
+                self.edit_value(cursor_edit_position=(5,27), edit_obj=menu.modelo.resistencia, edit_param="valor")
+                menu.modelo.calcular_corriente()
         # Menu 3.0: ====
             case "3.":
                 print("menu: 3.")
                 self.menu_stack.append(MenuCalcularResistencia())    
             case "3.1.":                
                 print("menu: 3.1.")
-                Terminal.mostrar_cursor()
-                Terminal.mover_cursor(4, 27)
-                value = input()
-                if Controller.is_float(value):
-                    menu.modelo.voltaje.valor = float(value)
-                    try:
-                        menu.modelo.resistencia.valor = menu.modelo.voltaje.valor/menu.modelo.corriente.valor
-                        menu.modelo.resistencia.unidad = 'Ω'
-                    except ZeroDivisionError:
-                        menu.modelo.resistencia.valor = "ERR"
-                        menu.modelo.resistencia.unidad = ''
-                else:
-                    print("Valor inválido")                    
+                self.edit_value(cursor_edit_position=(4,27), edit_obj=menu.modelo.voltaje, edit_param="valor")
+                menu.modelo.calcular_resistencia()
             case "3.2.":
                 print("menu: 3.2.")
-                Terminal.mostrar_cursor()
-                Terminal.mover_cursor(5, 27)
-                value = input()
-                if Controller.is_float(value):
-                    menu.modelo.corriente.valor = float(value)
-                    try:
-                        menu.modelo.resistencia.valor = menu.modelo.voltaje.valor/menu.modelo.corriente.valor
-                        menu.modelo.resistencia.unidad = 'Ω'
-                    except ZeroDivisionError:
-                        menu.modelo.resistencia.valor = "ERR"
-                        menu.modelo.resistencia.unidad = ''
-                else:
-                    print("Valor inválido")                    
+                self.edit_value(cursor_edit_position=(5,27), edit_obj=menu.modelo.corriente, edit_param="valor")
+                menu.modelo.calcular_resistencia()
         # Menu 4.0: ====
             case "4.":
                 self.menu_stack.append(MenuChangelog())
