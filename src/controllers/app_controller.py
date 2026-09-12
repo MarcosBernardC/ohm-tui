@@ -1,7 +1,7 @@
 from readchar import readkey
 import sys
 from dataclasses import dataclass, field
-from src.core.cursor import Cursor
+# from src.core.cursor import Cursor
 from src.core.terminal import Terminal
 from src.core.input import InputHandler
 from src.views.menus import MainMenu, MenuAyuda, MenuCalcularVoltaje, MenuCalcularCorriente, MenuCalcularResistencia, MenuChangelog, OhmModel
@@ -11,7 +11,6 @@ from src.views.menus import MainMenu, MenuAyuda, MenuCalcularVoltaje, MenuCalcul
 class Controller:
     menu_stack: list[MainMenu] = field(default_factory=lambda:[MainMenu()])
     
-
     def exec_kb(self, value):
         menu = self.menu_stack[-1]
         #print(f"Opción actual: {menu.cursor.rel_posicionY}")
