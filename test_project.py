@@ -1,5 +1,5 @@
 import pytest
-from project import mover_cursor, navegar
+from project import mover_cursor, navegar, calcular_resultado
 
 
 data_mover_cursor = [
@@ -10,7 +10,6 @@ data_mover_cursor = [
         (['k', 'j', 'j', 'j', 'j'], (5, 1)),
         (['k', 'j', 'j', 'j', 'j', 'j', 'j'], (5, 1)),
         ]
-
 @pytest.mark.parametrize("secuencia_de_movimiento, posicion_cursor", data_mover_cursor)
 def test_mover_cursor(secuencia_de_movimiento, posicion_cursor):
     posicion_final = mover_cursor(secuencia_de_movimiento)
@@ -37,9 +36,11 @@ data_nav = [(['k'], "1."),              # MAIN MENU
             (['j', 'j', 'j', 'l', 'k', 'j'], "CHANGELOG"),
             (['j', 'j', 'j', 'j', 'l', 'k', 'j'], "Ayuda / Atajos"),
             ]
-@pytest.mark.parametrize("secuencia_entrada, index_menu", data_nav)     
+@pytest.mark.parametrize("secuencia_entrada, index_menu", data_nav)
 def test_navegar(secuencia_entrada, index_menu):
     assert navegar(secuencia_entrada) == index_menu
 
-def test_req_func_3():
-    pass
+
+def test_calcular_voltaje():
+    assert calcular_resultado(['l'], 1.2, 2) == 2.4
+
