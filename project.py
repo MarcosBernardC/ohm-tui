@@ -21,7 +21,7 @@ def navegar(secuencia_entrada: list[str]) -> str:
     else:
         return controller.menu_stack[-1].banner[1].strip()
 
-def calcular_resultado(secuencia_entrada: list[str], valor1: float, valor2: float) -> float:
+def calcular_voltaje(secuencia_entrada: list[str], valor1: float, valor2: float) -> float:
     controller = Controller()
 
     for tecla_entrada in secuencia_entrada:
@@ -29,12 +29,37 @@ def calcular_resultado(secuencia_entrada: list[str], valor1: float, valor2: floa
 
     controller.menu_stack[-1].modelo.corriente.valor = valor1
     controller.menu_stack[-1].modelo.resistencia.valor = valor2
-    
+     
     controller.menu_stack[-1].modelo.calcular_voltaje()
 
     return controller.menu_stack[-1].modelo.voltaje.valor
     
+def calcular_corriente(secuencia_entrada: list[str], valor1: float, valor2: float) -> float:
+    controller = Controller()
 
+    for tecla_entrada in secuencia_entrada:
+        controller.exec_kb(tecla_entrada)
+
+    controller.menu_stack[-1].modelo.voltaje.valor = valor1
+    controller.menu_stack[-1].modelo.resistencia.valor = valor2
+     
+    controller.menu_stack[-1].modelo.calcular_corriente()
+
+    return controller.menu_stack[-1].modelo.corriente.valor
+    
+def calcular_resistencia(secuencia_entrada: list[str], valor1: float, valor2: float) -> float:
+    controller = Controller()
+
+    for tecla_entrada in secuencia_entrada:
+        controller.exec_kb(tecla_entrada)
+
+    controller.menu_stack[-1].modelo.voltaje.valor = valor1
+    controller.menu_stack[-1].modelo.corriente.valor = valor2
+     
+    controller.menu_stack[-1].modelo.calcular_resistencia()
+
+    return controller.menu_stack[-1].modelo.resistencia.valor
+    
 
 def main():
     inputkb = InputHandler()

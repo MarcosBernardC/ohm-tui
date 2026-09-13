@@ -1,5 +1,5 @@
 import pytest
-from project import mover_cursor, navegar, calcular_resultado
+from project import mover_cursor, navegar, calcular_voltaje, calcular_corriente, calcular_resistencia
 
 
 data_mover_cursor = [
@@ -42,5 +42,10 @@ def test_navegar(secuencia_entrada, index_menu):
 
 
 def test_calcular_voltaje():
-    assert calcular_resultado(['l'], 1.2, 2) == 2.4
+    assert calcular_voltaje(['l'], 1.2, 2) == 2.4
+ 
+def test_calcular_corriente():
+    assert calcular_corriente(['j', 'l'], 1.2, 2) == 0.6
 
+def test_calcular_resistencia():
+    assert calcular_resistencia(['j', 'j', 'l'], 1.2, 2) == 0.6
