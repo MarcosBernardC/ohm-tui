@@ -34,7 +34,7 @@ class OhmModel:
 
     def calcular_resistencia(self):
         try:
-            self.resistencia.valor = self.voltaje.valor/self.corriente.valor
+            self.resistencia.valor = abs(self.voltaje.valor/self.corriente.valor)
             self.resistencia.unidad = 'Ω'
         except ZeroDivisionError:
             self.resistencia.valor = "ERR"

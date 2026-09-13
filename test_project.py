@@ -57,11 +57,19 @@ data_calculo_corriente = [(['j', 'l'], 1.2, 2, 0.6),
                           (['j', 'l'], 0, 0, "ERR"),
                           (['j', 'l'], 1, 0, "ERR"),
                           (['j', 'l'], 0, 1, 0),
+                          (['j', 'l'], 0, 0.99999, 0),
                           ]
 @pytest.mark.parametrize("secuencia_entrada, valor1, valor2, resultado",data_calculo_corriente)
 def test_calcular_corriente(secuencia_entrada, valor1, valor2, resultado):
     assert calcular_corriente(secuencia_entrada, valor1, valor2) == resultado
 
 
-def test_calcular_resistencia():
-    assert calcular_resistencia(['j', 'j', 'l'], 1.2, 2) == 0.6
+data_calculo_resistencia = [(['j', 'j', 'l'], 1.2, 2, 0.6),
+                            (['j', 'j', 'l'], 0, 0, "ERR"),
+                            (['j', 'j', 'l'], 1, 0, "ERR"),
+                            (['j', 'j', 'l'], 0, 1, 0),
+                            (['j', 'j', 'l'], 0, 0.99999, 0),
+                          ]
+@pytest.mark.parametrize("secuencia_entrada, valor1, valor2, resultado",data_calculo_resistencia)
+def test_calcular_resistencia(secuencia_entrada, valor1, valor2, resultado):
+    assert calcular_resistencia(secuencia_entrada, valor1, valor2) == resultado
