@@ -1,5 +1,5 @@
 import pytest
-from project import mover_cursor, navegar, calcular_voltaje, calcular_corriente, calcular_resistencia, calcular_parametro
+from project import mover_cursor, navegar, calcular_parametro
 
 
 data_mover_cursor = [
@@ -41,44 +41,22 @@ data_nav = [(['k'], "1."),              # MAIN MENU
 def test_navegar(secuencia_entrada, index_menu):
     assert navegar(secuencia_entrada) == index_menu
 
-
-data_calculo_voltaje = [(['l'], 1.2, 2, 2.4),
-                        (['l'], 0, 5, 0),
-                        (['l'], 5, 0, 0),
-                        (['l'], -5, 1, 5),
-                        (['l'], 3.3, -1, 3.3)
-                        ]
-@pytest.mark.parametrize("secuencia_entrada, valor1, valor2, resultado",data_calculo_voltaje)
-def test_calcular_voltaje(secuencia_entrada, valor1, valor2, resultado):
-    assert calcular_voltaje(secuencia_entrada, valor1, valor2) == resultado
-
-
-data_calculo_corriente = [(['j', 'l'], 1.2, 2, 0.6),
-                          (['j', 'l'], 0, 0, "ERR"),
-                          (['j', 'l'], 1, 0, "ERR"),
-                          (['j', 'l'], 0, 1, 0),
-                          (['j', 'l'], 0, 0.99999, 0),
+data_calculo_parametro = [(['l'], 1.2, 2, 2.4, "voltaje"),
+                          (['l'], 0, 5, 0, "voltaje"),
+                          (['l'], 5, 0, 0, "voltaje"),
+                          (['l'], -5, 1, 5, "voltaje"),
+                          (['l'], 3.3, -1, 3.3, "voltaje"),
+                          (['l'], 1.2, 2, 2.4, "voltaje"),
+                          (['j', 'l'], 1.2, 2, 0.6, "corriente"),
+                          (['j', 'l'], 0, 0, "ERR", "corriente"),
+                          (['j', 'l'], 1, 0, "ERR", "corriente"),
+                          (['j', 'l'], 0, 1, 0, "corriente"),
+                          (['j', 'l'], 0, 0.99999, 0, "corriente"),
+                          (['j', 'j', 'l'], 0, 0, "ERR", "resistencia"),
+                          (['j', 'j', 'l'], 1, 0, "ERR", "resistencia"),
+                          (['j', 'j', 'l'], 0, 1, 0, "resistencia"),
+                          (['j', 'j', 'l'], 0, 0.99999, 0, "resistencia"),
                           ]
-@pytest.mark.parametrize("secuencia_entrada, valor1, valor2, resultado",data_calculo_corriente)
-def test_calcular_corriente(secuencia_entrada, valor1, valor2, resultado):
-    assert calcular_corriente(secuencia_entrada, valor1, valor2) == resultado
-
-
-data_calculo_resistencia = [(['j', 'j', 'l'], 1.2, 2, 0.6),
-                            (['j', 'j', 'l'], 0, 0, "ERR"),
-                            (['j', 'j', 'l'], 1, 0, "ERR"),
-                            (['j', 'j', 'l'], 0, 1, 0),
-                            (['j', 'j', 'l'], 0, 0.99999, 0),
-                          ]
-@pytest.mark.parametrize("secuencia_entrada, valor1, valor2, resultado",data_calculo_resistencia)
-def test_calcular_resistencia(secuencia_entrada, valor1, valor2, resultado):
-    assert calcular_resistencia(secuencia_entrada, valor1, valor2) == resultado
-
-
-data_calculo_parametro = [(['l'], 1.2, 2, "voltaje", 2.4),
-                          (['l'], 0, 0, "corriente", "ERR"),
-                          (['l'], 0, 0, "resistencia", "ERR"),
-                          ]
-@pytest.mark.parametrize("secuencia_entrada, valor1, valor2, parametro, resultado",data_calculo_parametro)
-def test_calcular_parametro(secuencia_entrada, valor1, valor2, parametro, resultado):
+@pytest.mark.parametrize("secuencia_entrada, valor1, valor2, resultado, parametro", data_calculo_parametro)
+def test_calcular_parametro(secuencia_entrada, valor1, valor2, resultado, parametro):
     assert calcular_parametro(secuencia_entrada, valor1, valor2, parametro) == resultado
