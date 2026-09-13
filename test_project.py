@@ -40,9 +40,15 @@ data_nav = [(['k'], "1."),              # MAIN MENU
 def test_navegar(secuencia_entrada, index_menu):
     assert navegar(secuencia_entrada) == index_menu
 
-
-def test_calcular_voltaje():
-    assert calcular_voltaje(['l'], 1.2, 2) == 2.4
+data_calculo_voltaje = [(['l'], 1.2, 2, 2.4),
+                        (['l'], 0, 5, 0),
+                        (['l'], 5, 0, 0),
+                        (['l'], -5, 1, 5),
+                        (['l'], 3.3, -1, 3.3)
+                        ]
+@pytest.mark.parametrize("secuencia_entrada, valor1, valor2, resultado",data_calculo_voltaje)
+def test_calcular_voltaje(secuencia_entrada, valor1, valor2, resultado):
+    assert calcular_voltaje(secuencia_entrada, valor1, valor2) == resultado
  
 def test_calcular_corriente():
     assert calcular_corriente(['j', 'l'], 1.2, 2) == 0.6

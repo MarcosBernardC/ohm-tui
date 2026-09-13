@@ -22,7 +22,7 @@ class OhmModel:
     resistencia: Resistencia = field(default_factory=Resistencia)
 
     def calcular_voltaje(self):
-        self.voltaje.valor = self.corriente.valor*self.resistencia.valor
+        self.voltaje.valor = abs(self.corriente.valor*self.resistencia.valor)
 
     def calcular_corriente(self):
         try:
