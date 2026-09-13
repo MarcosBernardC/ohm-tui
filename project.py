@@ -34,7 +34,7 @@ def calcular_voltaje(secuencia_entrada: list[str], valor1: float, valor2: float)
 
     return controller.menu_stack[-1].modelo.voltaje.valor
     
-def calcular_corriente(secuencia_entrada: list[str], valor1: float, valor2: float) -> float:
+def calcular_corriente(secuencia_entrada: list[str], valor1: float, valor2: float):
     controller = Controller()
 
     for tecla_entrada in secuencia_entrada:

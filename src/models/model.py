@@ -26,7 +26,7 @@ class OhmModel:
 
     def calcular_corriente(self):
         try:
-            self.corriente.valor = self.voltaje.valor/self.resistencia.valor
+            self.corriente.valor = abs(self.voltaje.valor/self.resistencia.valor)
             self.corriente.unidad = 'A'
         except ZeroDivisionError:
             self.corriente.valor = "ERR"

@@ -16,6 +16,7 @@ def test_mover_cursor(secuencia_de_movimiento, posicion_cursor):
 
     assert posicion_final == posicion_cursor
 
+
 data_nav = [(['k'], "1."),              # MAIN MENU
             (['k', 'j'], "2."),
             (['k', 'j', 'j'], "3."),
@@ -40,6 +41,7 @@ data_nav = [(['k'], "1."),              # MAIN MENU
 def test_navegar(secuencia_entrada, index_menu):
     assert navegar(secuencia_entrada) == index_menu
 
+
 data_calculo_voltaje = [(['l'], 1.2, 2, 2.4),
                         (['l'], 0, 5, 0),
                         (['l'], 5, 0, 0),
@@ -49,9 +51,13 @@ data_calculo_voltaje = [(['l'], 1.2, 2, 2.4),
 @pytest.mark.parametrize("secuencia_entrada, valor1, valor2, resultado",data_calculo_voltaje)
 def test_calcular_voltaje(secuencia_entrada, valor1, valor2, resultado):
     assert calcular_voltaje(secuencia_entrada, valor1, valor2) == resultado
- 
-def test_calcular_corriente():
-    assert calcular_corriente(['j', 'l'], 1.2, 2) == 0.6
+
+
+data_calculo_corriente = [(['j', 'l'], 1.2, 2, 0.6)]
+@pytest.mark.parametrize("secuencia_entrada, valor1, valor2, resultado",data_calculo_corriente)
+def test_calcular_corriente(secuencia_entrada, valor1, valor2, resultado):
+    assert calcular_corriente(secuencia_entrada, valor1, valor2) == resultado
+
 
 def test_calcular_resistencia():
     assert calcular_resistencia(['j', 'j', 'l'], 1.2, 2) == 0.6
