@@ -34,7 +34,7 @@ class Cursor:
     @posicion.setter
     def posicion(self, value: tuple[int, int]):
         self.linea = value[0]
-        self.columna = value[0]
+        self.columna = value[1]
 
     @property
     def rel_posicionY(self):

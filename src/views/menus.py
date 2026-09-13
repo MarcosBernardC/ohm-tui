@@ -17,7 +17,7 @@ class MainMenu:
         ("5.", "5. Ayuda / Atajos")])
     footer: list = field(default_factory=lambda:[
         43*"=", "subir/bajar [k/j] . Entrar [l] . Salir [q]"])
-
+    navigable: bool = True
     def render(self):
         menu_str = []
         
@@ -135,7 +135,8 @@ class MenuCalcularVoltaje:
         40*'-',
             "  Resultado (V)     :",
         40*'=',
-        "Editar [l] . Volver [h] . Ayuda [?]"]) 
+        "Editar [l] . Volver [h] . Ayuda [?]"])
+    navigable: bool = True
 
     def render(self):
         self.opt_str_list = [
@@ -179,6 +180,7 @@ class MenuCalcularCorriente:
         "Resultado (I)            :",
         18*'-',
         "[Enter] Guardar | [h] Volver / Cancelar"]) 
+    navigable: bool = True
 
     def render(self):
         self.opt_str_list = [
@@ -216,12 +218,13 @@ class MenuCalcularResistencia:
         36*'=',
         7*' '+"CÁLCULO DE RESISTENCIA",
         36*'='])
-    opt_str_list: list=field(default_factory=lambda:[("3.1", f"3.1. Valor de Voltaje (V) : "), ("3.2.", "3.2. Valor de Corriente (I):")])
+    opt_str_list: list=field(default_factory=lambda:[("3.1.", f"3.1. Valor de Voltaje (V) : "), ("3.2.", "3.2. Valor de Corriente (I):")])
     footer: list=field(default_factory=lambda:[
         18*'-',
         "  Resultado (R)            :",
         18*'-',
         "[Enter] Guardar | [h]RVolver / Cancelar"]) 
+    navigable: bool = True
 
     def render(self):
         self.opt_str_list = [

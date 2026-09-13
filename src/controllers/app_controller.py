@@ -1,7 +1,6 @@
 from readchar import readkey
 import sys
 from dataclasses import dataclass, field
-# from src.core.cursor import Cursor
 from src.core.terminal import Terminal
 from src.core.input import InputHandler
 from src.views.menus import MainMenu, MenuAyuda, MenuCalcularVoltaje, MenuCalcularCorriente, MenuCalcularResistencia, MenuChangelog, OhmModel

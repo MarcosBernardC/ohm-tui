@@ -11,6 +11,17 @@ def mover_cursor(secuencia_entrada: list[str]) -> tuple[int, int]:
      
     return controller.menu_stack[-1].cursor.posicion 
 
+def navegar(secuencia_entrada: list[str]) -> str:
+    controller = Controller()
+    
+    for tecla_entrada in secuencia_entrada:
+        controller.exec_kb(tecla_entrada)
+    if controller.menu_stack[-1].navigable:
+        return controller.menu_stack[-1].opt_str_list[controller.menu_stack[-1].cursor.rel_posicionY][0]
+    else:
+        return controller.menu_stack[-1].banner[1].strip()
+
+
 def main():
     inputkb = InputHandler()
     controller = Controller()
