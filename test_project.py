@@ -53,7 +53,11 @@ def test_calcular_voltaje(secuencia_entrada, valor1, valor2, resultado):
     assert calcular_voltaje(secuencia_entrada, valor1, valor2) == resultado
 
 
-data_calculo_corriente = [(['j', 'l'], 1.2, 2, 0.6)]
+data_calculo_corriente = [(['j', 'l'], 1.2, 2, 0.6),
+                          (['j', 'l'], 0, 0, "ERR"),
+                          (['j', 'l'], 1, 0, "ERR"),
+                          (['j', 'l'], 0, 1, 0),
+                          ]
 @pytest.mark.parametrize("secuencia_entrada, valor1, valor2, resultado",data_calculo_corriente)
 def test_calcular_corriente(secuencia_entrada, valor1, valor2, resultado):
     assert calcular_corriente(secuencia_entrada, valor1, valor2) == resultado
