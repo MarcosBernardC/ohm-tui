@@ -1,5 +1,5 @@
 import pytest
-from project import mover_cursor, navegar, calcular_voltaje, calcular_corriente, calcular_resistencia
+from project import mover_cursor, navegar, calcular_voltaje, calcular_corriente, calcular_resistencia, calcular_parametro
 
 
 data_mover_cursor = [
@@ -73,3 +73,12 @@ data_calculo_resistencia = [(['j', 'j', 'l'], 1.2, 2, 0.6),
 @pytest.mark.parametrize("secuencia_entrada, valor1, valor2, resultado",data_calculo_resistencia)
 def test_calcular_resistencia(secuencia_entrada, valor1, valor2, resultado):
     assert calcular_resistencia(secuencia_entrada, valor1, valor2) == resultado
+
+
+data_calculo_parametro = [(['l'], 1.2, 2, "voltaje", 2.4),
+                          (['l'], 0, 0, "corriente", "ERR"),
+                          (['l'], 0, 0, "resistencia", "ERR"),
+                          ]
+@pytest.mark.parametrize("secuencia_entrada, valor1, valor2, parametro, resultado",data_calculo_parametro)
+def test_calcular_parametro(secuencia_entrada, valor1, valor2, parametro, resultado):
+    assert calcular_parametro(secuencia_entrada, valor1, valor2, parametro) == resultado
