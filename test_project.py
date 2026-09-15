@@ -61,7 +61,24 @@ data_calculo_parametro = [(['l'], 1.2, 2, 2.4, "voltaje"),
 def test_calcular_parametro(secuencia_entrada, valor1, valor2, resultado, parametro):
     assert calcular_parametro(secuencia_entrada, valor1, valor2, parametro) == resultado
 
-data_normalizar_parametro = [(['l'], "voltaje", 2500, "2.50 kV")] # NORMALIZAR VOLTAJE
+data_normalizar_parametro = [
+        #CALCULO VOLTAJE
+        (['l'], "voltaje", 0.0000001, "100.00 nV"),
+        (['l'], "voltaje", 5.2546, "5.25 V"),
+        (['l'], "voltaje", 152340000, "152.34 MV"),
+
+        (['l'], "corriente", 0.00000432, "4.32 uA"),
+        (['l'], "corriente", 0.0142, "14.20 mA"),
+        (['l'], "corriente", 123002314, "123.00 MA"),
+         
+        (['l'], "resistencia", 0.432, "432.00 mΩ"),
+        (['l'], "resistencia", 333.34, "333.34 Ω"),
+        (['l'], "resistencia", 453200134, "453.20 MΩ"),
+
+        #CALCULO CORRIENTE
+        (['j', 'l'], "voltaje", 0.0000043, "4.30 uV"),
+
+        ] # NORMALIZAR VOLTAJE
 @pytest.mark.parametrize("secuencia_entrada, nombre_parametro, valor, valor_normalizado", data_normalizar_parametro)
 def test_normalizar_parametro(secuencia_entrada, nombre_parametro, valor, valor_normalizado):
     assert normalizar_parametro(secuencia_entrada, nombre_parametro, valor) == valor_normalizado
