@@ -43,13 +43,15 @@ class OhmModel:
     @staticmethod
     def normalizar(parametro):
         si_exp = {
+                -12: 'f',
                 -9: 'n',
                 -6: 'u',
                 -3: 'm',
                 0: '',
                 3: 'k',
                 6: 'M',
-                9: 'G'
+                9: 'G',
+                12: 'T',
                 }
 
         mantisa_min = 1
