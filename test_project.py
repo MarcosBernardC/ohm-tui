@@ -1,5 +1,5 @@
 import pytest
-from project import mover_cursor, navegar, calcular_parametro
+from project import mover_cursor, navegar, calcular_parametro, normalizar_parametro
 
 
 data_mover_cursor = [
@@ -60,3 +60,8 @@ data_calculo_parametro = [(['l'], 1.2, 2, 2.4, "voltaje"),
 @pytest.mark.parametrize("secuencia_entrada, valor1, valor2, resultado, parametro", data_calculo_parametro)
 def test_calcular_parametro(secuencia_entrada, valor1, valor2, resultado, parametro):
     assert calcular_parametro(secuencia_entrada, valor1, valor2, parametro) == resultado
+
+data_normalizar_parametro = [(['l'], "voltaje", 2500, "2.50 kV")] # NORMALIZAR VOLTAJE
+@pytest.mark.parametrize("secuencia_entrada, nombre_parametro, valor, valor_normalizado", data_normalizar_parametro)
+def test_normalizar_parametro(secuencia_entrada, nombre_parametro, valor, valor_normalizado):
+    assert normalizar_parametro(secuencia_entrada, nombre_parametro, valor) == valor_normalizado

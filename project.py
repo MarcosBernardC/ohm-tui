@@ -49,7 +49,33 @@ def calcular_parametro(secuencia_entrada: list[str], valor1: float, valor2: floa
             controller.menu_stack[-1].modelo.calcular_resistencia()
 
             return controller.menu_stack[-1].modelo.resistencia.valor
+
+def normalizar_parametro(secuencia_entrada: list[str], nombre_parametro: str, valor: float) -> str:
+    controller = Controller()
+
+    for tecla_entrada in secuencia_entrada:
+        controller.exec_kb(tecla_entrada)
+    
+    modelo = controller.menu_stack[-1].modelo
+
+    match(nombre_parametro):
+        case "corriente":
+            corriente = modelo.corriente
+            corriente.valor = valor
+            return(modelo.normalizar(corriente))
             
+        case "voltaje":
+            voltaje = modelo.voltaje 
+            voltaje.valor = valor
+            return(modelo.normalizar(voltaje))
+        case "resistencia":
+            resistencia = modelo.resistencia
+            resistencai.valor = valor
+            return(modelo.normalizar(resistencia))
+    
+
+    
+    return "HOLA"
 
 def main():
     inputkb = InputHandler()
