@@ -140,12 +140,12 @@ class MenuCalcularVoltaje:
 
     def render(self):
         self.opt_str_list = [
-            ("1.1.", f"1.1. Corriente (I)    : {self.modelo.corriente.valor} {self.modelo.corriente.unidad}"),
-            ("1.2.", f"1.2. Resistencia (R)  : {self.modelo.resistencia.valor} {self.modelo.resistencia.unidad}")]
+            ("1.1.", f"1.1. Corriente (I)    : {OhmModel.normalizar(self.modelo.corriente)}"),
+            ("1.2.", f"1.2. Resistencia (R)  : {OhmModel.normalizar(self.modelo.resistencia)}")]
 
         self.footer = [
             17*'-',
-            f"  Resultado (V)         : {self.modelo.voltaje.valor} {self.modelo.voltaje.unidad}",
+            f"  Resultado (V)         : {OhmModel.normalizar(self.modelo.voltaje)}",
             36*'=',
             "Editar [l] . Volver [h] . Ayuda [?]"]
         menu_str = []
@@ -184,12 +184,12 @@ class MenuCalcularCorriente:
 
     def render(self):
         self.opt_str_list = [
-            ("2.1.", f"2.1. Voltaje (V)      : {self.modelo.voltaje.valor} {self.modelo.voltaje.unidad}"),
-            ("2.2.", f"2.2. Resistencia (R)  : {self.modelo.resistencia.valor} {self.modelo.resistencia.unidad}")]
+            ("2.1.", f"2.1. Voltaje (V)      : {OhmModel.normalizar(self.modelo.voltaje)}"),
+            ("2.2.", f"2.2. Resistencia (R)  : {OhmModel.normalizar(self.modelo.resistencia)}")]
 
         self.footer = [
             18*'-',
-            f"  Resultado (I)         : {self.modelo.corriente.valor} {self.modelo.corriente.unidad}",
+            f"  Resultado (I)         : {OhmModel.normalizar(self.modelo.corriente)}",
             36*'=',
             "Editar [l] . Volver [h] . Ayuda [?]"]
         menu_str = []
@@ -228,12 +228,12 @@ class MenuCalcularResistencia:
 
     def render(self):
         self.opt_str_list = [
-            ("3.1.", f"3.1. Voltaje (V)      : {self.modelo.voltaje.valor} {self.modelo.voltaje.unidad}"),
-            ("3.2.", f"3.2. Corriente (I)    : {self.modelo.corriente.valor} {self.modelo.corriente.unidad}")]
+            ("3.1.", f"3.1. Voltaje (V)      : {OhmModel.normalizar(self.modelo.voltaje)}"),
+            ("3.2.", f"3.2. Corriente (I)    : {OhmModel.normalizar(self.modelo.corriente)}")]
 
         self.footer = [
             18*'-',
-            f"  Resultado (R)         : {self.modelo.resistencia.valor} {self.modelo.resistencia.unidad}",
+            f"  Resultado (R)         : {OhmModel.normalizar(self.modelo.resistencia)}",
             36*'=',
             "Editar [l] . Volver [h] . Ayuda [?]"]
         menu_str = []
