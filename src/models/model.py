@@ -39,3 +39,32 @@ class OhmModel:
         except ZeroDivisionError:
             self.resistencia.valor = "ERR"
             self.resistencia.unidad = ''
+
+    @staticmethod
+    def normalizar(parametro):
+        si_exp = {
+                -9: 'n',
+                -6: 'u',
+                -3: 'm',
+                0: '',
+                3: 'k',
+                6: 'M',
+                9: 'G'
+                }
+
+        mantisa_min = 1
+        mantisa_max = 999
+        exponente = 0
+
+        numero = parametro.valor # evita romper el valor original del dato
+        
+        if numero != 0 and numero != "ERR":
+            while numero <= mantisa_min:
+                numero *= 1000
+                exponente -= 3
+            while numero >= mantisa_max:
+                numero /= 1000
+                exponente += 3
+            parametro.prefijo_si = si_exp[exponente]
+            return(f"{numero:.2f} {parametro.prefijo_si}{parametro.unidad}")
+        return (f"{parametro.valor}")
