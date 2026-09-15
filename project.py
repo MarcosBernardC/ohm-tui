@@ -70,7 +70,7 @@ def normalizar_parametro(secuencia_entrada: list[str], nombre_parametro: str, va
             return(modelo.normalizar(voltaje))
         case "resistencia":
             resistencia = modelo.resistencia
-            resistencai.valor = valor
+            resistencia.valor = valor
             return(modelo.normalizar(resistencia))
     
 
