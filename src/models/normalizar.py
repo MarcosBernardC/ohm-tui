@@ -1,5 +1,4 @@
-def main():
-    unidad = 'A'
+def normalizar(numero, unidad) -> str:
     si_exp = {
             -9: 'n',
             -6: 'u',
@@ -10,28 +9,29 @@ def main():
             9: 'G'
             }
 
-
-    entrada = float(input("Ingrese número de ejemplo: "))
-    tmp = entrada
-
     mantisa_min = 1
     mantisa_max = 999
 
     exponente = 0
 
-    if entrada != 0:
-        while entrada <= mantisa_min:
-            entrada *= 1000
+    if numero != 0:
+        while numero <= mantisa_min:
+            numero *= 1000
             exponente -= 3
 
-        while entrada >= mantisa_max:
-            entrada /= 1000
+        while numero >= mantisa_max:
+            numero /= 1000
             exponente += 3
 
-    
+    return(f"{numero:.2f} {si_exp[exponente]}{unidad}")
 
-    print(f"Valores normalizados:\n - entrada: {tmp}\n - entrada normalizada: {entrada:.2f}\n - exponente: {exponente}\n - si_exp: {si_exp[exponente]}\n Resultado: {entrada:.2f} {si_exp[exponente]}{unidad}")
+def main():
+    unidad = 'A'
+    entrada = float(input("Ingrese número de ejemplo: "))
 
+    norm_str = normalizar(entrada, unidad)
+
+    print(f"Valor normalizado: {norm_str}")
 
 if __name__ == "__main__":
     main()
