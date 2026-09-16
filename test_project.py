@@ -34,7 +34,7 @@ data_nav = [(['k'], "1."),              # MAIN MENU
             (['j', 'j', 'l', 'k', 'j'], "3.2."),
             (['j', 'j', 'l', 'k', 'j', 'j'], "3.2."),
             
-            (['j', 'j', 'j', 'l', 'k', 'j'], "CHANGELOG"),
+            (['j', 'j', 'j', 'l', 'k', 'j'], "OHM-TUI v1.0"),
             (['j', 'j', 'j', 'j', 'l', 'k', 'j'], "Ayuda / Atajos"),
             ]
 @pytest.mark.parametrize("secuencia_entrada, index_menu", data_nav)
