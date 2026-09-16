@@ -1,8 +1,7 @@
-from readchar import readkey
 import sys
 from dataclasses import dataclass, field
+
 from src.core.terminal import Terminal
-from src.core.input import InputHandler
 from src.views.menus import MainMenu, MenuAyuda, MenuCalcularVoltaje, MenuCalcularCorriente, MenuCalcularResistencia, MenuInfo, OhmModel
 
 
@@ -12,7 +11,6 @@ class Controller:
     
     def exec_kb(self, value):
         menu = self.menu_stack[-1]
-        #print(f"Opción actual: {menu.cursor.rel_posicionY}")
         dispatch = {
                 'j': menu.cursor.mover_abajo,
                 'k': menu.cursor.mover_arriba,
@@ -27,14 +25,12 @@ class Controller:
         else:
             print("opcion inválida")
         print(value)
-        #input()
 
     def help_menu(self):
         if isinstance(self.menu_stack[-1], MenuAyuda):
             return 0
         else:
             self.menu_stack.append(MenuAyuda())
-
 
     @staticmethod
     def is_float(value):
@@ -59,53 +55,36 @@ class Controller:
         cursor_rel_pos = menu.cursor.rel_posicionY
         opt = menu.opt_str_list[cursor_rel_pos]
         idmenu = opt[0]
-        # print(opt)
-        # input()
+
         match idmenu:
-        # Menu 1.0: ====
             case "1.":
-                # print(f"IDmenu: {idmenu}")
                 self.menu_stack.append(MenuCalcularVoltaje())
             case "1.1.":                
-                # print(f"IDmenu: {idmenu}")
                 self.edit_value(cursor_edit_position=(4,27), edit_obj=menu.modelo.corriente, edit_param="valor")
-                menu.modelo.voltaje.valor = menu.modelo.corriente.valor*menu.modelo.resistencia.valor
+                menu.modelo.calcular_voltaje()
             case "1.2.":
-                # print(f"IDmenu: {idmenu}")
                 self.edit_value(cursor_edit_position=(5, 27), edit_obj=menu.modelo.resistencia, edit_param="valor")
                 menu.modelo.calcular_voltaje()
-        # Menu 2.0: ====
             case "2.":
-                # print(f"IDmenu: {idmenu}")
                 self.menu_stack.append(MenuCalcularCorriente())    
             case "2.1.":                
-                # print(f"IDmenu: {idmenu}")
                 self.edit_value(cursor_edit_position=(4, 27), edit_obj=menu.modelo.voltaje, edit_param="valor")
                 menu.modelo.calcular_corriente()
             case "2.2.":
-                # print(f"IDmenu: {idmenu}")
                 self.edit_value(cursor_edit_position=(5,27), edit_obj=menu.modelo.resistencia, edit_param="valor")
                 menu.modelo.calcular_corriente()
-        # Menu 3.0: ====
             case "3.":
-                # print(f"IDmenu: {idmenu}")
                 self.menu_stack.append(MenuCalcularResistencia())    
             case "3.1.":                
-                # print(f"IDmenu: {idmenu}")
                 self.edit_value(cursor_edit_position=(4,27), edit_obj=menu.modelo.voltaje, edit_param="valor")
                 menu.modelo.calcular_resistencia()
             case "3.2.":
-                # print(f"IDmenu: {idmenu}")
                 self.edit_value(cursor_edit_position=(5,27), edit_obj=menu.modelo.corriente, edit_param="valor")
                 menu.modelo.calcular_resistencia()
-        # Menu 4.0: ====
             case "4.":
-                # print(f"IDmenu: {idmenu}")
                 self.menu_stack.append(MenuInfo())
             case "5.":
-                # print(f"IDmenu: {idmenu}")
                 self.menu_stack.append(MenuAyuda()) 
-        #input()
 
     def gestionar_menu(self):
         self.menu_stack[-1].render()

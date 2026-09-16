@@ -72,10 +72,7 @@ def normalizar_parametro(secuencia_entrada: list[str], nombre_parametro: str, va
             resistencia = modelo.resistencia
             resistencia.valor = valor
             return(modelo.normalizar(resistencia))
-    
-
-    
-    return "HOLA"
+       
 
 def main():
     inputkb = InputHandler()

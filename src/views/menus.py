@@ -27,8 +27,6 @@ class MainMenu:
         cursor_pos = self.cursor.posicion
         init_pos = self.cursor.min_posicion
         for i, str_opt in enumerate(self.opt_str_list):
-            # print(str_opt[1])
-            # input()
             if i+init_pos[0] == cursor_pos[0]: #línea (Y)
                 menu_str.append(f"{self.cursor.symbol} {str_opt[1]}")
             else:
@@ -255,4 +253,3 @@ class MenuCalcularResistencia:
             menu_str.append(element)
 
         print('\n'.join(menu_str))
-
