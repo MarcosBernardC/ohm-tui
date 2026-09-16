@@ -83,6 +83,7 @@ data_normalizar_parametro = [
         (['j', 'l'], "resistencia", 0.000000573, "573.00 nΩ"),
         (['j', 'l'], "resistencia", 220.578, "220.58 Ω"),
         (['j', 'l'], "resistencia", 12345000, "12.35 MΩ"),
+
         (['j', 'l'], "voltaje", 0.000015798, "15.80 uV"),
         (['j', 'l'], "voltaje", 12.688, "12.69 V"),
         (['j', 'l'], "voltaje", 15234760000, "15.23 GV"),
@@ -91,6 +92,23 @@ data_normalizar_parametro = [
         (['j', 'j', 'l'], "resistencia", 1.0458, "1.05 Ω"),
         (['j', 'j', 'l'], "resistencia", 20067835, "20.07 MΩ"),
 
+        (['j', 'j', 'l'], "voltaje", 0.000015798, "15.80 uV"),
+        (['j', 'j', 'l'], "voltaje", 12.688, "12.69 V"),
+        (['j', 'j', 'l'], "voltaje", 15234760000, "15.23 GV"),
+        
+        (['j', 'j', 'l'], "corriente", 0.000000573, "573.00 nA"),
+        (['j', 'j', 'l'], "corriente", 4.367, "4.37 A"),
+        (['j', 'j', 'l'], "corriente", 48767004, "48.77 MA"),
+
+        #LÍMITES SI
+        (['l'], "voltaje", 1e33, "ERR"),
+        (['l'], "voltaje", 1e-33, "ERR"),
+
+        (['j', 'l'], "corriente", 1e33, "ERR"),
+        (['j', 'l'], "corriente", 1e-33, "ERR"),
+        
+        (['j', 'j', 'l'], "resistencia", 1e33, "ERR"),
+        (['j', 'j', 'l'], "resistencia", 1e-33, "ERR"),
         ] # NORMALIZAR
 @pytest.mark.parametrize("secuencia_entrada, nombre_parametro, valor, valor_normalizado", data_normalizar_parametro)
 def test_normalizar_parametro(secuencia_entrada, nombre_parametro, valor, valor_normalizado):
