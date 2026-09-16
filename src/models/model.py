@@ -43,7 +43,13 @@ class OhmModel:
     @staticmethod
     def normalizar(parametro):
         si_exp = {
-                -12: 'f',
+                -30: 'q',
+                -27: 'r',
+                -24: 'y',
+                -21: 'z',
+                -18: 'a',
+                -15: 'f',
+                -12: 'p',
                 -9: 'n',
                 -6: 'u',
                 -3: 'm',
@@ -52,14 +58,20 @@ class OhmModel:
                 6: 'M',
                 9: 'G',
                 12: 'T',
+                15: 'P',
+                18: 'E',
+                21: 'Z',
+                24: 'Y',
+                27: 'R',
+                30: 'Q'
                 }
 
         mantisa_min = 1
         mantisa_max = 999
         exponente = 0
 
-        numero = parametro.valor # evita romper el valor original del dato
-        
+        numero = parametro.valor
+
         if numero != 0 and numero != "ERR":
             while numero <= mantisa_min:
                 numero *= 1000
@@ -67,6 +79,9 @@ class OhmModel:
             while numero >= mantisa_max:
                 numero /= 1000
                 exponente += 3
-            parametro.prefijo_si = si_exp[exponente]
-            return(f"{numero:.2f} {parametro.prefijo_si}{parametro.unidad}")
+            if exponente <= 30 and exponente >=-30:
+                parametro.prefijo_si = si_exp[exponente]
+                return(f"{numero:.2f} {parametro.prefijo_si}{parametro.unidad}")
+            else:
+                return(f"ERR")
         return (f"{parametro.valor}")
