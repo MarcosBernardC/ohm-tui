@@ -16,7 +16,6 @@ def test_mover_cursor(secuencia_de_movimiento, posicion_cursor):
 
     assert posicion_final == posicion_cursor
 
-
 data_nav = [(['k'], "1."),              # MAIN MENU
             (['k', 'j'], "2."),
             (['k', 'j', 'j'], "3."),

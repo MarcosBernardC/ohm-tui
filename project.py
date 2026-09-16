@@ -3,6 +3,19 @@ from src.core.input import InputHandler
 from src.controllers.app_controller import Controller
 
 
+def main():
+    inputkb = InputHandler()
+    controller = Controller()
+
+    while True:
+        Terminal.reiniciar_pantalla()
+        Terminal.ocultar_cursor()
+        
+        controller.gestionar_menu()
+        opt = inputkb.kb()
+        controller.exec_kb(opt)
+
+
 def mover_cursor(secuencia_entrada: list[str]) -> tuple[int, int]:
     controller = Controller()
     
@@ -73,19 +86,6 @@ def normalizar_parametro(secuencia_entrada: list[str], nombre_parametro: str, va
             resistencia.valor = valor
             return(modelo.normalizar(resistencia))
        
-
-def main():
-    inputkb = InputHandler()
-    controller = Controller()
-
-    while True:
-        Terminal.reiniciar_pantalla()
-        Terminal.ocultar_cursor()
-        
-        controller.gestionar_menu()
-        opt = inputkb.kb()
-        controller.exec_kb(opt)
-
 
 if __name__ == "__main__":
     main()
