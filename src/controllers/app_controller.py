@@ -3,7 +3,7 @@ import sys
 from dataclasses import dataclass, field
 from src.core.terminal import Terminal
 from src.core.input import InputHandler
-from src.views.menus import MainMenu, MenuAyuda, MenuCalcularVoltaje, MenuCalcularCorriente, MenuCalcularResistencia, MenuChangelog, OhmModel
+from src.views.menus import MainMenu, MenuAyuda, MenuCalcularVoltaje, MenuCalcularCorriente, MenuCalcularResistencia, MenuInfo, OhmModel
 
 
 @dataclass
@@ -101,7 +101,7 @@ class Controller:
         # Menu 4.0: ====
             case "4.":
                 # print(f"IDmenu: {idmenu}")
-                self.menu_stack.append(MenuChangelog())
+                self.menu_stack.append(MenuInfo())
             case "5.":
                 # print(f"IDmenu: {idmenu}")
                 self.menu_stack.append(MenuAyuda()) 

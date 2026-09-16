@@ -13,8 +13,8 @@ class MainMenu:
         ("1.", "1. Calcular Voltaje (V = I × R)"),
         ("2.", "2. Calcular Corriente (I = V / R)"),
         ("3.", "3. Calcular Resistencia (R = V / I)"),
-        ("4.", "4. Ver Changelog"), 
-        ("5.", "5. Ayuda / Atajos")])
+        ("4.", "4. Info"), 
+        ("5.", "5. Ayuda")])
     footer: list = field(default_factory=lambda:[
         43*"=", "subir/bajar [k/j] . Entrar [l] . Salir [q]"])
     navigable: bool = True
@@ -81,18 +81,20 @@ class MenuAyuda:
         print('\n'.join(menu_str))
 
 @dataclass
-class MenuChangelog:
+class MenuInfo:
     cursor: Cursor=field(default_factory=lambda:Cursor(min_posicion=(1, 1), max_posicion=(1,1)))
     banner: list=field(default_factory=lambda:[
-        38*'=',
-        15*' '+"CHANGELOG",
-        38*'='])
+        41*'=',
+        15*' '+"OHM-TUI v1.0",
+        41*'='])
     opt_str_list: list=field(default_factory=lambda:[
-        '\n'+"v1.1.0 (Actual)",
-        "  * feat: agregado panel de historial",
-        "  * refactor: unificación de vistas",])
+        '\n'+"  Proyecto Final - CS50P (2026)"+'\n',
+        "  • Autor: Marcos Bernard Calixto López",
+        "  • Versión: 1.0.0 (Setiembre 2026)",
+        "  • Descripción: Herramienta de terminal\n    interactiva para el análisis de\n    circuitos de corriente directa (DC).",
+        ])
     footer: list = field(default_factory=lambda:[
-        '\n'+38*"=", "Volver [h] . Salir [q]"])
+        '\n'+41*"=", "Volver [h] . Salir [q]"])
     navigable: bool = False
 
     def render(self):
