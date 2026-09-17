@@ -1,6 +1,9 @@
+from readchar import readkey
+
 import sys
 from dataclasses import dataclass, field
 
+# from src.core.input import InputHandler
 from src.core.terminal import Terminal
 from src.views.menus import MainMenu, MenuAyuda, MenuCalcularVoltaje, MenuCalcularCorriente, MenuCalcularResistencia, MenuInfo, OhmModel
 
@@ -8,8 +11,14 @@ from src.views.menus import MainMenu, MenuAyuda, MenuCalcularVoltaje, MenuCalcul
 @dataclass
 class Controller:
     menu_stack: list[MainMenu] = field(default_factory=lambda:[MainMenu()])
+    kb_val: str = ''
+     
+    def read_kb(self):
+        self.kb_val = readkey()
+        
     
-    def exec_kb(self, value):
+    def exec_kb(self):
+        value = self.kb_val
         menu = self.menu_stack[-1]
         dispatch = {
                 'j': menu.cursor.mover_abajo,
@@ -86,7 +95,9 @@ class Controller:
             case "5.":
                 self.menu_stack.append(MenuAyuda()) 
 
-    def gestionar_menu(self):
+    def gestionar_menu(self): 
+        Terminal.reiniciar_pantalla()
+        Terminal.ocultar_cursor()
         self.menu_stack[-1].render()
 
     def delete_menu(self):
