@@ -158,4 +158,35 @@ El modelo, aislado totalmente de los otro módulos, se encarga de ejecutar los c
 
 En este caso, para el proyecto se decide utilizar un modelo sencillo, que nos permita eliminar toda complejidad mientras se refactorizan el proyecto. Claro está que una vez maduro el proyecto, el modelo puede ser reemplazado por otro, como un calculador de circuitos RC.
 
+De acuerdo con lo mencionado se muestra las dependencias involucradas en el modelo (OhmModel):
+
+```mermaid
+classDiagram
+    class OhmModel{
+        - corriente: Corriente
+        - resistencia: Resistencia
+        - voltaje: Voltaje
+
+        +calcular_voltaje()
+        +calcular_corriente()
+        +calcular_resistencia()
+
+        +normalizar()
+    }
+    class Voltaje {
+        - unidad: str
+        + valor: float
+    }
+    OhmModel *-- Voltaje : componente de modelo
+    class Resistencia {
+        - unidad: str
+        + valor: float
+    }
+    OhmModel *-- Resistencia : componente de modelo
+    class Corriente {
+        - unidad: str
+        + valor: float
+    }
+    OhmModel *-- Corriente : componente de modelo
+```
 
