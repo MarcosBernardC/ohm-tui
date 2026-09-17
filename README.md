@@ -126,4 +126,26 @@ De la misma manera se crearon los siguientes menús:
 
 Más adelante veremos cómo algunos menús están compuestos de otras instancias asociadas (como por ejemplo los menús de cálculo, que necesitan un modelo para renderizar parametros numéricos)
 
+### Controlador
+Para generar una interacción entre componentes mencionados, se decidió crear una clase Controller, cuyo objetivo es del de generar un flujo desacoplado y eficiente de toda la interacción general del sistema.
 
+#### Pila de menús
+De nada serviría implementar varios menús, si no tenemos una manera de ordenarlos acorde a lo que el usuario requiera. Es por ello que se opta usar pilas tipo LIFO (Last In First Out), donde cada menu es un elemento de la pila. 
+
+Imaginemos que estamos en el main menu, y el usuario selecciona la opción **1.0** (Calcular Voltaje), entonces el menú que debe apilarse sería MenuCalcularVoltaje. Quedando la pila de la siguiente manera.
+
+```text
+  Pila: menu_stack[MainMenu(), MenuCalcularVoltaje(), ...]
+        +-------------------------+
+        |           ...           | -> render()
+        +-------------------------+
+        |   MenuCalcularVoltaje   | -> render()
+        +-------------------------+
+        |        MainMenu         | -> render()
+        +-------------------------+
+```
+
+Entonces vemos que la pila es una excelente manera de manejar la interacción de menús.
+
+#### Dispatcher
+Una vez que tenemos todas las acciones necesarias para el sistema, se procede a implementar un ejecutor de acciones, el cual trabaja directamente con el módulo lector de entrada mencionado anteriormente (InputHandler).
