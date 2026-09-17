@@ -32,11 +32,11 @@ Debido a la necesidad de implementar un proyecto de esta magnitud, se requirió 
 ```mermaid
 classDiagram
     class Cursor{
-        - símbolo str
+        - símbolo: str
         - max_posicion:  tuple[int, int]
         - min_posicion:  tuple[int, int]
-        - linea int
-        - columna int
+        - linea: int
+        - columna: int
 
         +mover_arriba()
         +mover_abajo()
@@ -53,8 +53,7 @@ Para navegar en la TUI, se utiliza un módulo de lectura independiente, el cuál
 
 Este módulo está separado del Controlador (que se mostrará más adelante) debido a decisiones iniciales de implementación, en un refactor futuro puede agregarse al controller mediante un método estático.
 
-#### Modelo secuencial de interacción
-     
+#### Modelo secuencial de interacción 
 ```mermaid
 sequenceDiagram
    autonumber
@@ -72,4 +71,59 @@ sequenceDiagram
    end
 ```
 
-TODO
+
+### Menus
+Una TUI siempre muestra al usuario una capa de visualización, que le permite al mismo manejarse entre las diversas opciones implementadas en dicha TUI. Por ejemplo el menú principal, que suele contener las opciones principales del sistema.
+
+```bash
+===========================================
+               OHM-TUI v1.0
+===========================================
+> 1. Calcular Voltaje (V = I × R)
+  2. Calcular Corriente (I = V / R)
+  3. Calcular Resistencia (R = V / I)
+  4. Info
+  5. Ayuda
+===========================================
+subir/bajar [k/j] . Entrar [l] . Salir [q]
+```
+
+El menú mostrado, como ejemplo, consta de tres partes claramente segmentadas.
+- Cabecera o banner
+- Lista de opciones
+- Pie o footer
+
+Y aquí también podemos agregar un objeto que ya habíamos creado, como el cursor.
+
+Es por ello que se decidió diseñar el objeto MainMenu de la siguiente manera:
+```mermaid
+classDiagram
+    class MainMenu{
+        - banner: list[str]
+        - opt_str_list: list[str]
+        - footer: list[str]
+        - navigable: bool
+        +render()
+    }
+    class Cursor {
+        - min_posicion: tuple[int, int]
+        - max_posicion: tuple[int, int]
+        - posicion: tuple[int, int]
+        - symbol: str
+        + mover()
+    }
+    MainMenu *-- Cursor : componente dedicado
+```
+
+Cómo se puede ver, el menú está compuesto de un cursor, esto desacopla eficientemente el renderizado de ambas instancias y mantiene una mejor arquitectura.
+
+De la misma manera se crearon los siguientes menús: 
+- MenuAyuda
+- MenuInfo
+- MenuCalcularVoltaje
+- MenuCalcularCorriente
+- MenuCalcularResistencia
+
+Más adelante veremos cómo algunos menús están compuestos de otras instancias asociadas (como por ejemplo los menús de cálculo, que necesitan un modelo para renderizar parametros numéricos)
+
+
