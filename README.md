@@ -22,6 +22,7 @@ Terminal es un módulo creado para manejar la impresion de secuencias ANSI usand
 
 - Limpiar pantalla + Mover Cursor
 
+
 ### Cursor (selector de opción)
 El cursor representa al típico puntero de opción en los menús que indica cual opción es la seleccionada.
 Su icono puede ser un símbolo representativo que le indique al usuario en que opción está, ejemplos típicos son **>**, **>>** o **▶**. Para el presente proyecto se opta por el símbolo **>** con una motivación meramente estética.
@@ -48,29 +49,6 @@ classDiagram
     }
 ```
 
-### InputHandler
-Para navegar en la TUI, se utiliza un módulo de lectura independiente, el cuál utiliza la biblioteca readchar para manejar un input continuo, sin las pausas necesarias que demanda el método input() nativo.
-
-Este módulo está separado del Controlador (que se mostrará más adelante) debido a decisiones iniciales de implementación, en un refactor futuro puede agregarse al controller mediante un método estático.
-
-#### Modelo secuencial de interacción 
-```mermaid
-sequenceDiagram
-   autonumber
-   actor user as user
-   participant input-module as InputHandler
-   participant controller as Controller
-
-   user->>input-module: presiona tecla
-   input-module->>controller: ingresa entrada
-
-   alt si entrada es válida
-      controller->>controller: ejecuta entrada
-   else si la tecla no es válida
-      controller->>user: print("opción inválida")
-   end
-```
-
 
 ### Menus
 Una TUI siempre muestra al usuario una capa de visualización, que le permite al mismo manejarse entre las diversas opciones implementadas en dicha TUI. Por ejemplo el menú principal, que suele contener las opciones principales del sistema.
@@ -93,7 +71,7 @@ El menú mostrado, como ejemplo, consta de tres partes claramente segmentadas.
 - Lista de opciones
 - Pie o footer
 
-Y aquí también podemos agregar un objeto que ya habíamos creado, como el cursor.
+Y aquí también podemos agregar un objeto que ya habíamos creado, el cursor de selección.
 
 Es por ello que se decidió diseñar el objeto MainMenu de la siguiente manera:
 ```mermaid
@@ -114,8 +92,7 @@ classDiagram
     }
     MainMenu *-- Cursor : componente dedicado
 ```
-
-Cómo se puede ver, el menú está compuesto de un cursor, esto desacopla eficientemente el renderizado de ambas instancias y mantiene una mejor arquitectura.
+Este diseño desacopla el estado del menú del cursor, generando una arquitectura más limpia y funcional.
 
 De la misma manera se crearon los siguientes menús: 
 - MenuAyuda
@@ -126,8 +103,37 @@ De la misma manera se crearon los siguientes menús:
 
 Más adelante veremos cómo algunos menús están compuestos de otras instancias asociadas (como por ejemplo los menús de cálculo, que necesitan un modelo para renderizar parametros numéricos)
 
+
 ### Controlador
-Para generar una interacción entre componentes mencionados, se decidió crear una clase Controller, cuyo objetivo es del de generar un flujo desacoplado y eficiente de toda la interacción general del sistema.
+Para generar una interacción entre los componentes mencionados, se decidió crear una clase Controller, cuyo objetivo es el de orquestar el flujo desacoplado y eficiente de cada componente involucrado.
+
+##### Modelo secuencial de interacción 
+```mermaid
+sequenceDiagram
+    autonumber
+    actor user as user
+    participant controller as Controller
+    participant dispatcher as dispatcher
+    
+    controller->>user: solicita tecla
+    user->>controller: ingresa tecla
+
+    controller->>dispatcher: solicita evaluación
+    alt si tecla es válida
+        dispatcher->>controller: valida ejecución
+    end
+```
+
+Las acciones implementadas para el presente proyecto son las siguientes:
+- Mover cursor abajo
+- Mover cursor arriba
+- Apilar nuevo menú
+- Desapilar último menú
+- Salir del programa
+- Ir al menú de ayuda
+
+#### Mover cursor
+Como se mencionó en el apartado de cursor, este cuenta con métodos que permiten modificar su tupla de posición, donde el primer elemento representa la línea (Y) y el segundo elemento la columna (X).
 
 #### Pila de menús
 De nada serviría implementar varios menús, si no tenemos una manera de ordenarlos acorde a lo que el usuario requiera. Es por ello que se opta usar pilas tipo LIFO (Last In First Out), donde cada menu es un elemento de la pila. 
@@ -145,7 +151,11 @@ Imaginemos que estamos en el main menu, y el usuario selecciona la opción **1.0
         +-------------------------+
 ```
 
-Entonces vemos que la pila es una excelente manera de manejar la interacción de menús.
+El controlador por defecto siempre inicializa con un MainMenu() en su pila (una lista de menús) y el proceso de apilar y desapilar corresponde a métodos append y pop nativos de python para manipular listas.
 
-#### Dispatcher
-Una vez que tenemos todas las acciones necesarias para el sistema, se procede a implementar un ejecutor de acciones, el cual trabaja directamente con el módulo lector de entrada mencionado anteriormente (InputHandler).
+### Modelo
+El modelo, aislado totalmente de los otro módulos, se encarga de ejecutar los cálculos y modelamiento de componentes necesarios para obtener resultados de negocio.
+
+En este caso, para el proyecto se decide utilizar un modelo sencillo, que nos permita eliminar toda complejidad mientras se refactorizan el proyecto. Claro está que una vez maduro el proyecto, el modelo puede ser reemplazado por otro, como un calculador de circuitos RC.
+
+
