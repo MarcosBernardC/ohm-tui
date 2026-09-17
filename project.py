@@ -19,7 +19,7 @@ def mover_cursor(secuencia_entrada: list[str]) -> tuple[int, int]:
      
     return controller.menu_stack[-1].cursor.posicion 
 
-def navegar(secuencia_entrada: list[str]) -> str:
+det navegar(secuencia_entrada: list[str]) -> str:
     controller = Controller()
 
     for tecla_entrada in secuencia_entrada:

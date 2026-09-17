@@ -158,7 +158,31 @@ El modelo, aislado totalmente de los otro módulos, se encarga de ejecutar los c
 
 En este caso, para el proyecto se decide utilizar un modelo sencillo, que nos permita eliminar toda complejidad mientras se refactorizan el proyecto. Claro está que una vez maduro el proyecto, el modelo puede ser reemplazado por otro, como un calculador de circuitos RC.
 
-De acuerdo con lo mencionado se muestra las dependencias involucradas en el modelo (OhmModel):
+De acuerdo con lo mencionado se muestra un ejemplo de parámetro circuital del sistema:
+
+    class Voltaje {
+        - unidad: str
+        + valor: float
+    }
+
+#### Normalización de parámetros
+Es muy conocido , en el ambito profesional, que la representación científica de un parámetro es más que añadirle la unidad de medida al lado derecho (e.g. 0.001 A), ya que suponiendo querramos representar un número extremadamente pequeño ocupariamos gran espacio en solo digitar los decimales de dicho número. Es por ello que los prefijos del sistema internacional son tan útiles en estos casos.
+
+Por ejemplo supongamos que queremos representar la millonesima parte de una corriente electrica que fluye por una resistencia.
+
+corriente si prefijos SI:  
+$$
+c1 = 0.000001 A
+$$
+
+corriente con prefijos SI: 
+$$
+1 uA
+$$
+
+Para el presente proyecto se ha implementado un método de normalización de parámetros dentro de la clase OhmModel. Cuya lógica se actual es simple y directa.
+
+Finalmente, integrando cada parte del modelo, se muestra su representación completa.
 
 ```mermaid
 classDiagram
@@ -189,4 +213,37 @@ classDiagram
     }
     OhmModel *-- Corriente : componente de modelo
 ```
+## Tests
+Para probar exhaustivanente el flujo dw funcionamiento de la TUI se hizo uso de parametrize, la cual es una herramienta que nos permite realizar pruebas iterativas con distintas combinaciones de entradas posible.
 
+Por ejemplo, para verificar el funcionamiento del cursor implementado. Se prueban distintas combinaciones de movimiento.
+
+```python
+data_mover_cursor = [
+        (['k'], (1, 1)),
+        (['k', 'j'], (2, 1)),
+        (['k', 'j', 'j'], (3, 1)),
+        (['k', 'j', 'j', 'j'], (4, 1)),
+        (['k', 'j', 'j', 'j', 'j'], (5, 1)),
+        (['k', 'j', 'j', 'j', 'j', 'j', 'j'], (5, 1)),
+        ]
+@pytest.mark.parametrize("secuencia_de_movimiento, posicion_cursor", data_mover_cursor)
+def test_mover_cursor(secuencia_de_movimiento, posicion_cursor):
+    posicion_final = mover_cursor(secuencia_de_movimiento)
+
+    assert posicion_final == posicion_cursor
+```
+Este tipo de parametrización no se sería posible sin los wrappers implementados en el archivo principal project.py.
+
+Por ejemplo para los test anterioses se usa el wraper mover_cursor(), que simula leer una secuencia de teclas ingresadas por un usuario; para finalmente comprobar la posición del cursor (tupla) al terminar dicha secuencia.
+
+```python
+def mover_cursor(secuencia_entrada: list[str]) -> tuple[int, int]:
+    controller = Controller()
+     
+    for tecla_entrada in secuencia_entrada:
+        controller.kb_val = tecla_entrada
+        controller.exec_kb()
+     
+    return controller.menu_stack[-1].cursor.posicion 
+```
