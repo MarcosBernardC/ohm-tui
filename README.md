@@ -28,7 +28,7 @@ El cursor representa al típico puntero de opción en los menús que indica cual
 Su icono puede ser un símbolo representativo que le indique al usuario en que opción está, ejemplos típicos son **>**, **>>** o **▶**. Para el presente proyecto se opta por el símbolo **>** con una motivación meramente estética.
 
 #### Representación del cursor implementado.
-Debido a la necesidad de implementar un proyecto de esta magnitud, se requirió modularizar cada componente de tal modo que sean independientes unos de otros. Para el caso de este módulo su representación UML es la siguiente:
+Con la finalidad de implementar una arquitectura eficiente, se requirió modularizar el sistema en componentes separados con responsabilidad única. Para el caso de este módulo (cursor) se muestra la representación UML respectiva:
 
 ```mermaid
 classDiagram
@@ -48,7 +48,6 @@ classDiagram
         +rel_posicionY()
     }
 ```
-
 
 ### Menus
 Una TUI siempre muestra al usuario una capa de visualización, que le permite al mismo manejarse entre las diversas opciones implementadas en dicha TUI. Por ejemplo el menú principal, que suele contener las opciones principales del sistema.
@@ -153,17 +152,33 @@ Imaginemos que estamos en el main menu, y el usuario selecciona la opción **1.0
 
 El controlador por defecto siempre inicializa con un MainMenu() en su pila (una lista de menús) y el proceso de apilar y desapilar corresponde a métodos append y pop nativos de python para manipular listas.
 
+#### Edición de parámetros
+En algunos menús, es necesario modificar parámetros, para mantener una interacción cómoda se opta por usar el cursor (por ejemplo █) y dar un salto hacia el punto de edición. De esta manera, con una tecla podemos activar el modo edición.
+```text
+====================================
+         CÁLCULO DE VOLTAJE
+====================================
+> 1.1. Corriente (I)    : █.0
+  1.2. Resistencia (R)  : 0.0
+-----------------
+  Resultado (V)         : 0.0
+====================================
+Editar [l] . Volver [h] . Ayuda [?]
+```
+
 ### Modelo
 El modelo, aislado totalmente de los otro módulos, se encarga de ejecutar los cálculos y modelamiento de componentes necesarios para obtener resultados de negocio.
 
 En este caso, para el proyecto se decide utilizar un modelo sencillo, que nos permita eliminar toda complejidad mientras se refactorizan el proyecto. Claro está que una vez maduro el proyecto, el modelo puede ser reemplazado por otro, como un calculador de circuitos RC.
 
 De acuerdo con lo mencionado se muestra un ejemplo de parámetro circuital del sistema:
-
-    class Voltaje {
-        - unidad: str
+```mermaid
+classDiagram
+    class Voltaje{
+        + unidad: str
         + valor: float
     }
+```
 
 #### Normalización de parámetros
 Es muy conocido , en el ambito profesional, que la representación científica de un parámetro es más que añadirle la unidad de medida al lado derecho (e.g. 0.001 A), ya que suponiendo querramos representar un número extremadamente pequeño ocupariamos gran espacio en solo digitar los decimales de dicho número. Es por ello que los prefijos del sistema internacional son tan útiles en estos casos.
@@ -177,11 +192,31 @@ $$
 
 corriente con prefijos SI: 
 $$
-1 uA
+c1 = 1 uA
 $$
 
-Para el presente proyecto se ha implementado un método de normalización de parámetros dentro de la clase OhmModel. Cuya lógica se actual es simple y directa.
+Para el presente proyecto se ha implementado un método de normalización de parámetros dentro de la clase OhmModel. Cuya lógica se actual es simple y directa, multiplicando o dividiendo iteradamente hasta obtener una mantiza entre 1 y 999.
 
+```python
+while numero <= 1:
+    numero *= 1000
+    exponente -= 3
+while numero >= 999:
+    numero /= 1000
+    exponente += 3
+```
+
+El exponente resultante es convertido a su símbolo prefijo SI, mediante un diccionario:
+
+```python
+si_exp = {
+        -30: 'q', -27: 'r', -24: 'y', -21: 'z', -18: 'a', -15: 'f', -12: 'p', -9: 'n', -6: 'u', -3: 'm',
+        0: '',
+        3: 'k', 6: 'M', 9: 'G', 12: 'T', 15: 'P', 18: 'E', 21: 'Z', 24: 'Y', 27: 'R', 30: 'Q'
+        }
+```
+
+#### Modelo Final
 Finalmente, integrando cada parte del modelo, se muestra su representación completa.
 
 ```mermaid
@@ -213,6 +248,27 @@ classDiagram
     }
     OhmModel *-- Corriente : componente de modelo
 ```
+
+#### Integración del modelo en los menús.
+Como se mencionó en el apartados anteriores, algunos menús tienen integrados más componentes. Por ejemplo para los menús de cálculo, se utiliza el módulo de modelo.
+```mermaid
+classDiagram
+    class MenuCalcularVoltaje{
+        - cursor: Cursor
+        - banner: list[str]
+        - opt_str_list: list[str]
+        - footer: list[str]
+        - navigable: bool
+        +render()
+    }
+    class OhmModel{
+        - resistencia: Resistencia
+        - corriente: Corriente
+        - voltaje: Voltaje
+        + Normalizar()
+    }
+    MenuCalcularVoltaje *-- OhmModel  : componente dedicado
+```
 ## Tests
 Para probar exhaustivanente el flujo dw funcionamiento de la TUI se hizo uso de parametrize, la cual es una herramienta que nos permite realizar pruebas iterativas con distintas combinaciones de entradas posible.
 
@@ -235,7 +291,7 @@ def test_mover_cursor(secuencia_de_movimiento, posicion_cursor):
 ```
 Este tipo de parametrización no se sería posible sin los wrappers implementados en el archivo principal project.py.
 
-Por ejemplo para los test anterioses se usa el wraper mover_cursor(), que simula leer una secuencia de teclas ingresadas por un usuario; para finalmente comprobar la posición del cursor (tupla) al terminar dicha secuencia.
+Por ejemplo para los test anteriores se usa el wraper mover_cursor(), que simula leer una secuencia de teclas ingresadas por un usuario; para finalmente comprobar la posición del cursor (tupla) al terminar dicha secuencia.
 
 ```python
 def mover_cursor(secuencia_entrada: list[str]) -> tuple[int, int]:
