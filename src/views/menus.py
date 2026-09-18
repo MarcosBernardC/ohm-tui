@@ -1,6 +1,6 @@
 from dataclasses import dataclass, field
-from src.core.cursor import Cursor
-from src.models.model import Corriente, Voltaje, Resistencia, OhmModel
+from src.models.cursor import Cursor
+from src.models.ohm_model import Corriente, Voltaje, Resistencia, OhmModel
 
 @dataclass
 class MainMenu:
