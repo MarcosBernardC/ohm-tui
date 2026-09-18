@@ -247,3 +247,8 @@ def mover_cursor(secuencia_entrada: list[str]) -> tuple[int, int]:
      
     return controller.menu_stack[-1].cursor.posicion 
 ```
+
+## Estructura de archivos
+- project.py: archivo principal, que maneja al controlador del proyecto implementado.
+- README.md: archivo de información del proyecto implementado, detalla cada módulo y su funcionamiento, muestra diagramas UML y código de testing.
+- requirements.txt: contiene una sola librería (readchar), la cuál es necesaria para leer entradas sin una pausa de entrada típica como el stdin.
