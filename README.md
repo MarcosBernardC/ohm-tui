@@ -6,7 +6,203 @@ OHM-TUI es una calculadora implementada en una interfaz de usuario basada en tex
 
 Su arquitectura está implementada a nivel de interprete, esto es, que no depende de frameworks como Rich o Textual, sino que consta de una arquitectura MVC dedicada, con la finalidad de ir más allá del rendimiento; como, por ejemplo, el aprendizaje de patrones de software y clases desacopladas (diseño modular).
 
-## MODULOS IMPLEMENTADOS
+### Patrón MVC
+Durante el desarrollo del presente proyecto final, existieron momentos donde agregar una característica adicional superaba límites de complejidad y comprensión concurrente. Es por ello que se investigó acerca de patrones de diseño acordes al objetivo que se trazó en un inicio, crear una interfaz interactiva e intuitiva para el usuario de terminal.
+
+Después de probar con herencia, polimorfismo y un poco de composite, logramos encontrar un patrón que segmentaba las TUIs en algo más que funciones, el patrón MVC:
+```mermaid
+sequenceDiagram
+    autonumber
+    actor usuario as Usuario
+    participant vista as Vista
+    participant controlador as Controlador
+    participant modelo as Modelo
+
+    usuario->>vista: Interacción
+    vista->>controlador: Evento
+    controlador->>modelo: Modifica datos
+    modelo-->>controlador: Estado actualizado
+    controlador->>vista: Renderiza
+    vista->>usuario: Muestra cambios
+```
+
+Siguiendo este principio se logró implementar el proyecto cuyos detalles se abordan a continuación.
+
+### Modelos
+Existen dos tipos de modelo en el presente proyecto, el **modelo de dominio** y el **modelo de estado de interfaz**
+
+#### Modelo de dominio (OhmModel)
+Se encarga de ejecutar los cálculos y modelamiento de componentes necesarios para obtener el resultado de dominio (por ejemplo, modelar un circuito simple).
+
+##### Ley de Ohm
+La ley de Ohm nos dice que al aplicar un potencial electrico en los extremos de una resistencia, se producirá una corriente eléctrica a lo largo del circuito.
+
+```txt
+                      Resistencia
+               *--------/\/\/\/\--------*
+               |   ~~~~~> ~~~~~> ~~~~>  |
+               |       Corriente        |
+    Voltaje + ___                       | 
+            -  _       Corriente        | 
+               |   <~~~~~ <~~~~~ <~~~~  |
+               *------------------------*
+```
+
+Y que su relación matemática está definida por:
+
+$$
+V = I*R
+$$
+
+Cuyas unidades en el sistema internacional son:
+
+$$
+V: voltios (V)\\
+I: amperios (A)\\
+R: ohmios (Ω)
+$$
+
+De acuerdo con lo mencionado se muestra un ejemplo de parámetro circuital del sistema:
+
+```mermaid
+classDiagram
+    class Voltaje{
+        + unidad: str
+        + valor: float
+    }
+    class Corriente{
+        + unidad: str
+        + valor: float
+    }
+    class Resistencia{
+        + unidad: str
+        + valor: float
+    }
+```
+
+#### Calculo de parámetros.
+De la fórmula general, se puede deducir el cálculo de los parámetros restantes:
+
+$$
+I = \frac{V}{R} \quad \text{y} \quad R = \frac{V}{I}
+$$
+
+En las divisiones, hay que tener en cuenta los denominadores, que nunca pueden ser ceros. Por tanto se usan excepciones ***ZeroDivisionError*** para evitar errores en el sistema.
+
+Para el caso de calcular corriente sería:
+```python
+try:
+    self.corriente.valor = abs(self.voltaje.valor/self.resistencia.valor)
+    self.corriente.unidad = 'A'
+except ZeroDivisionError:
+    self.corriente.valor = "ERR"
+    self.corriente.unidad = ''
+```
+
+El valor absoluto se implementa por fines meramente de cálculo escalar.
+Este proceso lo realiza el método OhmModel.calcular del presente modelo.
+
+#### Notación de Ingeniería
+Para representar una magnitud física, existe la **Notación Científica** y la **Notación de Ingeniería**.
+
+Supongamos que queremos representar una corriente de 0.000047 amperios:
+
+Notación Científica:
+
+$$
+4.7 \times 10^{-5} A
+$$
+
+Notación de Ingeniería:
+
+$$
+47 \, \mu\text{A}
+$$
+
+##### Algoritmo de conversión
+Para aplicar notación científica a las magnitudes involucradas en el modelo, se implementa un algoritmo directo y fácil de entender. Consisten en multiplicar o dividir iterativamente el número hasta alcanzar una mantisa (valor numérico) en el rango de 0 y 1000:
+
+$$
+0 < \text{mantisa} < 1000
+$$
+```python
+while numero <= 1:
+    numero *= 1000
+    exponente -= 3
+while numero >= 999:
+    numero /= 1000
+    exponente += 3
+```
+
+El exponente resultante es convertido a su símbolo prefijo SI, mediante un diccionario:
+
+```python
+si_exp = {
+        -30: 'q', -27: 'r', -24: 'y', -21: 'z', -18: 'a', -15: 'f', -12: 'p', -9: 'n', -6: 'u', -3: 'm',
+        0: '',
+        3: 'k', 6: 'M', 9: 'G', 12: 'T', 15: 'P', 18: 'E', 21: 'Z', 24: 'Y', 27: 'R', 30: 'Q'
+        }
+```
+
+Para al final componerlo de la manera:
+
+$$
+ magnitud = mantisa [prefijo SI][unidad SI]
+$$
+
+Este proceso de conversión lo realiza el método OhmModel.normalizar del presente modelo.
+
+#### Modelo Final
+Finalmente, integrando cada parte del modelo, se muestra su representación completa.
+
+```mermaid
+classDiagram
+    class OhmModel{
+        - corriente: Corriente
+        - resistencia: Resistencia
+        - voltaje: Voltaje
+        
+        -calcular()
+
+        +normalizar()
+    }
+    class Voltaje {
+        - unidad: str
+        + valor: float
+    }
+    OhmModel *-- Voltaje : componente de modelo
+    class Resistencia {
+        - unidad: str
+        + valor: float
+    }
+    OhmModel *-- Resistencia : componente de modelo
+    class Corriente {
+        - unidad: str
+        + valor: float
+    }
+    OhmModel *-- Corriente : componente de modelo
+```
+
+#### Integración del modelo en los menús.
+Como se mencionó en el apartados anteriores, algunos menús tienen integrados más componentes. Por ejemplo para los menús de cálculo, se utiliza el módulo de modelo.
+```mermaid
+classDiagram
+    class MenuCalcularVoltaje{
+        - cursor: Cursor
+        - banner: list[str]
+        - opt_str_list: list[str]
+        - footer: list[str]
+        - navigable: bool
+        +render()
+    }
+    class OhmModel{
+        - resistencia: Resistencia
+        - corriente: Corriente
+        - voltaje: Voltaje
+        + normalizar()
+    }
+    MenuCalcularVoltaje *-- OhmModel  : componente dedicado
+```
 
 ### Terminal
 Terminal es un módulo creado para manejar la impresion de secuencias ANSI usando lenguaje python; como, por ejemplo, la secuencia para limpiar pantalla (un equivalente a clear en linux o cls en windows).
@@ -102,7 +298,6 @@ De la misma manera se crearon los siguientes menús:
 
 Más adelante veremos cómo algunos menús están compuestos de otras instancias asociadas (como por ejemplo los menús de cálculo, que necesitan un modelo para renderizar parametros numéricos)
 
-
 ### Controlador
 Para generar una interacción entre los componentes mencionados, se decidió crear una clase Controller, cuyo objetivo es el de orquestar el flujo desacoplado y eficiente de cada componente involucrado.
 
@@ -166,111 +361,7 @@ En algunos menús, es necesario modificar parámetros, para mantener una interac
 Editar [l] . Volver [h] . Ayuda [?]
 ```
 
-### Modelo
-El modelo, aislado totalmente de los otro módulos, se encarga de ejecutar los cálculos y modelamiento de componentes necesarios para obtener resultados de negocio.
 
-En este caso, para el proyecto se decide utilizar un modelo sencillo, que nos permita eliminar toda complejidad mientras se refactorizan el proyecto. Claro está que una vez maduro el proyecto, el modelo puede ser reemplazado por otro, como un calculador de circuitos RC.
-
-De acuerdo con lo mencionado se muestra un ejemplo de parámetro circuital del sistema:
-```mermaid
-classDiagram
-    class Voltaje{
-        + unidad: str
-        + valor: float
-    }
-```
-
-#### Normalización de parámetros
-Es muy conocido , en el ambito profesional, que la representación científica de un parámetro es más que añadirle la unidad de medida al lado derecho (e.g. 0.001 A), ya que suponiendo querramos representar un número extremadamente pequeño ocupariamos gran espacio en solo digitar los decimales de dicho número. Es por ello que los prefijos del sistema internacional son tan útiles en estos casos.
-
-Por ejemplo supongamos que queremos representar la millonesima parte de una corriente electrica que fluye por una resistencia.
-
-corriente si prefijos SI:  
-
-$$
-c1 = 0.000001 A
-$$
-
-corriente con prefijos SI: 
-
-$$
-c1 = 1 uA
-$$
-
-Para el presente proyecto se ha implementado un método de normalización de parámetros dentro de la clase OhmModel. Cuya lógica se actual es simple y directa, multiplicando o dividiendo iteradamente hasta obtener una mantiza entre 1 y 999.
-
-```python
-while numero <= 1:
-    numero *= 1000
-    exponente -= 3
-while numero >= 999:
-    numero /= 1000
-    exponente += 3
-```
-
-El exponente resultante es convertido a su símbolo prefijo SI, mediante un diccionario:
-
-```python
-si_exp = {
-        -30: 'q', -27: 'r', -24: 'y', -21: 'z', -18: 'a', -15: 'f', -12: 'p', -9: 'n', -6: 'u', -3: 'm',
-        0: '',
-        3: 'k', 6: 'M', 9: 'G', 12: 'T', 15: 'P', 18: 'E', 21: 'Z', 24: 'Y', 27: 'R', 30: 'Q'
-        }
-```
-
-#### Modelo Final
-Finalmente, integrando cada parte del modelo, se muestra su representación completa.
-
-```mermaid
-classDiagram
-    class OhmModel{
-        - corriente: Corriente
-        - resistencia: Resistencia
-        - voltaje: Voltaje
-
-        +calcular_voltaje()
-        +calcular_corriente()
-        +calcular_resistencia()
-
-        +normalizar()
-    }
-    class Voltaje {
-        - unidad: str
-        + valor: float
-    }
-    OhmModel *-- Voltaje : componente de modelo
-    class Resistencia {
-        - unidad: str
-        + valor: float
-    }
-    OhmModel *-- Resistencia : componente de modelo
-    class Corriente {
-        - unidad: str
-        + valor: float
-    }
-    OhmModel *-- Corriente : componente de modelo
-```
-
-#### Integración del modelo en los menús.
-Como se mencionó en el apartados anteriores, algunos menús tienen integrados más componentes. Por ejemplo para los menús de cálculo, se utiliza el módulo de modelo.
-```mermaid
-classDiagram
-    class MenuCalcularVoltaje{
-        - cursor: Cursor
-        - banner: list[str]
-        - opt_str_list: list[str]
-        - footer: list[str]
-        - navigable: bool
-        +render()
-    }
-    class OhmModel{
-        - resistencia: Resistencia
-        - corriente: Corriente
-        - voltaje: Voltaje
-        + Normalizar()
-    }
-    MenuCalcularVoltaje *-- OhmModel  : componente dedicado
-```
 ## Tests
 Para probar exhaustivanente el flujo dw funcionamiento de la TUI se hizo uso de parametrize, la cual es una herramienta que nos permite realizar pruebas iterativas con distintas combinaciones de entradas posible.
 
@@ -304,6 +395,34 @@ def mover_cursor(secuencia_entrada: list[str]) -> tuple[int, int]:
         controller.exec_kb()
      
     return controller.menu_stack[-1].cursor.posicion 
+```
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor usuario as Usuario
+    participant main as project.py (Main Loop)
+    participant ctrl as Controller
+    participant cursor as Cursor (Core)
+    participant model as OhmModel (Model)
+    participant view as Menu (Vista)
+
+    loop Bucle Principal
+        main->>ctrl: gestionar_menu()
+        ctrl->>view: render()
+        view->>usuario: Muestra pantalla en terminal
+        
+        main->>ctrl: read_kb() / exec_kb()
+        usuario->>ctrl: Presiona tecla (ej. 'j', 'k', 'l')
+        
+        alt Movimiento de Navegación (ej. 'j' o 'k')
+            ctrl->>cursor: mover_abajo() / mover_arriba()
+            cursor-->>ctrl: Actualiza posición (Y)
+        else Acción / Ingresar (ej. 'l')
+            ctrl->>model: Ejecuta lógica (ej. calcular_voltaje())
+            model-->>ctrl: Datos calculados y actualizados
+        end
+    end
 ```
 
 ## Estructura de archivos
