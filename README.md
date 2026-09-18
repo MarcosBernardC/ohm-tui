@@ -186,11 +186,13 @@ Es muy conocido , en el ambito profesional, que la representación científica d
 Por ejemplo supongamos que queremos representar la millonesima parte de una corriente electrica que fluye por una resistencia.
 
 corriente si prefijos SI:  
+
 $$
 c1 = 0.000001 A
 $$
 
 corriente con prefijos SI: 
+
 $$
 c1 = 1 uA
 $$
