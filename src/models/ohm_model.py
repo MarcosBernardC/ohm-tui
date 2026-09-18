@@ -21,24 +21,25 @@ class OhmModel:
     voltaje: Voltaje = field(default_factory=Voltaje)
     resistencia: Resistencia = field(default_factory=Resistencia)
 
-    def calcular_voltaje(self):
-        self.voltaje.valor = abs(self.corriente.valor*self.resistencia.valor)
+    def calcular(self, unidad):
+        match unidad:
+            case 'V':
+                self.voltaje.valor = abs(self.corriente.valor*self.resistencia.valor)
+            case 'A':
+                try:
+                    self.corriente.valor = abs(self.voltaje.valor/self.resistencia.valor)
+                    self.corriente.unidad = 'A'
+                except ZeroDivisionError:
+                    self.corriente.valor = "ERR"
+                    self.corriente.unidad = ''
+            case 'R':
+                try:
+                    self.resistencia.valor = abs(self.voltaje.valor/self.corriente.valor)
+                    self.resistencia.unidad = 'Ω'
+                except ZeroDivisionError:
+                    self.resistencia.valor = "ERR"
+                    self.resistencia.unidad = ''
 
-    def calcular_corriente(self):
-        try:
-            self.corriente.valor = abs(self.voltaje.valor/self.resistencia.valor)
-            self.corriente.unidad = 'A'
-        except ZeroDivisionError:
-            self.corriente.valor = "ERR"
-            self.corriente.unidad = ''
-
-    def calcular_resistencia(self):
-        try:
-            self.resistencia.valor = abs(self.voltaje.valor/self.corriente.valor)
-            self.resistencia.unidad = 'Ω'
-        except ZeroDivisionError:
-            self.resistencia.valor = "ERR"
-            self.resistencia.unidad = ''
 
     @staticmethod
     def normalizar(parametro):

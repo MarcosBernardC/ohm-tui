@@ -137,6 +137,7 @@ class MenuCalcularVoltaje:
         40*'=',
         "Editar [l] . Volver [h] . Ayuda [?]"])
     navigable: bool = True
+    main_param: str = 'V'
 
     def render(self):
         self.opt_str_list = [
@@ -181,6 +182,7 @@ class MenuCalcularCorriente:
         18*'-',
         "[Enter] Guardar | [h] Volver / Cancelar"]) 
     navigable: bool = True
+    main_param: str = 'A'
 
     def render(self):
         self.opt_str_list = [
@@ -225,6 +227,7 @@ class MenuCalcularResistencia:
         18*'-',
         "[Enter] Guardar | [h]RVolver / Cancelar"]) 
     navigable: bool = True
+    main_param: str = 'R'
 
     def render(self):
         self.opt_str_list = [

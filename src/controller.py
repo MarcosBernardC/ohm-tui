@@ -67,28 +67,28 @@ class Controller:
         match idmenu:
             case "1.":
                 self.menu_stack.append(MenuCalcularVoltaje())
-            case "1.1.":                
+            case "1.1.":
                 self.edit_value(cursor_edit_position=(4,27), edit_obj=menu.modelo.corriente, edit_param="valor")
-                menu.modelo.calcular_voltaje()
+                menu.modelo.calcular(self.menu_stack[-1].main_param)
             case "1.2.":
                 self.edit_value(cursor_edit_position=(5, 27), edit_obj=menu.modelo.resistencia, edit_param="valor")
-                menu.modelo.calcular_voltaje()
+                menu.modelo.calcular(self.menu_stack[-1].main_param)
             case "2.":
                 self.menu_stack.append(MenuCalcularCorriente())    
-            case "2.1.":                
+            case "2.1.":
                 self.edit_value(cursor_edit_position=(4, 27), edit_obj=menu.modelo.voltaje, edit_param="valor")
-                menu.modelo.calcular_corriente()
+                menu.modelo.calcular(self.menu_stack[-1].main_param)
             case "2.2.":
                 self.edit_value(cursor_edit_position=(5,27), edit_obj=menu.modelo.resistencia, edit_param="valor")
-                menu.modelo.calcular_corriente()
+                menu.modelo.calcular(self.menu_stack[-1].main_param)
             case "3.":
                 self.menu_stack.append(MenuCalcularResistencia())    
             case "3.1.":                
                 self.edit_value(cursor_edit_position=(4,27), edit_obj=menu.modelo.voltaje, edit_param="valor")
-                menu.modelo.calcular_resistencia()
+                menu.modelo.calcular(self.menu_stack[-1].main_param)
             case "3.2.":
                 self.edit_value(cursor_edit_position=(5,27), edit_obj=menu.modelo.corriente, edit_param="valor")
-                menu.modelo.calcular_resistencia()
+                menu.modelo.calcular(self.menu_stack[-1].main_param)
             case "4.":
                 self.menu_stack.append(MenuInfo())
             case "5.":
