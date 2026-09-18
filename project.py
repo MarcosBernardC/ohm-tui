@@ -25,40 +25,47 @@ def navegar(secuencia_entrada: list[str]) -> str:
     for tecla_entrada in secuencia_entrada:
         controller.kb_val = tecla_entrada
         controller.exec_kb()
-    if controller.menu_stack[-1].navigable:
-        return controller.menu_stack[-1].opt_str_list[controller.menu_stack[-1].cursor.rel_posicionY][0]
-    else:
-        return controller.menu_stack[-1].banner[1].strip()
 
-def calcular_parametro(secuencia_entrada: list[str], valor1: float, valor2: float, parametro: str):
+    menu = controller.menu_stack[-1]
+    cursor = menu.cursor
+    if menu.navigable:
+        return menu.opt_str_list[cursor.rel_posicionY][0]
+    else:
+        return menu.banner[1].strip()
+
+def calcular_parametro(secuencia_entrada: list[str], valor1: float, valor2: float):
     controller = Controller()
 
     for tecla_entrada in secuencia_entrada:
         controller.kb_val = tecla_entrada
         controller.exec_kb()
 
+    menu = controller.menu_stack[-1]
+    parametro = menu.main_param
+    modelo = menu.modelo
+
     match parametro:
-        case "voltaje":
-            controller.menu_stack[-1].modelo.corriente.valor = valor1
-            controller.menu_stack[-1].modelo.resistencia.valor = valor2
+        case "V":
+            modelo.corriente.valor = valor1
+            modelo.resistencia.valor = valor2
 
-            controller.menu_stack[-1].modelo.calcular_voltaje()
+            modelo.calcular(parametro)
 
-            return controller.menu_stack[-1].modelo.voltaje.valor
-        case "corriente":
-            controller.menu_stack[-1].modelo.voltaje.valor = valor1
-            controller.menu_stack[-1].modelo.resistencia.valor = valor2
+            return modelo.voltaje.valor
+        case "A":
+            menu.modelo.voltaje.valor = valor1
+            menu.modelo.resistencia.valor = valor2
 
-            controller.menu_stack[-1].modelo.calcular_corriente()
+            menu.modelo.calcular(parametro)
 
-            return controller.menu_stack[-1].modelo.corriente.valor
-        case "resistencia":
-            controller.menu_stack[-1].modelo.voltaje.valor = valor1
-            controller.menu_stack[-1].modelo.corriente.valor = valor2
+            return menu.modelo.corriente.valor
+        case "R":
+            menu.modelo.voltaje.valor = valor1
+            menu.modelo.corriente.valor = valor2
 
-            controller.menu_stack[-1].modelo.calcular_resistencia()
+            menu.modelo.calcular(parametro)
 
-            return controller.menu_stack[-1].modelo.resistencia.valor
+            return menu.modelo.resistencia.valor
 
 def normalizar_parametro(secuencia_entrada: list[str], nombre_parametro: str, valor: float) -> str:
     controller = Controller()
