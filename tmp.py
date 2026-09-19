@@ -25,27 +25,7 @@ def is_Decimal(valor):
 
 
 def main():
-    # Pruebas de normalización
-    resistencia = Resistencia()
-    num1 = input()
-    if is_Decimal(num1):
-        resistencia.valor = Decimal(num1).quantize(Decimal("0.01"), rounding=ROUND_HALF_UP)
-    
-    corriente = Corriente()
-    num2 = input()
-    if is_Decimal(num2):
-        corriente.valor = Decimal(num2).quantize(Decimal("0.01"), rounding=ROUND_HALF_UP)
-   
-    voltaje = Voltaje()
-    voltaje.valor = corriente.valor*resistencia.valor
-   
-    print(f"corriente = {corriente.valor} {corriente.unidad}\nresistencia = {resistencia.valor} {resistencia.unidad}\nvoltaje = {corriente.valor*resistencia.valor} {voltaje.unidad}")
-
-    print(f"type(voltaje.valor): {type(voltaje.valor)}")
-
-    voltaje_redondeado = voltaje.valor.quantize(Decimal("0.01"), rounding=ROUND_HALF_UP)
-
-    print(f"voltaje redondeado: {voltaje_redondeado}")
+    pass
 
 if __name__ == "__main__":
     main()
