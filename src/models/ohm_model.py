@@ -66,23 +66,23 @@ class OhmModel:
                 27: 'R',
                 30: 'Q'
                 }
-
-        mantisa_min = 1
-        mantisa_max = 999
+  
+        mantisa = round(parametro.valor, 2)
+ 
+        mantisa_min = 1.00
+        mantisa_max = 1000.00
         exponente = 0
-
-        numero = parametro.valor
-
-        if numero != 0 and numero != "ERR":
-            while numero <= mantisa_min:
-                numero *= 1000
+    
+        if mantisa != 0 and mantisa != "ERR":
+            while mantisa <= mantisa_min:
+                mantisa *= 1000
                 exponente -= 3
-            while numero >= mantisa_max:
-                numero /= 1000
+            while mantisa >= mantisa_max:
+                mantisa /= 1000
                 exponente += 3
             if exponente <= 30 and exponente >=-30:
                 parametro.prefijo_si = si_exp[exponente]
-                return(f"{numero:.2f} {parametro.prefijo_si}{parametro.unidad}")
+                return(f"{mantisa:.2f} {parametro.prefijo_si}{parametro.unidad}")
             else:
                 return(f"ERR")
         return (f"{parametro.valor}")
