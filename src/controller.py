@@ -2,6 +2,7 @@ from readchar import readkey
 
 import sys
 from dataclasses import dataclass, field
+from decimal import Decimal, InvalidOperation, ROUND_HALF_UP
 
 from src.terminal import Terminal
 from src.views.menus import MainMenu, MenuAyuda, MenuCalcularVoltaje, MenuCalcularCorriente, MenuCalcularResistencia, MenuInfo, OhmModel
@@ -41,20 +42,21 @@ class Controller:
             self.menu_stack.append(MenuAyuda())
 
     @staticmethod
-    def is_float(value):
+    def is_Decimal(value):
         try:
-            float(value)
+            Decimal(value)
             return True
-        except ValueError:
+        except InvalidOperation:
             return False
 
     def edit_value(self, cursor_edit_position: tuple[int, int], edit_obj: object, edit_param: str):
         Terminal.mostrar_cursor()
         Terminal.mover_cursor(cursor_edit_position[0], cursor_edit_position[1])
         value = input()
-        if Controller.is_float(value):
-            valor_a_editar = float(value)
-            setattr(edit_obj, edit_param, valor_a_editar)
+        
+        if Controller.is_Decimal(value):
+            valor_a_ingresar = Decimal(value).quantize(Decimal("0.0001"), rounding=ROUND_HALF_UP)
+            setattr(edit_obj, edit_param, valor_a_ingresar)
         else:
             print("valor inválido")
 

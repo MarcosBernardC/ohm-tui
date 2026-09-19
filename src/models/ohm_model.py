@@ -1,45 +1,27 @@
 from dataclasses import dataclass, field
+from decimal import Decimal, ROUND_HALF_UP, InvalidOperation
+
 
 @dataclass
 class Corriente:
     unidad: str = 'A'
-    valor: float = 0.0
+    valor: Decimal = field(default_factory=lambda : Decimal("0.00"))
 
 @dataclass
 class Voltaje:
     unidad: str = 'V'
-    valor: float = 0.0
+    valor: Decimal = field(default_factory=lambda : Decimal("0.00"))
 
 @dataclass
 class Resistencia:
     unidad: str = 'Ω'
-    valor: float = 0.0
+    valor: Decimal = field(default_factory=lambda: Decimal("0.00"))
 
 @dataclass
 class OhmModel:
     corriente: Corriente = field(default_factory=Corriente)
     voltaje: Voltaje = field(default_factory=Voltaje)
     resistencia: Resistencia = field(default_factory=Resistencia)
-
-    def calcular(self, unidad):
-        match unidad:
-            case 'V':
-                self.voltaje.valor = abs(self.corriente.valor*self.resistencia.valor)
-            case 'A':
-                try:
-                    self.corriente.valor = abs(self.voltaje.valor/self.resistencia.valor)
-                    self.corriente.unidad = 'A'
-                except ZeroDivisionError:
-                    self.corriente.valor = "ERR"
-                    self.corriente.unidad = ''
-            case 'R':
-                try:
-                    self.resistencia.valor = abs(self.voltaje.valor/self.corriente.valor)
-                    self.resistencia.unidad = 'Ω'
-                except ZeroDivisionError:
-                    self.resistencia.valor = "ERR"
-                    self.resistencia.unidad = ''
-
 
     @staticmethod
     def normalizar(parametro):
@@ -67,14 +49,13 @@ class OhmModel:
                 30: 'Q'
                 }
   
-        mantisa = round(parametro.valor, 2)
- 
-        mantisa_min = 1.00
-        mantisa_max = 1000.00
+        mantisa_min = Decimal("1.0000")
+        mantisa_max = Decimal("1000.0000")
         exponente = 0
     
-        if mantisa != 0 and mantisa != "ERR":
-            while mantisa <= mantisa_min:
+        if parametro.valor != 0 and parametro.valor != "ERR":
+            mantisa = parametro.valor
+            while mantisa < mantisa_min:
                 mantisa *= 1000
                 exponente -= 3
             while mantisa >= mantisa_max:
@@ -85,4 +66,25 @@ class OhmModel:
                 return(f"{mantisa:.2f} {parametro.prefijo_si}{parametro.unidad}")
             else:
                 return(f"ERR")
-        return (f"{parametro.valor}")
+        else:
+            return (f"{Decimal(parametro.valor).quantize(Decimal("0.01"), rounding=ROUND_HALF_UP)}")
+    
+    def calcular(self, unidad):
+        match unidad:
+            case 'V':
+                self.voltaje.valor = abs(self.corriente.valor*self.resistencia.valor).quantize(Decimal("0.0001"), rounding=ROUND_HALF_UP)
+            case 'A':
+                try:
+                    self.corriente.valor = abs(self.voltaje.valor/self.resistencia.valor).quantize(Decimal("0.0001"), rounding=ROUND_HALF_UP)
+                    self.corriente.unidad = 'A'
+                except (ZeroDivisionError, InvalidOperation):
+                    self.corriente.valor = "ERR"
+                    self.corriente.unidad = ''
+            case 'R':
+                try:
+                    self.resistencia.valor = abs(self.voltaje.valor/self.corriente.valor).quantize(Decimal("0.0001"), rounding=ROUND_HALF_UP)
+
+                    self.resistencia.unidad = 'Ω'
+                except ZeroDivisionError:
+                    self.resistencia.valor = "ERR"
+                    self.resistencia.unidad = ''
