@@ -1,5 +1,4 @@
 from readchar import readkey
-
 import sys
 from dataclasses import dataclass, field
 from decimal import Decimal, InvalidOperation

@@ -1,5 +1,5 @@
 from dataclasses import dataclass, field
-from decimal import Decimal, ROUND_HALF_EVEN, InvalidOperation
+from decimal import Decimal, ROUND_HALF_UP, ROUND_HALF_EVEN, InvalidOperation
 
 
 @dataclass
@@ -52,17 +52,29 @@ class OhmModel:
         mantisa_min = Decimal("1.00")
         mantisa_max = Decimal("1000.00")
         exponente = 0
-    
+        mantisa = parametro.valor
+
+
         if parametro.valor != Decimal("0") and parametro.valor != "ERR":
-            mantisa = parametro.valor
             while mantisa < mantisa_min:
                 mantisa *= 1000
                 exponente -= 3
             while mantisa >= mantisa_max:
                 mantisa /= 1000
                 exponente += 3
+
+            mantisa = mantisa.quantize(Decimal("0.01"), rounding=ROUND_HALF_EVEN)
+            
+            while mantisa < mantisa_min:
+                mantisa *= 1000
+                exponente -= 3
+            while mantisa >= mantisa_max:
+                mantisa /= 1000
+                exponente += 3
+ 
             if exponente <= 30 and exponente >=-30:
                 parametro.prefijo_si = si_exp[exponente]
+
             return(f"{mantisa.quantize(Decimal("0.01"), rounding=ROUND_HALF_EVEN)} {parametro.prefijo_si}{parametro.unidad}")
 
         elif parametro.valor == Decimal("0"):
