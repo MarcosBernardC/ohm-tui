@@ -87,14 +87,14 @@ $$
 I = \frac{V}{R} \quad \text{y} \quad R = \frac{V}{I}
 $$
 
-En las divisiones, hay que tener en cuenta los denominadores, que nunca pueden ser ceros. Por tanto se usan excepciones ***ZeroDivisionError*** para evitar errores en el sistema.
+En las divisiones, hay que tener en cuenta los denominadores, que nunca pueden ser ceros. Por tanto se usan excepciones ***ZeroDivisionError*** y ***InvalidOperation***, esta última excepción es debido al uso de la librería decimal.
 
 Para el caso de calcular corriente sería:
 ```python
 try:
     self.corriente.valor = abs(self.voltaje.valor/self.resistencia.valor)
     self.corriente.unidad = 'A'
-except ZeroDivisionError:
+except (ZeroDivisionError, InvalidOperation):
     self.corriente.valor = "ERR"
     self.corriente.unidad = ''
 ```
@@ -126,11 +126,11 @@ $$
 0 < \text{mantisa} < 1000
 $$
 ```python
-while numero <= 1:
-    numero *= 1000
+while mantisa < 1:
+    mantisa *= 1000
     exponente -= 3
-while numero >= 999:
-    numero /= 1000
+while mantisa >= 1000:
+    mantisa /= 1000
     exponente += 3
 ```
 
@@ -150,6 +150,17 @@ $$
  magnitud = mantisa [prefijo SI][unidad SI]
 $$
 
+Sin embargo, este proceso requiere un tratamiento especial al momento de renderizar los valores en el menú final. Por ello se agregó una validación final antes de retornar el valor normalizado:
+```python
+mantisa = mantisa.quantize(Decimal("0.01"), rounding=ROUND_HALF_EVEN)
+
+while mantisa < mantisa_min:
+    mantisa *= 1000
+    exponente -= 3
+while mantisa >= mantisa_max:
+    mantisa /= 1000
+    exponente += 3
+```
 Este proceso de conversión lo realiza el método OhmModel.normalizar del presente modelo.
 
 #### Modelo Final
@@ -363,7 +374,7 @@ Editar [l] . Volver [h] . Ayuda [?]
 
 
 ## Tests
-Para probar exhaustivanente el flujo dw funcionamiento de la TUI se hizo uso de parametrize, la cual es una herramienta que nos permite realizar pruebas iterativas con distintas combinaciones de entradas posible.
+Para probar exhaustivanente el flujo de funcionamiento de la TUI se hizo uso de parametrize, la cual es una herramienta que nos permite realizar pruebas iterativas con distintas combinaciones de entradas posible.
 
 Por ejemplo, para verificar el funcionamiento del cursor implementado. Se prueban distintas combinaciones de movimiento.
 
