@@ -2,7 +2,7 @@ from readchar import readkey
 
 import sys
 from dataclasses import dataclass, field
-from decimal import Decimal, InvalidOperation, ROUND_HALF_UP
+from decimal import Decimal, InvalidOperation
 
 from src.terminal import Terminal
 from src.views.menus import MainMenu, MenuAyuda, MenuCalcularVoltaje, MenuCalcularCorriente, MenuCalcularResistencia, MenuInfo, OhmModel
@@ -55,7 +55,7 @@ class Controller:
         value = input()
         
         if Controller.is_Decimal(value):
-            valor_a_ingresar = Decimal(value).quantize(Decimal("0.0001"), rounding=ROUND_HALF_UP)
+            valor_a_ingresar = Decimal(value)
             setattr(edit_obj, edit_param, valor_a_ingresar)
         else:
             print("valor inválido")

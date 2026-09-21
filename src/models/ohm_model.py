@@ -1,5 +1,5 @@
 from dataclasses import dataclass, field
-from decimal import Decimal, ROUND_HALF_UP, InvalidOperation
+from decimal import Decimal, ROUND_HALF_EVEN, InvalidOperation
 
 
 @dataclass
@@ -49,11 +49,11 @@ class OhmModel:
                 30: 'Q'
                 }
   
-        mantisa_min = Decimal("1.0000")
-        mantisa_max = Decimal("1000.0000")
+        mantisa_min = Decimal("1.00")
+        mantisa_max = Decimal("1000.00")
         exponente = 0
     
-        if parametro.valor != 0 and parametro.valor != "ERR":
+        if parametro.valor != Decimal("0") and parametro.valor != "ERR":
             mantisa = parametro.valor
             while mantisa < mantisa_min:
                 mantisa *= 1000
@@ -63,27 +63,27 @@ class OhmModel:
                 exponente += 3
             if exponente <= 30 and exponente >=-30:
                 parametro.prefijo_si = si_exp[exponente]
-                return(f"{mantisa:.2f} {parametro.prefijo_si}{parametro.unidad}")
-            else:
-                return(f"ERR")
-        else:
-            return (f"{Decimal(parametro.valor).quantize(Decimal("0.01"), rounding=ROUND_HALF_UP)}")
+            return(f"{mantisa.quantize(Decimal("0.01"), rounding=ROUND_HALF_EVEN)} {parametro.prefijo_si}{parametro.unidad}")
+
+        elif parametro.valor == Decimal("0"):
+            return (f"{Decimal(parametro.valor).quantize(Decimal("0.01"), rounding=ROUND_HALF_EVEN)}")
+
+        else: return (f"ERR")
     
     def calcular(self, unidad):
         match unidad:
             case 'V':
-                self.voltaje.valor = abs(self.corriente.valor*self.resistencia.valor).quantize(Decimal("0.0001"), rounding=ROUND_HALF_UP)
+                self.voltaje.valor = abs(self.corriente.valor*self.resistencia.valor)
             case 'A':
                 try:
-                    self.corriente.valor = abs(self.voltaje.valor/self.resistencia.valor).quantize(Decimal("0.0001"), rounding=ROUND_HALF_UP)
+                    self.corriente.valor = abs(self.voltaje.valor/self.resistencia.valor)
                     self.corriente.unidad = 'A'
                 except (ZeroDivisionError, InvalidOperation):
                     self.corriente.valor = "ERR"
                     self.corriente.unidad = ''
             case 'R':
                 try:
-                    self.resistencia.valor = abs(self.voltaje.valor/self.corriente.valor).quantize(Decimal("0.0001"), rounding=ROUND_HALF_UP)
-
+                    self.resistencia.valor = abs(self.voltaje.valor/self.corriente.valor)
                     self.resistencia.unidad = 'Ω'
                 except ZeroDivisionError:
                     self.resistencia.valor = "ERR"
