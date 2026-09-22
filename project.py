@@ -67,7 +67,7 @@ def calcular_parametro(secuencia_entrada: list[str], valor1: float, valor2: floa
 
             return menu.modelo.resistencia.valor
 
-def normalizar_parametro(secuencia_entrada: list[str], nombre_parametro: str, valor: float) -> str:
+def normalizar_parametro(secuencia_entrada: list[str], nombre_parametro: str, valor) -> str:
     controller = Controller()
 
     for tecla_entrada in secuencia_entrada:
