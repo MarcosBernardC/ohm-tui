@@ -12,18 +12,18 @@ Durante el desarrollo del presente proyecto final, existieron momentos donde agr
 Después de probar con herencia, polimorfismo y un poco de composite, logramos encontrar un patrón que segmentaba las TUIs en algo más que funciones, el patrón MVC:
 ```mermaid
 sequenceDiagram
-    autonumber
-    actor usuario as Usuario
-    participant vista as Vista
-    participant controlador as Controlador
-    participant modelo as Modelo
+autonumber
+actor usuario as Usuario
+participant vista as Vista
+participant controlador as Controlador
+participant modelo as Modelo
 
-    usuario->>vista: Interacción
-    vista->>controlador: Evento
-    controlador->>modelo: Modifica datos
-    modelo-->>controlador: Estado actualizado
-    controlador->>vista: Renderiza
-    vista->>usuario: Muestra cambios
+usuario->>vista: Interacción
+vista->>controlador: Evento
+controlador->>modelo: Modifica datos
+modelo-->>controlador: Estado actualizado
+controlador->>vista: Renderiza
+vista->>usuario: Muestra cambios
 ```
 
 Siguiendo este principio se logró implementar el proyecto cuyos detalles se abordan a continuación.
@@ -38,20 +38,20 @@ Se encarga de ejecutar los cálculos y modelamiento de componentes necesarios pa
 La ley de Ohm nos dice que al aplicar un potencial eléctrico en los extremos de una resistencia, se producirá una corriente eléctrica a lo largo del circuito.
 
 ```txt
-                      Resistencia
-               *--------/\/\/\/\--------*
-               |   ~~~~~> ~~~~~> ~~~~>  |
-               |       Corriente        |
-    Voltaje + ___                       | 
-            -  _       Corriente        | 
-               |   <~~~~~ <~~~~~ <~~~~  |
-               *------------------------*
+                  Resistencia
+           *--------/\/\/\/\--------*
+           |   ~~~~~> ~~~~~> ~~~~>  |
+           |       Corriente        |
+Voltaje + ___                       | 
+        -  _       Corriente        | 
+           |   <~~~~~ <~~~~~ <~~~~  |
+           *------------------------*
 ```
 
 Y que su relación matemática está definida por:
 
 $$
-V = I*R
+V = I \times R
 $$
 
 Cuyas unidades en el sistema internacional son:
@@ -66,18 +66,18 @@ De acuerdo con lo mencionado se muestra un ejemplo de parámetro circuital del s
 
 ```mermaid
 classDiagram
-    class Voltaje{
-        + unidad: str
-        + valor: Decimal
-    }
-    class Corriente{
-        + unidad: str
-        + valor: Decimal
-    }
-    class Resistencia{
-        + unidad: str
-        + valor: Decimal
-    }
+class Voltaje{
+    + unidad: str
+    + valor: Decimal
+}
+class Corriente{
+    + unidad: str
+    + valor: Decimal
+}
+class Resistencia{
+    + unidad: str
+    + valor: Decimal
+}
 ```
 
 Nótese que el atributo valor de cada componente es de tipo Decimal. Esta fue una implementación realizada al final del proyecto, debido a que ofrece una precisión aritmética mucho mayor que el clásico float nativo de python. Cabe resaltar que la librería decimal también es nativa.
@@ -106,11 +106,11 @@ En las divisiones, hay que tener en cuenta los denominadores, que nunca pueden s
 Para el caso de calcular corriente:
 ```python
 try:
-    self.corriente.valor = abs(self.voltaje.valor/self.resistencia.valor)
-    self.corriente.unidad = 'A'
+self.corriente.valor = abs(self.voltaje.valor/self.resistencia.valor)
+self.corriente.unidad = 'A'
 except (ZeroDivisionError, InvalidOperation):
-    self.corriente.valor = "ERR"
-    self.corriente.unidad = ''
+self.corriente.valor = "ERR"
+self.corriente.unidad = ''
 ```
 
 El valor absoluto se implementa por fines meramente de cálculo escalar.
@@ -138,10 +138,10 @@ Los prefijos SI, en su última actualización (año 2022) incluyó los valores d
 
 ```python
 si_exp = {
-        -30: 'q', -27: 'r', -24: 'y', -21: 'z', -18: 'a', -15: 'f', -12: 'p', -9: 'n', -6: 'u', -3: 'm',
-        0: '',
-        3: 'k', 6: 'M', 9: 'G', 12: 'T', 15: 'P', 18: 'E', 21: 'Z', 24: 'Y', 27: 'R', 30: 'Q'
-        }
+    -30: 'q', -27: 'r', -24: 'y', -21: 'z', -18: 'a', -15: 'f', -12: 'p', -9: 'n', -6: 'u', -3: 'm',
+    0: '',
+    3: 'k', 6: 'M', 9: 'G', 12: 'T', 15: 'P', 18: 'E', 21: 'Z', 24: 'Y', 27: 'R', 30: 'Q'
+    }
 ```
 
 ##### Algoritmo de conversión
@@ -154,11 +154,11 @@ $$
 Para lograr esto, se implementa un algoritmo directo y fácil de entender. Consiste en multiplicar o dividir iterativamente el número hasta alcanzar una mantisa (valor numérico) en el rango de 1 y 1000
 ```python
 while mantisa < 1:
-    mantisa *= 1000
-    exponente -= 3
+mantisa *= 1000
+exponente -= 3
 while mantisa >= 1000:
-    mantisa /= 1000
-    exponente += 3
+mantisa /= 1000
+exponente += 3
 ```
 
 Luego se redondea (en el presente proyecto a dos cifras) usando el método quantize de decimal.
@@ -167,25 +167,25 @@ Luego se redondea (en el presente proyecto a dos cifras) usando el método quant
 mantisa = mantisa.quantize(Decimal("0.01"), rounding=ROUND_HALF_EVEN)
 ```
 
-ROUND_HALF_EVEN es el redondeo estandar utilizado para metrología de precisión según el estandar ASTM E29.
+ROUND_HALF_EVEN es el redondeo estándar utilizado para metrología de precisión según la norma ASTM E29.
 
 Por último se verifica nuevamente si la mantisa subió a 1000.00 (caso especial), además se verifica si el exponente no ha excedido la notación de ingeniería (Quetta y Quecto)
 
 ```python
 while mantisa >= 1000:
-    mantisa /= 1000
-    exponente += 3
+mantisa /= 1000
+exponente += 3
 ```
 
 El exponente resultante es convertido a su símbolo prefijo SI, mediante el diccionario mostrado:
 ```python
 if exponente <= 30 and exponente >=-30:
-    parametro.prefijo_si = si_exp[exponente]
+parametro.prefijo_si = si_exp[exponente]
 ```
 
 Para al final componerlo de la manera:
 $$
- magnitud = mantisa [prefijo SI][unidad SI]
+magnitud = mantisa [prefijo SI][unidad SI]
 $$
 
 *_Este proceso de conversión lo realiza el método OhmModel.normalizar del presente modelo._
@@ -195,27 +195,27 @@ Finalmente, integrando cada parte del modelo, se muestra su representación comp
 
 ```mermaid
 classDiagram
-    class OhmModel{
-        
-        -calcular()
+class OhmModel{
+    
+    -calcular()
 
-        +normalizar()
-    }
-    class Voltaje {
-        - unidad: str
-        + valor: Decimal
-    }
-    OhmModel *-- Voltaje : componente de modelo
-    class Resistencia {
-        - unidad: str
-        + valor: Decimal
-    }
-    OhmModel *-- Resistencia : componente de modelo
-    class Corriente {
-        - unidad: str
-        + valor: Decimal
-    }
-    OhmModel *-- Corriente : componente de modelo
+    +normalizar()
+}
+class Voltaje {
+    - unidad: str
+    + valor: Decimal
+}
+OhmModel *-- Voltaje : componente de modelo
+class Resistencia {
+    - unidad: str
+    + valor: Decimal
+}
+OhmModel *-- Resistencia : componente de modelo
+class Corriente {
+    - unidad: str
+    + valor: Decimal
+}
+OhmModel *-- Corriente : componente de modelo
 ```
 
 ### Terminal
@@ -242,21 +242,21 @@ Con la finalidad de implementar una arquitectura eficiente, se requirió modular
 
 ```mermaid
 classDiagram
-    class Cursor{
-        - símbolo: str
-        - max_posicion:  tuple[int, int]
-        - min_posicion:  tuple[int, int]
-        - linea: int
-        - columna: int
+class Cursor{
+    - símbolo: str
+    - max_posicion:  tuple[int, int]
+    - min_posicion:  tuple[int, int]
+    - linea: int
+    - columna: int
 
-        +mover_arriba()
-        +mover_abajo()
-        +mover_derecha()
-        +mover_izquierda()
+    +mover_arriba()
+    +mover_abajo()
+    +mover_derecha()
+    +mover_izquierda()
 
-        +posicion()
-        +rel_posicionY()
-    }
+    +posicion()
+    +rel_posicionY()
+}
 ```
 
 ### Menus
@@ -264,13 +264,13 @@ Una TUI siempre muestra al usuario una capa de visualización, que le permite al
 
 ```bash
 ===========================================
-               OHM-TUI v1.0
+           OHM-TUI v1.0
 ===========================================
 > 1. Calcular Voltaje (V = I × R)
-  2. Calcular Corriente (I = V / R)
-  3. Calcular Resistencia (R = V / I)
-  4. Info
-  5. Ayuda
+2. Calcular Corriente (I = V / R)
+3. Calcular Resistencia (R = V / I)
+4. Info
+5. Ayuda
 ===========================================
 subir/bajar [k/j] . Entrar [l] . Salir [q]
 ```
@@ -285,21 +285,21 @@ Y aquí también podemos agregar un objeto que ya habíamos creado, el cursor de
 Es por ello que se decidió diseñar el objeto MainMenu de la siguiente manera:
 ```mermaid
 classDiagram
-    class MainMenu{
-        - banner: list[str]
-        - opt_str_list: list[str]
-        - footer: list[str]
-        - navigable: bool
-        +render()
-    }
-    class Cursor {
-        - min_posicion: tuple[int, int]
-        - max_posicion: tuple[int, int]
-        - posicion: tuple[int, int]
-        - symbol: str
-        + mover()
-    }
-    MainMenu *-- Cursor : componente dedicado
+class MainMenu{
+    - banner: list[str]
+    - opt_str_list: list[str]
+    - footer: list[str]
+    - navigable: bool
+    +render()
+}
+class Cursor {
+    - min_posicion: tuple[int, int]
+    - max_posicion: tuple[int, int]
+    - posicion: tuple[int, int]
+    - symbol: str
+    + mover()
+}
+MainMenu *-- Cursor : componente dedicado
 ```
 Este diseño desacopla el estado del menú del cursor, generando una arquitectura más limpia y funcional.
 
@@ -311,29 +311,29 @@ De la misma manera se crearon los siguientes menús:
 Para este tipo de menús se integra el modelo OhmModel implementado en apartados anteriores.
 ```mermaid
 classDiagram
-    class MenuCalcularVoltaje{
-        - cursor: Cursor
-        - banner: list[str]
-        - opt_str_list: list[str]
-        - footer: list[str]
-        - navigable: bool
-        +render()
-    }
-    class OhmModel{
-        - resistencia: Resistencia
-        - corriente: Corriente
-        - voltaje: Voltaje
-        + normalizar()
-    }
-    MenuCalcularVoltaje *-- OhmModel  : componente dedicado
-    class Cursor {
-        - min_posicion: tuple[int, int]
-        - max_posicion: tuple[int, int]
-        - posicion: tuple[int, int]
-        - symbol: str
-        + mover()
-    }
-    MenuCalcularVoltaje *-- Cursor : componente dedicado
+class MenuCalcularVoltaje{
+    - cursor: Cursor
+    - banner: list[str]
+    - opt_str_list: list[str]
+    - footer: list[str]
+    - navigable: bool
+    +render()
+}
+class OhmModel{
+    - resistencia: Resistencia
+    - corriente: Corriente
+    - voltaje: Voltaje
+    + normalizar()
+}
+MenuCalcularVoltaje *-- OhmModel  : componente dedicado
+class Cursor {
+    - min_posicion: tuple[int, int]
+    - max_posicion: tuple[int, int]
+    - posicion: tuple[int, int]
+    - symbol: str
+    + mover()
+}
+MenuCalcularVoltaje *-- Cursor : componente dedicado
 ```
 
 De la misma manera se crearon los siguientes menús: 
@@ -346,18 +346,18 @@ Para generar una interacción entre los componentes mencionados, se decidió cre
 ##### Modelo secuencial de interacción 
 ```mermaid
 sequenceDiagram
-    autonumber
-    actor user as user
-    participant controller as Controller
-    participant dispatcher as dispatcher
-    
-    controller->>user: solicita tecla
-    user->>controller: ingresa tecla
+autonumber
+actor user as user
+participant controller as Controller
+participant dispatcher as dispatcher
 
-    controller->>dispatcher: solicita evaluación
-    alt si tecla es válida
-        dispatcher->>controller: valida ejecución
-    end
+controller->>user: solicita tecla
+user->>controller: ingresa tecla
+
+controller->>dispatcher: solicita evaluación
+alt si tecla es válida
+    dispatcher->>controller: valida ejecución
+end
 ```
 
 Las acciones implementadas para el presente proyecto son las siguientes:
@@ -374,17 +374,17 @@ Como se mencionó en el apartado de cursor, este cuenta con métodos que permite
 #### Pila de menús
 De nada serviría implementar varios menús, si no tenemos una manera de ordenarlos acorde a lo que el usuario requiera. Es por ello que se opta usar pilas tipo LIFO (Last In First Out), donde cada menu es un elemento de la pila. 
 
-Imaginemos que estamos en el main menu, y el usuario selecciona la opción **1.0** (Calcular Voltaje), entonces el menú que debe apilarse sería MenuCalcularVoltaje. Quedando la pila de la siguiente manera.
+Imaginemos que estamos en el main menu, y el usuario selecciona la opción **1.** (Calcular Voltaje), entonces el menú que debe apilarse sería MenuCalcularVoltaje. Quedando la pila de la siguiente manera.
 
 ```text
-  Pila: menu_stack[MainMenu(), MenuCalcularVoltaje(), ...]
-        +-------------------------+
-        |           ...           | -> render()
-        +-------------------------+
-        |   MenuCalcularVoltaje   | -> render()
-        +-------------------------+
-        |        MainMenu         | -> render()
-        +-------------------------+
+Pila: menu_stack[MainMenu(), MenuCalcularVoltaje(), ...]
+    +-------------------------+
+    |           ...           | -> render()
+    +-------------------------+
+    |   MenuCalcularVoltaje   | -> render()
+    +-------------------------+
+    |        MainMenu         | -> render()
+    +-------------------------+
 ```
 
 El controlador por defecto siempre inicializa con un MainMenu() en su pila (una lista de menús) y el proceso de apilar y desapilar corresponde a métodos append y pop nativos de python para manipular listas.
@@ -393,36 +393,36 @@ El controlador por defecto siempre inicializa con un MainMenu() en su pila (una 
 En algunos menús, es necesario modificar parámetros, para mantener una interacción cómoda se opta por usar el cursor (por ejemplo █) y dar un salto hacia el punto de edición. De esta manera, con una tecla podemos activar el modo edición.
 ```text
 ====================================
-         CÁLCULO DE VOLTAJE
+     CÁLCULO DE VOLTAJE
 ====================================
 > 1.1. Corriente (I)    : █.0
-  1.2. Resistencia (R)  : 0.0
+1.2. Resistencia (R)  : 0.0
 -----------------
-  Resultado (V)         : 0.0
+Resultado (V)         : 0.0
 ====================================
 Editar [l] . Volver [h] . Ayuda [?]
 ```
 
 
 ## Tests
-Para probar exhaustivamente el flujo de funcionamiento de la TUI se hizo uso de parametrize, la cual es una herramienta que nos permite realizar pruebas iterativas con distintas combinaciones de entradas posibles.
+Para probar exhaustivamente el flujo de funcionamiento de la TUI se hizo uso de pytest.mark.parametrize, la cual es una herramienta que nos permite realizar pruebas iterativas con distintas combinaciones de entradas posibles.
 
 Por ejemplo, para verificar el funcionamiento del cursor implementado. Se prueban distintas combinaciones de movimiento.
 
 ```python
 data_mover_cursor = [
-        (['k'], (1, 1)),
-        (['k', 'j'], (2, 1)),
-        (['k', 'j', 'j'], (3, 1)),
-        (['k', 'j', 'j', 'j'], (4, 1)),
-        (['k', 'j', 'j', 'j', 'j'], (5, 1)),
-        (['k', 'j', 'j', 'j', 'j', 'j', 'j'], (5, 1)),
-        ]
+    (['k'], (1, 1)),
+    (['k', 'j'], (2, 1)),
+    (['k', 'j', 'j'], (3, 1)),
+    (['k', 'j', 'j', 'j'], (4, 1)),
+    (['k', 'j', 'j', 'j', 'j'], (5, 1)),
+    (['k', 'j', 'j', 'j', 'j', 'j', 'j'], (5, 1)),
+    ]
 @pytest.mark.parametrize("secuencia_de_movimiento, posicion_cursor", data_mover_cursor)
 def test_mover_cursor(secuencia_de_movimiento, posicion_cursor):
-    posicion_final = mover_cursor(secuencia_de_movimiento)
+posicion_final = mover_cursor(secuencia_de_movimiento)
 
-    assert posicion_final == posicion_cursor
+assert posicion_final == posicion_cursor
 ```
 Este tipo de parametrización no se sería posible sin los wrappers implementados en el archivo principal project.py.
 
@@ -430,44 +430,23 @@ Por ejemplo para los test anteriores se usa el wrapper mover_cursor(), que simul
 
 ```python
 def mover_cursor(secuencia_entrada: list[str]) -> tuple[int, int]:
-    controller = Controller()
-     
-    for tecla_entrada in secuencia_entrada:
-        controller.kb_val = tecla_entrada
-        controller.exec_kb()
-     
-    return controller.menu_stack[-1].cursor.posicion 
+controller = Controller()
+ 
+for tecla_entrada in secuencia_entrada:
+    controller.kb_val = tecla_entrada
+    controller.exec_kb()
+ 
+return controller.menu_stack[-1].cursor.posicion 
 ```
 
-```mermaid
-sequenceDiagram
-    autonumber
-    actor usuario as Usuario
-    participant main as project.py (Main Loop)
-    participant ctrl as Controller
-    participant cursor as Cursor (Core)
-    participant model as OhmModel (Model)
-    participant view as Menu (Vista)
-
-    loop Bucle Principal
-        main->>ctrl: gestionar_menu()
-        ctrl->>view: render()
-        view->>usuario: Muestra pantalla en terminal
-        
-        main->>ctrl: read_kb() / exec_kb()
-        usuario->>ctrl: Presiona tecla (ej. 'j', 'k', 'l')
-        
-        alt Movimiento de Navegación (ej. 'j' o 'k')
-            ctrl->>cursor: mover_abajo() / mover_arriba()
-            cursor-->>ctrl: Actualiza posición (Y)
-        else Acción / Ingresar (ej. 'l')
-            ctrl->>model: Ejecuta lógica (ej. calcular_voltaje())
-            model-->>ctrl: Datos calculados y actualizados
-        end
-    end
-```
+De una manera análoga se implementaron en total los siguientes wrappers para testing: 
+- mover_cursor()
+- navegar()
+- calcular_parametro()
+- normalizar_parametro()
 
 ## Estructura de archivos
 - project.py: archivo principal, que maneja al controlador del proyecto implementado.
 - README.md: archivo de información del proyecto implementado, detalla cada módulo y su funcionamiento, muestra diagramas UML y código de testing.
-- requirements.txt: contiene una sola librería (readchar), la cual es necesaria para leer entradas sin un salto de línea adicional. 
+- requirements.txt: contiene una sola librería (readchar), la cual es necesaria para leer entradas sin un salto de línea adicional.
+- test_project.py: archivo de pruebas, para el cual se utilizó parametrize, lo que permitió implementar el testing secuencias de entrada de una manera iterativa. Además, se utilizaron wrappers de funcionalidad, que imitan el comportamiento de la arquitectura interna, utilizando como objeto principal la clase Controller, el cual es el núcleo del sistema.
