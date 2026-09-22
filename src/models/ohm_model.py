@@ -74,9 +74,9 @@ class OhmModel:
  
             if exponente <= 30 and exponente >=-30:
                 parametro.prefijo_si = si_exp[exponente]
-
-            return(f"{mantisa.quantize(Decimal("0.01"), rounding=ROUND_HALF_EVEN)} {parametro.prefijo_si}{parametro.unidad}")
-
+                return(f"{mantisa.quantize(Decimal("0.01"), rounding=ROUND_HALF_EVEN)} {parametro.prefijo_si}{parametro.unidad}")
+            else:
+                return("ERR")
         elif parametro.valor == Decimal("0"):
             return (f"{Decimal(parametro.valor).quantize(Decimal("0.01"), rounding=ROUND_HALF_EVEN)}")
 
