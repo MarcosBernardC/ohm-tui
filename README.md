@@ -445,6 +445,16 @@ De una manera análoga se implementaron en total los siguientes wrappers para te
 - calcular_parametro()
 - normalizar_parametro()
 
+En general se obtuvieron 75 tests pasados, que prueban cada característica del sistema implementado:
+
+```text
+...
+test_project.py::test_normalizar_parametro[secuencia_entrada34-corriente-valor34-1.00 kA] PASSED [ 98%]
+test_project.py::test_normalizar_parametro[secuencia_entrada35-resistencia-valor35-1.00 k\u03a9] PASSED [100%]
+
+=========================== 75 passed in 0.07s ===========================
+```
+
 ## Estructura de archivos
 - project.py: archivo principal, que maneja al controlador del proyecto implementado.
 - README.md: archivo de información del proyecto implementado, detalla cada módulo y su funcionamiento, muestra diagramas UML y código de testing.
