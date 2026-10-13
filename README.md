@@ -6,29 +6,31 @@ OHM-TUI es una calculadora implementada en una interfaz de usuario basada en tex
 
 Su arquitectura está implementada directamente sobre la terminal, esto es, que no depende de frameworks como Rich o Textual, sino que consta de una arquitectura MVC dedicada. El objetivo inicial fue implementar una TUI eficiente, lo que conllevó a aprender patrones de diseño y clases desacopladas (diseño modular).
 
+## Componentes del proyecto
 ### Patrón MVC
 Durante el desarrollo del presente proyecto final, existieron momentos donde agregar una característica adicional superaba límites de complejidad y comprensión concurrente. Es por ello que se investigó acerca de patrones de diseño acordes al objetivo que se trazó en un inicio, crear una interfaz interactiva e intuitiva para el usuario de terminal.
 
 Después de probar con herencia, polimorfismo y un poco de composite, logramos encontrar un patrón que segmentaba las TUIs en algo más que funciones, el patrón MVC:
 ```mermaid
 sequenceDiagram
-autonumber
-actor usuario as Usuario
-participant vista as Vista
-participant controlador as Controlador
-participant modelo as Modelo
+    autonumber
+    actor usuario as Usuario
+    participant controlador as Controlador
+    participant vista as Vista
+    participant modelo as Modelo
 
-usuario->>vista: Interacción
-vista->>controlador: Evento
-controlador->>modelo: Modifica datos
-modelo-->>controlador: Estado actualizado
-controlador->>vista: Renderiza
-vista->>usuario: Muestra cambios
+    usuario->>controlador: Presiona tecla (read_kb)
+    controlador->>vista: Mueve cursor / Cambia menú (stack)
+    vista->>vista: render() con posición del cursor
+    controlador->>modelo: Modifica parámetro y calcula
+    modelo-->>controlador: Devuelve resultado
+    controlador->>vista: Actualiza datos de la vista
+    vista->>usuario: Muestra pantalla actualizada
 ```
 
 Siguiendo este principio se logró implementar el proyecto cuyos detalles se abordan a continuación.
 
-### Modelos
+### Modelo
 Existen dos tipos de modelo en el presente proyecto, el **modelo de dominio** y el **modelo de estado de interfaz**
 
 #### Modelo de dominio (OhmModel)
@@ -106,11 +108,11 @@ En las divisiones, hay que tener en cuenta los denominadores, que nunca pueden s
 Para el caso de calcular corriente:
 ```python
 try:
-self.corriente.valor = abs(self.voltaje.valor/self.resistencia.valor)
-self.corriente.unidad = 'A'
+    self.corriente.valor = abs(self.voltaje.valor/self.resistencia.valor)
+    self.corriente.unidad = 'A'
 except (ZeroDivisionError, InvalidOperation):
-self.corriente.valor = "ERR"
-self.corriente.unidad = ''
+    self.corriente.valor = "ERR"
+    self.corriente.unidad = ''
 ```
 
 El valor absoluto se implementa por fines meramente de cálculo escalar.
@@ -218,21 +220,6 @@ class Corriente {
 OhmModel *-- Corriente : componente de modelo
 ```
 
-### Terminal
-Terminal es un módulo creado para manejar la impresión de secuencias ANSI usando lenguaje python; como, por ejemplo, la secuencia para limpiar pantalla (un equivalente a clear en linux o cls en windows).
-
-**Secuencias implementadas:**
-
-- Limpiar pantalla: "\33[2J"
-- Mover cursor (línea, columna): f"\033[{line};{column}f"
-- Ocultar Cursor: "\033[?25l"
-- Mostrar Cursor: "\033[?25h"
-
-**Combinación de secuencias:**
-
-- Limpiar pantalla + Mover Cursor
-
-
 ### Cursor (selector de opción)
 El cursor representa al típico puntero de opción en los menús que indica cual opción es la seleccionada.
 Su icono puede ser un símbolo representativo que le indique al usuario en que opción está, ejemplos típicos son **>**, **>>** o **▶**. Para el presente proyecto se opta por el símbolo **>** con una motivación meramente estética.
@@ -259,7 +246,7 @@ class Cursor{
 }
 ```
 
-### Menus
+### Vista
 Una TUI siempre muestra al usuario una capa de visualización, que le permite al mismo manejarse entre las diversas opciones implementadas en dicha TUI. Por ejemplo el menú principal, que suele contener las opciones principales del sistema.
 
 ```bash
@@ -287,9 +274,9 @@ Es por ello que se decidió diseñar el objeto MainMenu de la siguiente manera:
 classDiagram
 class MainMenu{
     - banner: list[str]
-    - opt_str_list: list[str]
     - footer: list[str]
     - navigable: bool
+    - opt_str_list: list[str] 
     +render()
 }
 class Cursor {
@@ -312,11 +299,10 @@ Para este tipo de menús se integra el modelo OhmModel implementado en apartados
 ```mermaid
 classDiagram
 class MenuCalcularVoltaje{
-    - cursor: Cursor
     - banner: list[str]
-    - opt_str_list: list[str]
     - footer: list[str]
     - navigable: bool
+    - opt_str_list: list[str]
     +render()
 }
 class OhmModel{
@@ -339,6 +325,20 @@ MenuCalcularVoltaje *-- Cursor : componente dedicado
 De la misma manera se crearon los siguientes menús: 
 - MenuCalcularCorriente
 - MenuCalcularResistencia
+
+### Terminal
+Terminal es un módulo creado para manejar la impresión de secuencias ANSI usando lenguaje python; como, por ejemplo, la secuencia para limpiar pantalla (un equivalente a clear en linux o cls en windows).
+
+**Secuencias implementadas:**
+
+- Limpiar pantalla: "\33[2J"
+- Mover cursor (línea, columna): f"\033[{line};{column}f"
+- Ocultar Cursor: "\033[?25l"
+- Mostrar Cursor: "\033[?25h"
+
+**Combinación de secuencias:**
+
+- Limpiar pantalla + Mover Cursor
 
 ### Controlador
 Para generar una interacción entre los componentes mencionados, se decidió crear una clase Controller, cuyo objetivo es el de orquestar el flujo desacoplado y eficiente de cada componente involucrado.
