@@ -1,42 +1,41 @@
 # OHM-TUI v1.0 🔋⚡
 
-#### Demo video: https://www.youtube.com
-#### Descripción:
+Demo video: https://www.youtube.com
+## DESCRIPCIÓN
 OHM-TUI es una calculadora implementada en una interfaz de usuario basada en texto (de sus siglas en inglés TUI: Text User Interface), que permite editar y calcular de manera interactiva las fórmulas referentes a las leyes de Ohm. 
 
-Su arquitectura está implementada directamente sobre la terminal, esto es, que no depende de frameworks como Rich o Textual, sino que consta de una arquitectura MVC dedicada. El objetivo inicial fue implementar una TUI eficiente, lo que conllevó a aprender patrones de diseño y clases desacopladas (diseño modular).
+Su arquitectura está implementada directamente sobre la terminal, esto es, que no depende de frameworks como Rich o Textual, sino que consta de una arquitectura MVC dedicada. El objetivo inicial fue implementar una TUI eficiente, lo que conllevó a aprender patrones de diseño y clases desacopladas (diseño modula
 
-## Componentes del proyecto
-### Patrón MVC
+## COMPONENTES DEL PROYECTO
+### PATRÓN MVC
 Durante el desarrollo del presente proyecto final, existieron momentos donde agregar una característica adicional superaba límites de complejidad y comprensión concurrente. Es por ello que se investigó acerca de patrones de diseño acordes al objetivo que se trazó en un inicio, crear una interfaz interactiva e intuitiva para el usuario de terminal.
 
 Después de probar con herencia, polimorfismo y un poco de composite, logramos encontrar un patrón que segmentaba las TUIs en algo más que funciones, el patrón MVC:
 ```mermaid
 sequenceDiagram
-    autonumber
-    actor usuario as Usuario
-    participant controlador as Controlador
-    participant vista as Vista
-    participant modelo as Modelo
+    actor U as Usuario
+    participant C as Controller
+    participant M as Model
+    participant V as View
 
-    usuario->>controlador: Presiona tecla (read_kb)
-    controlador->>vista: Mueve cursor / Cambia menú (stack)
-    vista->>vista: render() con posición del cursor
-    controlador->>modelo: Modifica parámetro y calcula
-    modelo-->>controlador: Devuelve resultado
-    controlador->>vista: Actualiza datos de la vista
-    vista->>usuario: Muestra pantalla actualizada
+    U->>C: Interacción
+    C->>M: Solicitar operación
+    M-->>C: Resultado
+    C->>V: Actualizar vista
+    V-->>U: Mostrar interfaz
 ```
 
 Siguiendo este principio se logró implementar el proyecto cuyos detalles se abordan a continuación.
 
-### Modelo
+---
+
+### MODELO
 Existen dos tipos de modelo en el presente proyecto, el **modelo de dominio** y el **modelo de estado de interfaz**
 
-#### Modelo de dominio (OhmModel)
+#### MODELO DE DOMINIO (OhmModel)
 Se encarga de ejecutar los cálculos y modelamiento de componentes necesarios para obtener el resultado de dominio (por ejemplo, modelar un circuito simple).
 
-##### Ley de Ohm
+##### LEY DE OHM
 La ley de Ohm nos dice que al aplicar un potencial eléctrico en los extremos de una resistencia, se producirá una corriente eléctrica a lo largo del circuito.
 
 ```txt
@@ -82,6 +81,8 @@ class Resistencia{
 }
 ```
 
+---
+
 Nótese que el atributo valor de cada componente es de tipo Decimal. Esta fue una implementación realizada al final del proyecto, debido a que ofrece una precisión aritmética mucho mayor que el clásico float nativo de python. Cabe resaltar que la librería decimal también es nativa.
 
 ```python
@@ -96,7 +97,7 @@ suma_normal: 0.30000000000000004
 suma_Decimal: 0.3
 ```
 
-#### Cálculo de parámetros. (OhmModel.calcular)
+##### CÁLCULO DE PARÁMETROS
 De la fórmula general, se puede deducir el cálculo de los parámetros restantes:
 
 $$
@@ -119,7 +120,7 @@ El valor absoluto se implementa por fines meramente de cálculo escalar.
 
 *_Este proceso lo realiza el método calcular de OhmModel._
 
-#### Notación de Ingeniería (OhmModel.normalizar)
+##### NOTACIÓN DE INGENIERÍA
 Para representar una magnitud física, existe la **Notación Científica** y la **Notación de Ingeniería**.
 
 Supongamos que queremos representar una corriente de 0.000047 amperios:
@@ -146,7 +147,7 @@ si_exp = {
     }
 ```
 
-##### Algoritmo de conversión
+###### CONVERSIÓN
 Para aplicar notación de ingeniería a las magnitudes involucradas en el modelo, se requiere mantener la mantisa en el siguiente rango:
 
 $$
@@ -192,7 +193,7 @@ $$
 
 *_Este proceso de conversión lo realiza el método OhmModel.normalizar del presente modelo._
 
-#### Modelo Final
+#### DIAGRAMA UML
 Finalmente, integrando cada parte del modelo, se muestra su representación completa.
 
 ```mermaid
@@ -220,33 +221,7 @@ class Corriente {
 OhmModel *-- Corriente : componente de modelo
 ```
 
-### Cursor (selector de opción)
-El cursor representa al típico puntero de opción en los menús que indica cual opción es la seleccionada.
-Su icono puede ser un símbolo representativo que le indique al usuario en que opción está, ejemplos típicos son **>**, **>>** o **▶**. Para el presente proyecto se opta por el símbolo **>** con una motivación meramente estética.
-
-#### Representación del cursor implementado.
-Con la finalidad de implementar una arquitectura eficiente, se requirió modularizar el sistema en componentes separados con responsabilidad única. Para el caso de este módulo (cursor) se muestra la representación UML respectiva:
-
-```mermaid
-classDiagram
-class Cursor{
-    - símbolo: str
-    - max_posicion:  tuple[int, int]
-    - min_posicion:  tuple[int, int]
-    - linea: int
-    - columna: int
-
-    +mover_arriba()
-    +mover_abajo()
-    +mover_derecha()
-    +mover_izquierda()
-
-    +posicion()
-    +rel_posicionY()
-}
-```
-
-### Vista
+### VISTA 
 Una TUI siempre muestra al usuario una capa de visualización, que le permite al mismo manejarse entre las diversas opciones implementadas en dicha TUI. Por ejemplo el menú principal, que suele contener las opciones principales del sistema.
 
 ```bash
@@ -292,9 +267,48 @@ Este diseño desacopla el estado del menú del cursor, generando una arquitectur
 
 De la misma manera se crearon los siguientes menús: 
 - MenuAyuda
+```bash
+==========================
+      Ayuda / Atajos
+==========================
+[j] Mover abajo    ▼
+[k] Mover arriba   ▲
+[h] Volver atrás   ◄
+[l] Ingresar       ►
+[q] Salir
+==========================
+Volver [h] . Salir [q]
+```
 - MenuInfo
+```bash
+=========================================
+               OHM-TUI v1.0
+=========================================
+
+  Proyecto Final - CS50P (2026)
+
+  • Autor: Marcos Bernard Calixto López
+  • Versión: 1.0.0 (Setiembre 2026)
+  • Descripción: Herramienta de terminal
+    interactiva para el análisis de
+    circuitos de corriente directa (DC).
+
+=========================================
+Volver [h] . Salir [q]
+```
 
 #### Menú de Cálculos
+```bash
+====================================
+         CÁLCULO DE VOLTAJE
+====================================
+> 1.1. Corriente (I)    : 0.00
+  1.2. Resistencia (R)  : 0.00
+-----------------
+  Resultado (V)         : 0.00
+====================================
+Editar [l] . Volver [h] . Ayuda [?]
+```
 Para este tipo de menús se integra el modelo OhmModel implementado en apartados anteriores.
 ```mermaid
 classDiagram
@@ -309,7 +323,8 @@ class OhmModel{
     - resistencia: Resistencia
     - corriente: Corriente
     - voltaje: Voltaje
-    + normalizar()
+    - normalizar()
+    + calcular()
 }
 MenuCalcularVoltaje *-- OhmModel  : componente dedicado
 class Cursor {
@@ -324,40 +339,71 @@ MenuCalcularVoltaje *-- Cursor : componente dedicado
 
 De la misma manera se crearon los siguientes menús: 
 - MenuCalcularCorriente
+```bash
+====================================
+       CÁLCULO DE CORRIENTE
+====================================
+> 2.1. Voltaje (V)      : 0.00
+  2.2. Resistencia (R)  : 0.00
+------------------
+  Resultado (I)         : 0.00
+====================================
+Editar [l] . Volver [h] . Ayuda [?]
+```
 - MenuCalcularResistencia
+```bash
+====================================
+       CÁLCULO DE RESISTENCIA
+====================================
+> 3.1. Voltaje (V)      : 0.00
+  3.2. Corriente (I)    : 0.00
+------------------
+  Resultado (R)         : 0.00
+====================================
+Editar [l] . Volver [h] . Ayuda [?]
+```
 
-### Terminal
-Terminal es un módulo creado para manejar la impresión de secuencias ANSI usando lenguaje python; como, por ejemplo, la secuencia para limpiar pantalla (un equivalente a clear en linux o cls en windows).
-
-**Secuencias implementadas:**
-
-- Limpiar pantalla: "\33[2J"
-- Mover cursor (línea, columna): f"\033[{line};{column}f"
-- Ocultar Cursor: "\033[?25l"
-- Mostrar Cursor: "\033[?25h"
-
-**Combinación de secuencias:**
-
-- Limpiar pantalla + Mover Cursor
-
-### Controlador
+### CONTROLADOR
 Para generar una interacción entre los componentes mencionados, se decidió crear una clase Controller, cuyo objetivo es el de orquestar el flujo desacoplado y eficiente de cada componente involucrado.
 
 ##### Modelo secuencial de interacción 
 ```mermaid
 sequenceDiagram
-autonumber
-actor user as user
-participant controller as Controller
-participant dispatcher as dispatcher
+    actor U as Usuario
+    participant C as Controller
+    participant V as View (Menu stack)
+    participant M as Model
 
-controller->>user: solicita tecla
-user->>controller: ingresa tecla
+    C->>V: Inicializar menú
+    V-->>U: Mostrar interfaz
 
-controller->>dispatcher: solicita evaluación
-alt si tecla es válida
-    dispatcher->>controller: valida ejecución
-end
+    loop Interacción
+        U->>C: Ingresar tecla
+        C->>C: Resolver acción
+
+        alt Navegación y menús
+            rect rgb(220, 235, 250)
+                C->>V: Actualizar estado del menú
+            end
+        else Cálculo
+            rect rgb(230, 220, 248)
+                C->>M: calcular()
+                M-->>C: Resultado
+            end
+        else Ayuda
+            rect rgb(220, 245, 225)
+                C->>V: Mostrar ayuda
+            end
+        else Salida
+            rect rgb(255, 230, 215)
+                C->>U: Solicitar confirmación
+                U-->>C: Confirmar o cancelar
+            end
+        end
+
+        C->>V: render()
+        V-->>U: Mostrar interfaz actualizada
+    end
 ```
 
 Las acciones implementadas para el presente proyecto son las siguientes:
@@ -368,6 +414,31 @@ Las acciones implementadas para el presente proyecto son las siguientes:
 - Salir del programa
 - Ir al menú de ayuda
 
+#### CURSOR
+El cursor representa al típico puntero de opción en los menús que indica cual opción es la seleccionada.
+Su icono puede ser un símbolo representativo que le indique al usuario en que opción está, ejemplos típicos son **>**, **>>** o **▶**. Para el presente proyecto se opta por el símbolo **>** con una motivación meramente estética.
+
+#### Representación del cursor implementado.
+Con la finalidad de implementar una arquitectura eficiente, se requirió modularizar el sistema en componentes separados con responsabilidad única. Para el caso de este módulo (cursor) se muestra la representación UML respectiva:
+
+```mermaid
+classDiagram
+class Cursor{
+    - símbolo: str
+    - max_posicion:  tuple[int, int]
+    - min_posicion:  tuple[int, int]
+    - linea: int
+    - columna: int
+
+    +mover_arriba()
+    +mover_abajo()
+    +mover_derecha()
+    +mover_izquierda()
+
+    +posicion()
+    +rel_posicionY()
+}
+```
 #### Mover cursor
 Como se mencionó en el apartado de cursor, este cuenta con métodos que permiten modificar su tupla de posición, donde el primer elemento representa la línea (Y) y el segundo elemento la columna (X).
 
@@ -403,6 +474,19 @@ Resultado (V)         : 0.0
 Editar [l] . Volver [h] . Ayuda [?]
 ```
 
+### Terminal
+Terminal es un módulo creado para manejar la impresión de secuencias ANSI usando lenguaje python; como, por ejemplo, la secuencia para limpiar pantalla (un equivalente a clear en linux o cls en windows).
+
+**Secuencias implementadas:**
+
+- Limpiar pantalla: "\33[2J"
+- Mover cursor (línea, columna): f"\033[{line};{column}f"
+- Ocultar Cursor: "\033[?25l"
+- Mostrar Cursor: "\033[?25h"
+
+**Combinación de secuencias:**
+
+- Limpiar pantalla + Mover Cursor
 
 ## Tests
 Para probar exhaustivamente el flujo de funcionamiento de la TUI se hizo uso de pytest.mark.parametrize, la cual es una herramienta que nos permite realizar pruebas iterativas con distintas combinaciones de entradas posibles.
