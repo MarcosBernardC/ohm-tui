@@ -123,14 +123,16 @@ class MenuInfo:
 @dataclass
 class MenuCalcularVoltaje:
     modelo: OhmModel = field(default_factory=OhmModel)
-    cursor: Cursor=field(default_factory=lambda:Cursor(min_posicion=(1, 1), max_posicion=(2,1)))
+    cursor: Cursor=field(default_factory=lambda:Cursor(min_posicion=(1, 1), max_posicion=(3,1)))
     banner: list=field(default_factory=lambda:[
         36*'=',
         9*' '+"CÁLCULO DE VOLTAJE",
         36*'='])
     opt_str_list: list=field(default_factory=lambda:[
         ("1.1.", "1.1. Corriente (I)     : "),
-        ("1.2.", "1.2. Resistencia (R)   :")])
+        ("1.2.", "1.2. Resistencia (R)   :"),
+        ("1.3.", "1.3. Calcular"),
+        ]),
     footer: list=field(default_factory=lambda:[
         40*'-',
             "  Resultado (V)     :",
@@ -142,7 +144,9 @@ class MenuCalcularVoltaje:
     def render(self):
         self.opt_str_list = [
             ("1.1.", f"1.1. Corriente (I)    : {OhmModel.normalizar(self.modelo.corriente)}"),
-            ("1.2.", f"1.2. Resistencia (R)  : {OhmModel.normalizar(self.modelo.resistencia)}")]
+            ("1.2.", f"1.2. Resistencia (R)  : {OhmModel.normalizar(self.modelo.resistencia)}"),
+            ("1.3.", "1.3. Calcular")
+            ]
 
         self.footer = [
             17*'-',
@@ -170,12 +174,16 @@ class MenuCalcularVoltaje:
 @dataclass
 class MenuCalcularCorriente:
     modelo: OhmModel = field(default_factory=OhmModel)
-    cursor: Cursor=field(default_factory=lambda:Cursor(min_posicion=(1, 1), max_posicion=(2,1)))
+    cursor: Cursor=field(default_factory=lambda:Cursor(min_posicion=(1, 1), max_posicion=(3,1)))
     banner: list=field(default_factory=lambda:[
         36*'=',
         7*' '+"CÁLCULO DE CORRIENTE",
         36*'='])
-    opt_str_list: list=field(default_factory=lambda:[("2.1.", f"2.1. Voltaje (V):"), ("2.2.", "2.2. Resistencia (R):")])
+    opt_str_list: list=field(default_factory=lambda:[
+        ("2.1.", f"2.1. Voltaje (V):"), 
+        ("2.2.", "2.2. Resistencia (R):"),
+        ("2.3.", "2.3. Calcular"),
+        ])
     footer: list=field(default_factory=lambda:[
         18*'-',
         "Resultado (I)            :",
@@ -187,7 +195,9 @@ class MenuCalcularCorriente:
     def render(self):
         self.opt_str_list = [
             ("2.1.", f"2.1. Voltaje (V)      : {OhmModel.normalizar(self.modelo.voltaje)}"),
-            ("2.2.", f"2.2. Resistencia (R)  : {OhmModel.normalizar(self.modelo.resistencia)}")]
+            ("2.2.", f"2.2. Resistencia (R)  : {OhmModel.normalizar(self.modelo.resistencia)}"),
+            ("2.3.", "2.3. Calcular"),
+            ]
 
         self.footer = [
             18*'-',
@@ -215,12 +225,16 @@ class MenuCalcularCorriente:
 @dataclass
 class MenuCalcularResistencia:
     modelo: OhmModel = field(default_factory=OhmModel)
-    cursor: Cursor=field(default_factory=lambda:Cursor(min_posicion=(1, 1), max_posicion=(2,1)))
+    cursor: Cursor=field(default_factory=lambda:Cursor(min_posicion=(1, 1), max_posicion=(3,1)))
     banner: list=field(default_factory=lambda:[
         36*'=',
         7*' '+"CÁLCULO DE RESISTENCIA",
         36*'='])
-    opt_str_list: list=field(default_factory=lambda:[("3.1.", f"3.1. Valor de Voltaje (V) : "), ("3.2.", "3.2. Valor de Corriente (I):")])
+    opt_str_list: list=field(default_factory=lambda:[
+        ("3.1.", f"3.1. Valor de Voltaje (V) : "),
+        ("3.2.", "3.2. Valor de Corriente (I):"),
+        ("3.3.", "3.3. Calcular"),
+        ])
     footer: list=field(default_factory=lambda:[
         18*'-',
         "  Resultado (R)            :",
@@ -232,7 +246,9 @@ class MenuCalcularResistencia:
     def render(self):
         self.opt_str_list = [
             ("3.1.", f"3.1. Voltaje (V)      : {OhmModel.normalizar(self.modelo.voltaje)}"),
-            ("3.2.", f"3.2. Corriente (I)    : {OhmModel.normalizar(self.modelo.corriente)}")]
+            ("3.2.", f"3.2. Corriente (I)    : {OhmModel.normalizar(self.modelo.corriente)}"),
+            ("3.3.", "3.3. Calcular"),
+            ]
 
         self.footer = [
             18*'-',

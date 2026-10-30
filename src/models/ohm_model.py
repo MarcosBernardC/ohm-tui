@@ -97,6 +97,6 @@ class OhmModel:
                 try:
                     self.resistencia.valor = abs(self.voltaje.valor/self.corriente.valor)
                     self.resistencia.unidad = 'Ω'
-                except ZeroDivisionError:
+                except (ZeroDivisionError, InvalidOperation):
                     self.resistencia.valor = "ERR"
                     self.resistencia.unidad = ''
