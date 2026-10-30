@@ -129,30 +129,43 @@ class MenuCalcularVoltaje:
         9*' '+"CÁLCULO DE VOLTAJE",
         36*'='])
     opt_str_list: list=field(default_factory=lambda:[
-        ("1.1.", "1.1. Corriente (I)     : "),
+        ("1.1.", "1.1. Corriente (I)     :"),
         ("1.2.", "1.2. Resistencia (R)   :"),
         ("1.3.", "1.3. Calcular"),
         ]),
     footer: list=field(default_factory=lambda:[
-        40*'-',
-            "  Resultado (V)     :",
-        40*'=',
+        36*'-',
+        "  Fórmula         : V = I x R",
+        36*'-',
+        "  Resultado (V)     :",
+        36*'='   ,
         "Editar [l] . Volver [h] . Ayuda [?]"])
     navigable: bool = True
     main_param: str = 'V'
 
     def render(self):
+        mantisa_corriente, prefijo_si_corriente  = OhmModel.normalizar(self.modelo.corriente)
+        mantisa_resistor, prefijo_si_resistor  = OhmModel.normalizar(self.modelo.resistencia) 
+        mantisa_voltaje, prefijo_si_voltaje  = OhmModel.normalizar(self.modelo.resistencia)
+
         self.opt_str_list = [
-            ("1.1.", f"1.1. Corriente (I)    : {OhmModel.normalizar(self.modelo.corriente)}"),
-            ("1.2.", f"1.2. Resistencia (R)  : {OhmModel.normalizar(self.modelo.resistencia)}"),
+            ("1.1.", f"1.1. Corriente (I)    : {mantisa_corriente} {prefijo_si_corriente}{self.modelo.corriente.unidad}"),
+            ("1.2.", f"1.2. Resistencia (R)  : {mantisa_resistor} {prefijo_si_resistor}{self.modelo.resistencia.unidad}"),
             ("1.3.", "1.3. Calcular")
             ]
 
+        if prefijo_si_corriente!="" and prefijo_si_resistor!="":
+            line1 = f"  V = ({mantisa_corriente} x {mantisa_resistor}) x ({prefijo_si_corriente} x {prefijo_si_resistor}) ({self.modelo.corriente.unidad}x{self.modelo.resistencia.unidad})"
+        elif prefijo_si_corriente!="" or prefijo_si_resistor!="": 
+            line1 = f"  V = {mantisa_corriente} x {mantisa_resistor} x ({prefijo_si_corriente}{prefijo_si_resistor})({self.modelo.corriente.unidad} x {self.modelo.resistencia.unidad})"
+        else:
+            line1 = f"  V = {mantisa_corriente} x {mantisa_resistor} ({self.modelo.corriente.unidad} x {self.modelo.resistencia.unidad})"
         self.footer = [
-            17*'-',
-            f"  Resultado (V)         : {OhmModel.normalizar(self.modelo.voltaje)}",
-            36*'=',
-            "Editar [l] . Volver [h] . Ayuda [?]"]
+                "  V = I x R ",
+                36*'-',
+                line1,
+                36*'=',
+                "Editar [l] . Volver [h] . Ayuda [?]"]
         menu_str = []
         
         for element in self.banner:
@@ -170,6 +183,7 @@ class MenuCalcularVoltaje:
             menu_str.append(element)
 
         print('\n'.join(menu_str))
+
 
 @dataclass
 class MenuCalcularCorriente:

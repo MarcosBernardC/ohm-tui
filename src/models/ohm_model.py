@@ -48,14 +48,14 @@ class OhmModel:
                 27: 'R',
                 30: 'Q'
                 }
-  
+ 
+        prefijo_si = ""
         mantisa_min = Decimal("1.00")
         mantisa_max = Decimal("1000.00")
         exponente = 0
         mantisa = parametro.valor
 
-
-        if parametro.valor != Decimal("0") and parametro.valor != "ERR":
+        if parametro.valor != Decimal("0.00") and parametro.valor != "ERR":
             while mantisa < mantisa_min:
                 mantisa *= 1000
                 exponente -= 3
@@ -73,13 +73,12 @@ class OhmModel:
                 exponente += 3
  
             if exponente <= 30 and exponente >=-30:
-                parametro.prefijo_si = si_exp[exponente]
-                return(f"{mantisa.quantize(Decimal("0.01"), rounding=ROUND_HALF_EVEN)} {parametro.prefijo_si}{parametro.unidad}")
+                prefijo_si = si_exp[exponente]
+                return((mantisa.quantize(Decimal("0.01"), rounding=ROUND_HALF_EVEN), prefijo_si))
             else:
                 return("ERR")
-        elif parametro.valor == Decimal("0"):
-            return (f"{Decimal(parametro.valor).quantize(Decimal("0.01"), rounding=ROUND_HALF_EVEN)}")
-
+        elif parametro.valor == Decimal("0.00"):
+            return((mantisa.quantize(Decimal("0.01"), rounding=ROUND_HALF_EVEN), prefijo_si))
         else: return (f"ERR")
     
     def calcular(self, unidad):
