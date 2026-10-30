@@ -156,14 +156,19 @@ class MenuCalcularVoltaje:
 
         if prefijo_si_corriente!="" and prefijo_si_resistor!="":
             line1 = f"  V = ({mantisa_corriente} x {mantisa_resistor}) x ({prefijo_si_corriente} x {prefijo_si_resistor}) ({self.modelo.corriente.unidad}x{self.modelo.resistencia.unidad})"
+            line2 = f"  V = "
         elif prefijo_si_corriente!="" or prefijo_si_resistor!="": 
             line1 = f"  V = {mantisa_corriente} x {mantisa_resistor} x ({prefijo_si_corriente}{prefijo_si_resistor})({self.modelo.corriente.unidad} x {self.modelo.resistencia.unidad})"
+            line2 = f"  V = "
         else:
             line1 = f"  V = {mantisa_corriente} x {mantisa_resistor} ({self.modelo.corriente.unidad} x {self.modelo.resistencia.unidad})"
+            line2 = f"  V = "
+        
         self.footer = [
                 "  V = I x R ",
                 36*'-',
                 line1,
+                line2,
                 36*'=',
                 "Editar [l] . Volver [h] . Ayuda [?]"]
         menu_str = []
