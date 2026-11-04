@@ -136,7 +136,6 @@ class MenuCalcularVoltaje:
     footer: list=field(default_factory=lambda:[
         36*'-',
         "  Fórmula         : V = I x R",
-        36*'-',
         "  Resultado (V)     :",
         36*'='   ,
         "Editar [l] . Volver [h] . Ayuda [?]"])
@@ -146,7 +145,7 @@ class MenuCalcularVoltaje:
     def render(self):
         mantisa_corriente, prefijo_si_corriente  = OhmModel.normalizar(self.modelo.corriente)
         mantisa_resistor, prefijo_si_resistor  = OhmModel.normalizar(self.modelo.resistencia) 
-        mantisa_voltaje, prefijo_si_voltaje  = OhmModel.normalizar(self.modelo.resistencia)
+        mantisa_voltaje, prefijo_si_voltaje  = OhmModel.normalizar(self.modelo.voltaje)
 
         self.opt_str_list = [
             ("1.1.", f"1.1. Corriente (I)    : {mantisa_corriente} {prefijo_si_corriente}{self.modelo.corriente.unidad}"),
@@ -156,17 +155,20 @@ class MenuCalcularVoltaje:
 
         if prefijo_si_corriente!="" and prefijo_si_resistor!="":
             line1 = f"  V = ({mantisa_corriente} x {mantisa_resistor}) x ({prefijo_si_corriente} x {prefijo_si_resistor}) ({self.modelo.corriente.unidad}x{self.modelo.resistencia.unidad})"
-            line2 = f"  V = "
-        elif prefijo_si_corriente!="" or prefijo_si_resistor!="": 
-            line1 = f"  V = {mantisa_corriente} x {mantisa_resistor} x ({prefijo_si_corriente}{prefijo_si_resistor})({self.modelo.corriente.unidad} x {self.modelo.resistencia.unidad})"
-            line2 = f"  V = "
+            line2 = f"  V = {mantisa_voltaje} {prefijo_si_voltaje}{self.modelo.voltaje.unidad}"
+        elif prefijo_si_corriente!="" and prefijo_si_resistor=="":
+            line1 = f"  V = {mantisa_corriente} x {mantisa_resistor} x ({prefijo_si_corriente})({self.modelo.corriente.unidad} x {self.modelo.resistencia.unidad})"
+            line2 = f"  V = {mantisa_voltaje} {prefijo_si_voltaje}{self.modelo.voltaje.unidad}" 
+        elif prefijo_si_corriente=="" and prefijo_si_resistor!="":
+            line1 = f"  V = {mantisa_corriente} x {mantisa_resistor} x ({prefijo_si_resistor})({self.modelo.corriente.unidad} x {self.modelo.resistencia.unidad})"
+            line2 = f"  V = {mantisa_voltaje} {prefijo_si_voltaje}{self.modelo.voltaje.unidad}"
         else:
             line1 = f"  V = {mantisa_corriente} x {mantisa_resistor} ({self.modelo.corriente.unidad} x {self.modelo.resistencia.unidad})"
-            line2 = f"  V = "
+            line2 = f"  V = {mantisa_voltaje} {prefijo_si_voltaje}{self.modelo.voltaje.unidad}"
         
         self.footer = [
-                "  V = I x R ",
                 36*'-',
+                "  V = I x R ",
                 line1,
                 line2,
                 36*'=',
