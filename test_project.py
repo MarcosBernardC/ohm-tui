@@ -3,6 +3,8 @@ from decimal import Decimal
 
 from project import mover_cursor, navegar, calcular_parametro, normalizar_parametro
 
+from src.models.ohm_model import OhmModel, Corriente, Voltaje, Resistencia
+
 
 data_mover_cursor = [
         (['k'], (1, 1)),
@@ -118,3 +120,13 @@ data_normalizar_parametro = [
 @pytest.mark.parametrize("secuencia_entrada, nombre_parametro, valor, valor_normalizado", data_normalizar_parametro)
 def test_normalizar_parametro(secuencia_entrada, nombre_parametro, valor, valor_normalizado):
     assert normalizar_parametro(secuencia_entrada, nombre_parametro, valor) == valor_normalizado
+
+# def test_calcular(unidad_a_calcular, valor1, valor2, resultado):
+def test_calcular():
+    unidad_a_calcular = 'V'
+    ohm_model = OhmModel()
+    ohm_model.corriente = Corriente(valor=Decimal("1.50"))
+    ohm_model.resistencia = Resistencia(valor=Decimal("2.00"))
+    ohm_model.calcular(unidad_a_calcular)
+    assert ohm_model.voltaje.valor == Decimal("3.00")
+
