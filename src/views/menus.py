@@ -287,15 +287,19 @@ class MenuCalcularResistencia:
     main_param: str = 'R'
 
     def render(self):
+        mantisa_corriente, prefijo_si_corriente  = OhmModel.normalizar(self.modelo.corriente)
+        mantisa_resistor, prefijo_si_resistor  = OhmModel.normalizar(self.modelo.resistencia) 
+        mantisa_voltaje, prefijo_si_voltaje  = OhmModel.normalizar(self.modelo.voltaje)
+
         self.opt_str_list = [
-            ("3.1.", f"3.1. Voltaje (V)      : {OhmModel.normalizar(self.modelo.voltaje)}"),
-            ("3.2.", f"3.2. Corriente (I)    : {OhmModel.normalizar(self.modelo.corriente)}"),
+            ("3.1.", f"3.1. Voltaje (V)      : {mantisa_voltaje} {prefijo_si_voltaje}{self.modelo.voltaje.unidad}"),
+            ("3.2.", f"3.2. Corriente (I)    : {mantisa_corriente} {prefijo_si_corriente}{self.modelo.corriente.unidad}"),
             ("3.3.", "3.3. Calcular"),
             ]
 
         self.footer = [
             18*'-',
-            f"  Resultado (R)         : {OhmModel.normalizar(self.modelo.resistencia)}",
+            f"  Resultado (R)         : {mantisa_resistor} {prefijo_si_resistor}{self.modelo.resistencia.unidad}",
             36*'=',
             "Editar [l] . Volver [h] . Ayuda [?]"]
         menu_str = []
