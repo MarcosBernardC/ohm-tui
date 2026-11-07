@@ -191,7 +191,6 @@ class MenuCalcularVoltaje:
 
         print('\n'.join(menu_str))
 
-
 @dataclass
 class MenuCalcularCorriente:
     modelo: OhmModel = field(default_factory=OhmModel)
@@ -205,24 +204,47 @@ class MenuCalcularCorriente:
         ("2.2.", "2.2. Resistencia (R):"),
         ("2.3.", "2.3. Calcular"),
         ])
+
+
     footer: list=field(default_factory=lambda:[
-        18*'-',
-        "Resultado (I)            :",
+        36*'-',
+        "  Fórmula         : V = I x R",
+        "  Resultado (V)     :",
+
         18*'-',
         "[Enter] Guardar | [h] Volver / Cancelar"]) 
     navigable: bool = True
     main_param: str = 'A'
 
     def render(self):
+        mantisa_corriente, prefijo_si_corriente  = OhmModel.normalizar(self.modelo.corriente)
+        mantisa_resistor, prefijo_si_resistor  = OhmModel.normalizar(self.modelo.resistencia) 
+        mantisa_voltaje, prefijo_si_voltaje  = OhmModel.normalizar(self.modelo.voltaje)
+
         self.opt_str_list = [
-            ("2.1.", f"2.1. Voltaje (V)      : {OhmModel.normalizar(self.modelo.voltaje)}"),
-            ("2.2.", f"2.2. Resistencia (R)  : {OhmModel.normalizar(self.modelo.resistencia)}"),
+            ("2.1.", f"2.1. Voltaje (V)      : {mantisa_voltaje} {prefijo_si_voltaje}{self.modelo.voltaje.unidad}"),
+            ("2.2.", f"2.2. Resistencia (R)  : {mantisa_resistor} {prefijo_si_resistor}{self.modelo.resistencia.unidad}"),
             ("2.3.", "2.3. Calcular"),
             ]
-
+ 
+        if prefijo_si_voltaje!="" and prefijo_si_resistor!="":
+            line1 = f"  I = ({mantisa_voltaje} / {mantisa_resistor}) x ({prefijo_si_corriente} / {prefijo_si_resistor}) ({self.modelo.voltaje.unidad}/{self.modelo.resistencia.unidad})"
+            line2 = f"  I = {mantisa_corriente} {prefijo_si_corriente}{self.modelo.corriente.unidad}"
+        elif prefijo_si_voltaje!="" and prefijo_si_resistor=="": #Solo prefijo voltaje
+            line1 = f"  I = {mantisa_voltaje} / {mantisa_resistor} x ({prefijo_si_voltaje})({self.modelo.voltaje.unidad} / {self.modelo.resistencia.unidad})"
+            line2 = f"  I = {mantisa_corriente} {prefijo_si_corriente}{self.modelo.corriente.unidad}" 
+        elif prefijo_si_voltaje=="" and prefijo_si_resistor!="": # Solo prefijo resistor
+            line1 = f"  I = {mantisa_voltaje} / {mantisa_resistor} x ({prefijo_si_resistor})({self.modelo.voltaje.unidad} / {self.modelo.resistencia.unidad})"
+            line2 = f"  I = {mantisa_corriente} {prefijo_si_corriente}{self.modelo.corriente.unidad}"
+        else:
+            line1 = f"  I = {mantisa_voltaje} / {mantisa_resistor} ({self.modelo.voltaje.unidad} / {self.modelo.resistencia.unidad})"
+            line2 = f"  I = {mantisa_corriente} {prefijo_si_corriente}{self.modelo.corriente.unidad}"
+        
         self.footer = [
-            18*'-',
-            f"  Resultado (I)         : {OhmModel.normalizar(self.modelo.corriente)}",
+            36*'-',
+            f"  I = V / R",
+            line1,
+            line2,
             36*'=',
             "Editar [l] . Volver [h] . Ayuda [?]"]
         menu_str = []
