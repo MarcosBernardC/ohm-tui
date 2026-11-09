@@ -234,7 +234,7 @@ class MenuCalcularCorriente:
             ]
         # I = V / R 
         if prefijo_si_voltaje!="" and prefijo_si_resistor!="":
-            line1 = f"  I = ({mantisa_voltaje} / {mantisa_resistor}) x ({prefijo_si_corriente} / {prefijo_si_resistor}) ({self.modelo.voltaje.unidad}/{self.modelo.resistencia.unidad})"
+            line1 = f"  I = ({mantisa_voltaje} / {mantisa_resistor}) x ({prefijo_si_voltaje} / {prefijo_si_resistor}) ({self.modelo.voltaje.unidad}/{self.modelo.resistencia.unidad})"
             line2 = f"  I = {mantisa_corriente} {prefijo_si_corriente}{self.modelo.corriente.unidad}"
         elif prefijo_si_voltaje!="" and prefijo_si_resistor=="": #Solo prefijo voltaje
             line1 = f"  I = {mantisa_voltaje} / {mantisa_resistor} x ({prefijo_si_voltaje})({self.modelo.voltaje.unidad} / {self.modelo.resistencia.unidad})"
