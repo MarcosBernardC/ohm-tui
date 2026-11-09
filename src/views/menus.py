@@ -295,6 +295,8 @@ class MenuCalcularResistencia:
     navigable: bool = True
     main_param: str = 'R'
 
+    edited_value: bool = False
+
     def render(self):
         mantisa_corriente, prefijo_si_corriente  = OhmModel.normalizar(self.modelo.corriente)
         mantisa_resistor, prefijo_si_resistor  = OhmModel.normalizar(self.modelo.resistencia) 
@@ -318,7 +320,10 @@ class MenuCalcularResistencia:
         else:
             line1 = f"  I = {mantisa_voltaje} / {mantisa_corriente} ({self.modelo.voltaje.unidad} / {self.modelo.corriente.unidad})"
             line2 = f"  I = {mantisa_resistor} {prefijo_si_resistor}{self.modelo.resistencia.unidad}"
-        
+
+        if self.edited_value == True:
+            line2 = f""
+
         self.footer = [
             36*'-',
             f"  R = V / I",

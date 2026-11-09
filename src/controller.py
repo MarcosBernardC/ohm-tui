@@ -92,10 +92,13 @@ class Controller:
             case "3.":
                 self.menu_stack.append(MenuCalcularResistencia())    
             case "3.1.":                
+                self.menu_stack[-1].edited_value = True
                 self.edit_value(cursor_edit_position=(4,27), edit_obj=menu.modelo.voltaje, edit_param="valor")
             case "3.2.":
+                self.menu_stack[-1].edited_value = True
                 self.edit_value(cursor_edit_position=(5,27), edit_obj=menu.modelo.corriente, edit_param="valor")
             case "3.3.":
+                self.menu_stack[-1].edited_value = False
                 menu.modelo.calcular(self.menu_stack[-1].main_param)
             case "4.":
                 self.menu_stack.append(MenuInfo())
