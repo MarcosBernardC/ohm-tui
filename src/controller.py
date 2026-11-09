@@ -56,6 +56,7 @@ class Controller:
         if Controller.is_Decimal(value):
             valor_a_ingresar = Decimal(value)
             setattr(edit_obj, edit_param, valor_a_ingresar)
+            edit_obj.edited_value = True
         else:
             print("valor inválido")
 
@@ -70,17 +71,23 @@ class Controller:
                 self.menu_stack.append(MenuCalcularVoltaje())
             case "1.1.":
                 self.edit_value(cursor_edit_position=(4,27), edit_obj=menu.modelo.corriente, edit_param="valor")
+                self.menu_stack[-1].edited_value = True
             case "1.2.":
                 self.edit_value(cursor_edit_position=(5, 27), edit_obj=menu.modelo.resistencia, edit_param="valor")
+                self.menu_stack[-1].edited_value = True
             case "1.3.":
+                self.menu_stack[-1].edited_value = False
                 menu.modelo.calcular(self.menu_stack[-1].main_param)
             case "2.":
                 self.menu_stack.append(MenuCalcularCorriente())    
             case "2.1.":
                 self.edit_value(cursor_edit_position=(4, 27), edit_obj=menu.modelo.voltaje, edit_param="valor")
+                self.menu_stack[-1].edited_value = True
             case "2.2.":
                 self.edit_value(cursor_edit_position=(5,27), edit_obj=menu.modelo.resistencia, edit_param="valor")
-            case "2.3.":
+                self.menu_stack[-1].edited_value = True
+            case "2.3.": 
+                self.menu_stack[-1].edited_value = False
                 menu.modelo.calcular(self.menu_stack[-1].main_param)
             case "3.":
                 self.menu_stack.append(MenuCalcularResistencia())    
