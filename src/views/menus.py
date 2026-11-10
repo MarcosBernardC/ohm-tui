@@ -332,17 +332,24 @@ class MenuCalcularResistencia:
             line2 = f"  I = {mantisa_resistor} {prefijo_si_resistor}{self.modelo.resistencia.unidad}"
 
         if self.edited_value == True:
-            line2 = f""
-
-        self.footer = [
-            36*'-',
-            f"  R = V / I",
-            line1,
-            line2,
-            36*'=',
-            "Editar [l] . Volver [h] . Ayuda [?]"]
+            self.footer = [
+                36*'-',
+                f"  R = V / I",
+                line1,
+                36*'=',
+                "Editar [l] . Volver [h] . Ayuda [?]"
+                ]
+        else:
+            self.footer = [
+                36*'-',
+                f"  R = V / I",
+                line1,
+                line2,
+                36*'=',
+                "Editar [l] . Volver [h] . Ayuda [?]"
+                ]
+ 
         menu_str = []
-        
         for element in self.banner:
             menu_str.append(element)
 
