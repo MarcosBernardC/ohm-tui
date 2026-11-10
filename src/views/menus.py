@@ -142,7 +142,7 @@ class MenuCalcularVoltaje:
     navigable: bool = True
     main_param: str = 'V'
     
-    edited_value: bool = False
+    edited_value: bool = True
 
     def render(self):
         mantisa_corriente, prefijo_si_corriente  = OhmModel.normalizar(self.modelo.corriente)
@@ -169,17 +169,22 @@ class MenuCalcularVoltaje:
             line2 = f"  V = {mantisa_voltaje} {prefijo_si_voltaje}{self.modelo.voltaje.unidad}"
        
         if self.edited_value == True:
-            line2 = f""
-
-        self.footer = [
-                36*'-',
-                "  V = I x R ",
-                line1,
-                line2,
-                36*'=',
-                "Editar [l] . Volver [h] . Ayuda [?]"]
-        menu_str = []
-        
+            self.footer = [
+                    36*'-',
+                    "  V = I x R ",
+                    line1,
+                    36*'=',
+                    "Editar [l] . Volver [h] . Ayuda [?]"]
+        else:
+            self.footer = [
+                    36*'-',
+                    "  V = I x R ",
+                    line1,
+                    line2,
+                    36*'=',
+                    "Editar [l] . Volver [h] . Ayuda [?]"]
+ 
+        menu_str = [] 
         for element in self.banner:
             menu_str.append(element)
 
@@ -247,17 +252,22 @@ class MenuCalcularCorriente:
             line2 = f"  I = {mantisa_corriente} {prefijo_si_corriente}{self.modelo.corriente.unidad}"
 
         if self.edited_value == True:
-            line2 = f""
-
-        self.footer = [
-            36*'-',
-            f"  I = V / R",
-            line1,
-            line2,
-            36*'=',
-            "Editar [l] . Volver [h] . Ayuda [?]"]
-        menu_str = []
+            self.footer = [
+                    36*'-',
+                    "  V = I x R ",
+                    line1,
+                    36*'=',
+                    "Editar [l] . Volver [h] . Ayuda [?]"]
+        else:
+            self.footer = [
+                    36*'-',
+                    "  V = I x R ",
+                    line1,
+                    line2,
+                    36*'=',
+                    "Editar [l] . Volver [h] . Ayuda [?]"]
         
+        menu_str = []        
         for element in self.banner:
             menu_str.append(element)
 
