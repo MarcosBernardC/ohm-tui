@@ -254,7 +254,7 @@ class MenuCalcularCorriente:
         if self.edited_value == True:
             self.footer = [
                     36*'-',
-                    "  V = I x R ",
+                    "  I = V / R ",
                     line1,
                     36*'=',
                     "Editar [l] . Volver [h] . Ayuda [?]"]
