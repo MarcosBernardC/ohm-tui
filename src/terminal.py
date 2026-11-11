@@ -24,5 +24,9 @@ class Terminal:
         Terminal.limpiar_pantalla()
         Terminal.mover_cursor(0,0)
 
+    # Erase Line
+    @staticmethod
+    def erase_line() -> None:
+        Terminal._imprimir_secuencia("\33[K")
 if __name__ == "__main__":
     pass

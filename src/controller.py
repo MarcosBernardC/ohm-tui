@@ -51,6 +51,7 @@ class Controller:
     def edit_value(self, cursor_edit_position: tuple[int, int], edit_obj: object, edit_param: str):
         Terminal.mostrar_cursor()
         Terminal.mover_cursor(cursor_edit_position[0], cursor_edit_position[1])
+        Terminal.erase_line()
         value = input()
         
         if Controller.is_Decimal(value):
