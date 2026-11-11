@@ -243,13 +243,13 @@ class MenuCalcularCorriente:
             line1 = f"  I = ({mantisa_voltaje} / {mantisa_resistor}) × ({prefijo_si_voltaje} / {prefijo_si_resistor}) [{self.modelo.voltaje.unidad} / {self.modelo.resistencia.unidad}]"
             line2 = f"  I = {mantisa_corriente} {prefijo_si_corriente}{self.modelo.corriente.unidad}"
         elif prefijo_si_voltaje!="" and prefijo_si_resistor=="": #Solo prefijo voltaje
-            line1 = f"  I = {mantisa_voltaje} / {mantisa_resistor} × ({prefijo_si_voltaje}) × [{self.modelo.voltaje.unidad} / {self.modelo.resistencia.unidad}]"
+            line1 = f"  I = ({mantisa_voltaje} / {mantisa_resistor}) × ({prefijo_si_voltaje}) × [{self.modelo.voltaje.unidad} / {self.modelo.resistencia.unidad}]"
             line2 = f"  I = {mantisa_corriente} {prefijo_si_corriente}{self.modelo.corriente.unidad}" 
         elif prefijo_si_voltaje=="" and prefijo_si_resistor!="": # Solo prefijo resistor
-            line1 = f"  I = {mantisa_voltaje} / {mantisa_resistor} × ({prefijo_si_resistor}) ×  [{self.modelo.voltaje.unidad} / {self.modelo.resistencia.unidad}]"
+            line1 = f"  I = ({mantisa_voltaje} / {mantisa_resistor}) × ({prefijo_si_resistor}) ×  [{self.modelo.voltaje.unidad} / {self.modelo.resistencia.unidad}]"
             line2 = f"  I = {mantisa_corriente} {prefijo_si_corriente}{self.modelo.corriente.unidad}"
         else:
-            line1 = f"  I = {mantisa_voltaje} / {mantisa_resistor} × [{self.modelo.voltaje.unidad} / {self.modelo.resistencia.unidad}]"
+            line1 = f"  I = ({mantisa_voltaje} / {mantisa_resistor}) × [{self.modelo.voltaje.unidad} / {self.modelo.resistencia.unidad}]"
             line2 = f"  I = {mantisa_corriente} {prefijo_si_corriente}{self.modelo.corriente.unidad}"
 
         if self.edited_value == True:
@@ -324,13 +324,13 @@ class MenuCalcularResistencia:
             line1 = f"  R = ({mantisa_voltaje} / {mantisa_corriente}) x ({prefijo_si_voltaje} / {prefijo_si_corriente}) x [{self.modelo.voltaje.unidad}/{self.modelo.corriente.unidad}]"
             line2 = f"  R = {mantisa_resistor} {prefijo_si_resistor}{self.modelo.resistencia.unidad}"
         elif prefijo_si_voltaje!="" and prefijo_si_corriente=="": #Solo prefijo voltaje
-            line1 = f"  R = {mantisa_voltaje} / {mantisa_corriente} x ({prefijo_si_voltaje}) x [{self.modelo.voltaje.unidad} / {self.modelo.corriente.unidad}]"
+            line1 = f"  R = ({mantisa_voltaje} / {mantisa_corriente}) x ({prefijo_si_voltaje}) x [{self.modelo.voltaje.unidad} / {self.modelo.corriente.unidad}]"
             line2 = f"  R = {mantisa_resistor} {prefijo_si_resistor}{self.modelo.resistencia.unidad}"
         elif prefijo_si_voltaje=="" and prefijo_si_corriente!="": # Solo prefijo corriente
-            line1 = f"  R = {mantisa_voltaje} / {mantisa_corriente} x ({prefijo_si_corriente}) x [{self.modelo.voltaje.unidad} / {self.modelo.corriente.unidad}]"
+            line1 = f"  R = ({mantisa_voltaje} / {mantisa_corriente}) x ({prefijo_si_corriente}) x [{self.modelo.voltaje.unidad} / {self.modelo.corriente.unidad}]"
             line2 = f"  R = {mantisa_resistor} {prefijo_si_resistor}{self.modelo.resistencia.unidad}"
         else:
-            line1 = f"  R = {mantisa_voltaje} / {mantisa_corriente} x [{self.modelo.voltaje.unidad} / {self.modelo.corriente.unidad}]"
+            line1 = f"  R = ({mantisa_voltaje} / {mantisa_corriente}) x [{self.modelo.voltaje.unidad} / {self.modelo.corriente.unidad}]"
             line2 = f"  R = {mantisa_resistor} {prefijo_si_resistor}{self.modelo.resistencia.unidad}"
 
         if self.edited_value == True:
