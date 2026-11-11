@@ -132,7 +132,7 @@ class MenuCalcularVoltaje:
         ("1.1.", "1.1. Corriente (I)     :"),
         ("1.2.", "1.2. Resistencia (R)   :"),
         ("1.3.", "1.3. Calcular"),
-        ]),
+        ])
     footer: list=field(default_factory=lambda:[
         36*'-',
         "  Fórmula         : V = I × R",
