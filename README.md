@@ -186,6 +186,10 @@ if exponente <= 30 and exponente >=-30:
 parametro.prefijo_si = si_exp[exponente]
 ```
 
+Luego se retorna en formato tupla el valor normalizado:
+- (Decimal(), str)
+- ('ERR', '')
+
 Para al final componerlo de la manera:
 $$
 magnitud = mantisa [prefijo SI][unidad SI]
