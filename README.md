@@ -533,14 +533,14 @@ En general se obtuvieron 75 tests pasados, que prueban cada característica del 
 
 ```text
 ...
-test_project.py::test_normalizar_parametro[secuencia_entrada34-corriente-valor34-1.00 kA] PASSED [ 98%]
-test_project.py::test_normalizar_parametro[secuencia_entrada35-resistencia-valor35-1.00 k\u03a9] PASSED [100%]
+test_project.py::test_normalizar_parametro[secuencia_entrada34-corriente-valor34-valor_normalizado34] PASSED [ 97%]
+test_project.py::test_normalizar_parametro[secuencia_entrada35-resistencia-valor35-valor_normalizado35] PASSED [100%]
 
 =========================== 75 passed in 0.07s ===========================
 ```
 
 ## Estructura de archivos
-- project.py: archivo principal, que maneja al controlador del proyecto implementado.
+- project.py: archivo principal, que maneja al controlador del proyecto implementado y contiene los wrappers para testing CS50P.
 - README.md: archivo de información del proyecto implementado, detalla cada módulo y su funcionamiento, muestra diagramas UML y código de testing.
 - requirements.txt: contiene una sola librería (readchar), la cual es necesaria para leer entradas sin un salto de línea adicional.
 - test_project.py: archivo de pruebas, para el cual se utilizó parametrize, lo que permitió implementar el testing secuencias de entrada de una manera iterativa. Además, se utilizaron wrappers de funcionalidad, que imitan el comportamiento de la arquitectura interna, utilizando como objeto principal la clase Controller, el cual es el núcleo del sistema.
