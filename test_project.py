@@ -68,56 +68,56 @@ def test_calcular_parametro(secuencia_entrada, valor1, valor2, resultado):
 
 data_normalizar_parametro = [
         #CALCULO VOLTAJE
-        (['l'], "voltaje", Decimal("0.0000001"), "100.00 nV"),
-        (['l'], "voltaje", Decimal("5.2546"), "5.25 V"),
-        (['l'], "voltaje", Decimal("152340000"), "152.34 MV"),
+        (['l'], "voltaje", Decimal("0.0000001"), (Decimal('100.00'), 'n')),
+        (['l'], "voltaje", Decimal("5.2546"), (Decimal('5.25'), '')),
+        (['l'], "voltaje", Decimal("152340000"), (Decimal('152.34'), 'M')),
 
-        (['l'], "corriente", Decimal("0.00000432"), "4.32 uA"),
-        (['l'], "corriente", Decimal("0.0142"), "14.20 mA"),
-        (['l'], "corriente", Decimal("123002314"), "123.00 MA"),
+        (['l'], "corriente", Decimal("0.00000432"), (Decimal('4.32'), 'u')),
+        (['l'], "corriente", Decimal("0.0142"), (Decimal('14.20'), 'm')),
+        (['l'], "corriente", Decimal("123002314"), (Decimal('123.00'), 'M')),
 
-        (['l'], "resistencia", Decimal("0.432"), "432.00 mΩ"),
-        (['l'], "resistencia", Decimal("333.34"), "333.34 Ω"),
-        (['l'], "resistencia", Decimal("453200134"), "453.20 MΩ"),
+        (['l'], "resistencia", Decimal("0.432"), (Decimal('432.00'), 'm')),
+        (['l'], "resistencia", Decimal("333.34"), (Decimal('333.34'), '')),
+        (['l'], "resistencia", Decimal("453200134"), (Decimal('453.20'), 'M')),
         #
         # #CALCULO CORRIENTE
-        (['j', 'l'], "corriente", Decimal("0.000000573"), "573.00 nA"),
-        (['j', 'l'], "corriente", Decimal("4.367"), "4.37 A"),
-        (['j', 'l'], "corriente", Decimal("48767004"), "48.77 MA"),
+        (['j', 'l'], "corriente", Decimal("0.000000573"), (Decimal('573.00'), 'n')),
+        (['j', 'l'], "corriente", Decimal("4.367"), (Decimal('4.37'), '')),
+        (['j', 'l'], "corriente", Decimal("48767004"), (Decimal('48.77'), 'M')),
 
-        (['j', 'l'], "resistencia", Decimal("0.000000573"), "573.00 nΩ"),
-        (['j', 'l'], "resistencia", Decimal("220.578"), "220.58 Ω"),
-        (['j', 'l'], "resistencia", Decimal("12345000"), "12.34 MΩ"),
+        (['j', 'l'], "resistencia", Decimal("0.000000573"), (Decimal('573.00'), 'n')),
+        (['j', 'l'], "resistencia", Decimal("220.578"), (Decimal('220.58'), '')),
+        (['j', 'l'], "resistencia", Decimal("12345000"), (Decimal('12.34'), 'M')),
 
-        (['j', 'l'], "voltaje", Decimal("0.000015798"), "15.80 uV"),
-        (['j', 'l'], "voltaje", Decimal("12.688"), "12.69 V"),
-        (['j', 'l'], "voltaje", Decimal("15234760000"), "15.23 GV"),
+        (['j', 'l'], "voltaje", Decimal("0.000015798"), (Decimal('15.80'), 'u')),
+        (['j', 'l'], "voltaje", Decimal("12.688"), (Decimal('12.69'), '')),
+        (['j', 'l'], "voltaje", Decimal("15234760000"), (Decimal('15.23'), 'G')),
         #CALCULO RESISTENCIA
-        (['j', 'j', 'l'], "resistencia", Decimal("0.000000573"), "573.00 nΩ"),
-        (['j', 'j', 'l'], "resistencia", Decimal("1.0458"), "1.05 Ω"),
-        (['j', 'j', 'l'], "resistencia", Decimal("20067835"), "20.07 MΩ"),
+        (['j', 'j', 'l'], "resistencia", Decimal("0.000000573"), (Decimal('573.00'), 'n')),
+        (['j', 'j', 'l'], "resistencia", Decimal("1.0458"), (Decimal('1.05'), '')),
+        (['j', 'j', 'l'], "resistencia", Decimal("20067835"), (Decimal('20.07'), 'M')),
 
-        (['j', 'j', 'l'], "voltaje", Decimal("0.000015798"), "15.80 uV"),
-        (['j', 'j', 'l'], "voltaje", Decimal("12.688"), "12.69 V"),
-        (['j', 'j', 'l'], "voltaje", Decimal("15234760000"), "15.23 GV"),
+        (['j', 'j', 'l'], "voltaje", Decimal("0.000015798"), (Decimal('15.80'), 'u')),
+        (['j', 'j', 'l'], "voltaje", Decimal("12.688"), (Decimal('12.69'), '')),
+        (['j', 'j', 'l'], "voltaje", Decimal("15234760000"), (Decimal('15.23'), 'G')),
 
-        (['j', 'j', 'l'], "corriente", Decimal("0.000000573"), "573.00 nA"),
-        (['j', 'j', 'l'], "corriente", Decimal("4.367"), "4.37 A"),
-        (['j', 'j', 'l'], "corriente", Decimal("48767004"), "48.77 MA"),
+        (['j', 'j', 'l'], "corriente", Decimal("0.000000573"), (Decimal('573.00'), 'n')),
+        (['j', 'j', 'l'], "corriente", Decimal("4.367"), (Decimal('4.37'), '')),
+        (['j', 'j', 'l'], "corriente", Decimal("48767004"), (Decimal('48.77'), 'M')),
 
         #LÍMITES SI
-        (['l'], "voltaje", Decimal("1e33"), "ERR"),
-        (['l'], "voltaje", Decimal("1e-33"), "ERR"),
+        (['l'], "voltaje", Decimal("1e33"), ('ERR', '')),
+        (['l'], "voltaje", Decimal("1e-33"), ('ERR', '')),
 
-        (['j', 'l'], "corriente", Decimal("1e33"), "ERR"),
-        (['j', 'l'], "corriente", Decimal("1e-33"), "ERR"),
+        (['j', 'l'], "corriente", Decimal("1e33"), ('ERR', '')),
+        (['j', 'l'], "corriente", Decimal("1e-33"), ('ERR', '')),
 
-        (['j', 'j', 'l'], "resistencia", Decimal("1e33"), "ERR"),
-        (['j', 'j', 'l'], "resistencia", Decimal("1e-33"), "ERR"),
+        (['j', 'j', 'l'], "resistencia", Decimal("1e33"), ('ERR', '')),
+        (['j', 'j', 'l'], "resistencia", Decimal("1e-33"), ('ERR', '')),
         #LÍMITES 999.999
-        (['l'], "voltaje", Decimal("999.999"), "1.00 kV"),
-        (['j', 'l'], "corriente", Decimal("999.999"), "1.00 kA"),
-        (['j', 'j', 'l'], "resistencia", Decimal("999.999"), "1.00 kΩ"),
+        (['l'], "voltaje", Decimal("999.999"), (Decimal('1.00'), 'k')),
+        (['j', 'l'], "corriente", Decimal("999.999"), (Decimal('1.00'), 'k')),
+        (['j', 'j', 'l'], "resistencia", Decimal("999.999"), (Decimal('1.00'), 'k')),
         ] # NORMALIZAR
 @pytest.mark.parametrize("secuencia_entrada, nombre_parametro, valor, valor_normalizado", data_normalizar_parametro)
 def test_normalizar_parametro(secuencia_entrada, nombre_parametro, valor, valor_normalizado):

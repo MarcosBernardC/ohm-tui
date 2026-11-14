@@ -76,10 +76,10 @@ class OhmModel:
                 prefijo_si = si_exp[exponente]
                 return((mantisa.quantize(Decimal("0.01"), rounding=ROUND_HALF_EVEN), prefijo_si))
             else:
-                return("ERR")
+                return(("ERR",''))
         elif parametro.valor == Decimal("0.00"):
             return((mantisa.quantize(Decimal("0.01"), rounding=ROUND_HALF_EVEN), prefijo_si))
-        else: return (f"ERR")
+        else: return (("ERR",''))
     
     def calcular(self, unidad):
         match unidad:
